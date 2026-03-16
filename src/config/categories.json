@@ -1,0 +1,85 @@
+{
+  "expense_categories": [
+    {
+      "name": "Groceries",
+      "patterns": ["WOOLWORTHS", "COLES", "ALDI", "IGA", "COSTCO", "FRUITY CAPERS", "GREEN VALLEY SPICES", "CASC SEAFOOD", "COSTI BROS", "LAKEMBA SEAFOOD", "FRESH FOOD", "FRUIT MARKET"]
+    },
+    {
+      "name": "Fast food & Restaurant",
+      "patterns": ["MCDONALDS", "HUNGRY JACKS", "KFC", "SUBWAY", "DOMINOS", "UBER EATS", "MENULOG", "DOORDASH", "CHICKEN LICKEN", "COCACOLAEPP", "WINGS & THINGS", "OUTBACK STEAKHOUSE", "THAI PARAGON", "PARAGON", "STEAKHOUSE", "PIZZA"]
+    },
+    {
+      "name": "Medicine (Webster)",
+      "patterns": ["WEBSTER"]
+    },
+    {
+      "name": "Medicine (PRN & Oil)",
+      "patterns": ["PHARMACY", "CHEMIST", "CHEMIST WAREHOUSE", "PRICELINE", "AMCAL", "YOUR CHOICE PHARMACY", "PHARMACY 4 LESS"]
+    },
+    {
+      "name": "Rent",
+      "patterns": ["RENT", "LANDLORD", "REAL ESTATE"]
+    },
+    {
+      "name": "Personal Cashout",
+      "patterns": ["ANZ ATM", "ATM WITHDRAWAL", "CASH WITHDRAWAL"]
+    },
+    {
+      "name": "Car & Petrol",
+      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "7-ELEVEN", "PETROL", "E-TOLL", "LINKT", "OPAL"]
+    },
+    {
+      "name": "Gifts  & Outing",
+      "patterns": ["BWS", "DAN MURPHY", "LIQUORLAND", "GIFT", "OUTING"]
+    },
+    {
+      "name": "Debt(s)",
+      "patterns": ["DIRECT DEBIT", "BPAY", "PAYMENT TO", "AFTERPAY", "ZIP PAY"]
+    },
+    {
+      "name": "Miscellaneous",
+      "patterns": []
+    },
+    {
+      "name": "Office work & Stationary",
+      "patterns": ["OFFICEWORKS", "OFFICE WORKS", "STATIONARY"]
+    },
+    {
+      "name": "Nicotine & cigarettes",
+      "patterns": ["KING OF THE PACK", "KPY*KING", "CIGARETTE", "TOBACCO", "VAPE"]
+    },
+    {
+      "name": "Fashion & accessories",
+      "patterns": ["KMART", "BIG W", "TARGET", "COTTON ON", "UNIQLO", "H&M"]
+    },
+    {
+      "name": "Home & appliances",
+      "patterns": ["BUNNINGS", "IKEA", "HARVEY NORMAN", "JB HI-FI", "NEXTRA"]
+    }
+  ],
+  "income_categories": [
+    {
+      "name": "Savings",
+      "patterns": []
+    },
+    {
+      "name": "Disability Support Pension",
+      "patterns": ["CENTRELINK", "SERVICES AUSTRALIA", "FAMILY TAX"]
+    },
+    {
+      "name": "Bonus",
+      "patterns": ["BONUS"]
+    },
+    {
+      "name": "Interest",
+      "patterns": ["INTEREST"]
+    },
+    {
+      "name": "Other",
+      "patterns": ["PAY/SALARY", "WAGES", "SALARY"]
+    }
+  ],
+  "internal_transfer_patterns": ["ANZ M-BANKING FUNDS TFER", "FUNDS TFER TRANSFER"],
+  "subscription_patterns": ["NETFLIX", "SPOTIFY", "APPLE.COM", "GOOGLE", "DISNEY", "STAN", "PARAMOUNT", "YOUTUBE", "EAAA CONVENIENCE"],
+  "fee_patterns": ["ACCOUNT SERVICE FEE", "OVERDRAWN FEE", "DISHONOUR FEE"]
+}
