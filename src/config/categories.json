@@ -26,7 +26,7 @@
     },
     {
       "name": "Car & Petrol",
-      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "7-ELEVEN", "PETROL", "E-TOLL", "LINKT", "OPAL"]
+      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "PETROL", "E-TOLL", "LINKT", "OPAL"]
     },
     {
       "name": "Gifts  & Outing",
@@ -46,7 +46,7 @@
     },
     {
       "name": "Nicotine & cigarettes",
-      "patterns": ["KING OF THE PACK", "KPY*KING", "CIGARETTE", "TOBACCO", "VAPE"]
+      "patterns": ["KING OF THE PACK", "KPY*KING", "CIGARETTE", "TOBACCO", "VAPE", "EAAA CONVENIENCE"]
     },
     {
       "name": "Fashion & accessories",
@@ -80,6 +80,6 @@
     }
   ],
   "internal_transfer_patterns": ["ANZ M-BANKING FUNDS TFER", "FUNDS TFER TRANSFER"],
-  "subscription_patterns": ["NETFLIX", "SPOTIFY", "APPLE.COM", "GOOGLE", "DISNEY", "STAN", "PARAMOUNT", "YOUTUBE", "EAAA CONVENIENCE"],
+  "subscription_patterns": ["NETFLIX", "SPOTIFY", "APPLE.COM", "GOOGLE", "DISNEY", "STAN", "PARAMOUNT", "YOUTUBE"],
   "fee_patterns": ["ACCOUNT SERVICE FEE", "OVERDRAWN FEE", "DISHONOUR FEE"]
 }

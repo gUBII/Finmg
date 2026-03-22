@@ -20,7 +20,7 @@ from openpyxl.styles import Font, PatternFill
 
 from src.models.transaction import Transaction
 
-TEMPLATE_PATH = Path(__file__).parent.parent.parent / "template_empty" / "Monthly Template - Renato Gentili.xlsx"
+TEMPLATE_PATH = Path(__file__).parent.parent.parent / "templates" / "monthly_template.xlsx"
 
 MONTH_NAMES = {
     "01": "January", "02": "February", "03": "March", "04": "April",

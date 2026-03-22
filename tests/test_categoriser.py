@@ -29,8 +29,13 @@ class TestCategoriser:
         assert categorise_transaction(txn, config) == "Groceries"
 
     def test_fuel(self, config):
-        txn = Transaction(date=date(2026, 1, 15), description="7-ELEVEN 2268 LAKEMBA", withdrawal=54.50)
+        txn = Transaction(date=date(2026, 1, 15), description="AMPOL LAKEMBA", withdrawal=54.50)
         assert categorise_transaction(txn, config) == "Car & Petrol"
+
+    def test_7eleven_is_uncategorised(self, config):
+        """7-ELEVEN removed from Car & Petrol (ambiguous: fuel vs food vs tobacco)."""
+        txn = Transaction(date=date(2026, 1, 15), description="7-ELEVEN 2268 LAKEMBA", withdrawal=54.50)
+        assert categorise_transaction(txn, config) == "Uncategorised"
 
     def test_tobacco(self, config):
         txn = Transaction(date=date(2026, 1, 15), description="KPY*KING OF THE PACK L SYDNEY AU", withdrawal=15.31)
@@ -68,8 +73,13 @@ class TestCategoriser:
         txn = Transaction(date=date(2026, 1, 15), description="KMART 1367 WILEY PARK", withdrawal=82.80)
         assert categorise_transaction(txn, config) == "Fashion & accessories"
 
-    def test_subscription_as_miscellaneous(self, config):
+    def test_eaaa_convenience_is_nicotine(self, config):
+        """EAAA CONVENIENCE moved from subscriptions to Nicotine & cigarettes."""
         txn = Transaction(date=date(2026, 1, 15), description="EAAA CONVENIENCE PTY LTD LAKEMBA AU", withdrawal=10.0)
+        assert categorise_transaction(txn, config) == "Nicotine & cigarettes"
+
+    def test_subscription_as_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 1, 15), description="NETFLIX.COM AU", withdrawal=16.99)
         assert categorise_transaction(txn, config) == "Miscellaneous"
 
     def test_categorise_all(self, config):

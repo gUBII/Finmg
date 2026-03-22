@@ -12,6 +12,6 @@
 ## Acceptance Criteria
 - 3 PDFs parse with exact total matches
 - 5 monthly Excel workbooks generated from template
-- Streamlit UI functional with all 5 tabs
+- Streamlit UI functional with login-gated routed views
 - Category assignment with manual override capability
 - Internal transfers correctly flagged

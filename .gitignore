@@ -2,6 +2,7 @@
 bank_Statement/
 checkpoint_csv/
 monthly_output(raw)/
+data/
 
 # Python
 __pycache__/
@@ -19,6 +20,9 @@ build/
 *.swp
 *.swo
 
+# Streamlit
+.streamlit/secrets.toml
+
 # OS
 .DS_Store
 Thumbs.db
@@ -26,5 +30,5 @@ Thumbs.db
 # Agent handoff logs
 handoff/*.log
 
-# Local assets
+# Local assets (large original)
 linda.png

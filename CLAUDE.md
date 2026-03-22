@@ -4,23 +4,41 @@
 **IMPLEMENTATION_LEAD** — Core pipeline, parser, UI, Excel writer.
 
 ## Project
-FinMg — ANZ Bank Statement to Budget Pipeline
+FinMg — ANZ Bank Statement Dashboard for Linda-Jane
 
 ## Stack
-- Python 3.14, Streamlit, pdfplumber, openpyxl, pandas
+- Python 3.14, Streamlit, pdfplumber, openpyxl, pandas, plotly, Pillow
+- SQLite database at `data/finmg.db`
 - Virtual environment: `.venv/` (activate with `source .venv/bin/activate`)
 - Run app: `streamlit run src/app.py`
 - Run tests: `python3 -m pytest tests/ -v`
 
-## Key Files
-- `src/app.py` — Streamlit entry point (tabbed UI)
+## Architecture
+Single-page Streamlit app with login gate and sidebar radio navigation.
+All data persisted in SQLite (no session-state dependency for data).
+
+### Key Files
+- `src/app.py` — Entry: login gate → sidebar nav → view routing
+- `src/auth/auth.py` — SHA-256 credential check
+- `src/db/database.py` — SQLite init + connection
+- `src/db/queries.py` — All SQL query functions
+- `src/views/login.py` — Login page with linda photo
+- `src/views/dashboard.py` — Analytics KPIs + plotly charts + month status grid
+- `src/views/upload.py` — One-click PDF upload → parse → categorise → DB
+- `src/views/transactions.py` — Browse/edit/categorise with DB persistence
+- `src/views/export.py` — Excel export + ZIP download
 - `src/parser/pdf_extractor.py` — PDF → raw transactions
 - `src/parser/header_parser.py` — Account metadata extraction
 - `src/pipeline/categoriser.py` — Category assignment
 - `src/pipeline/merger.py` — Multi-account merge
 - `src/pipeline/excel_writer.py` — Budget template Excel output
 - `src/config/categories.json` — Category rules
-- `template_empty/` — Renato's budget template (copied and populated per month)
+- `templates/monthly_template.xlsx` — Renato's budget template
+
+## Database Schema
+- `uploaded_pdfs` — PDF metadata + file hash for dedup
+- `transactions` — All parsed transactions with category, month, account
+- `category_overrides` — Audit log of manual category changes
 
 ## Categories
 Categories must match the template exactly:
@@ -36,3 +54,4 @@ Categories must match the template exactly:
 ## PII
 - Bank statements, checkpoints, and outputs are gitignored
 - Never commit PDFs or files containing personal financial data
+- `data/` directory is entirely gitignored
