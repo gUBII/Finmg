@@ -14,6 +14,7 @@ from src.db.queries_estate import (
     list_private_managers,
     list_significant_people,
 )
+from src.db.queries_forecast import list_forecast_categories
 from scripts.seed import seed
 
 
@@ -57,6 +58,14 @@ class TestSeed:
         assert ("Nathan", "GENTILI") in names
         assert ("Margaret", "TRAVIA") in names
 
+        # Forecast categories mirrored from categories.json
+        expense_cats = list_forecast_categories(conn, section="D_expenditure")
+        income_cats = list_forecast_categories(conn, section="D_income")
+        assert len(expense_cats) >= 10  # template has 14
+        assert len(income_cats) >= 4    # template has 5
+        assert "Groceries" in {c.category_name for c in expense_cats}
+        assert "Disability Support Pension" in {c.category_name for c in income_cats}
+
         conn.close()
 
     def test_seed_is_idempotent(self, tmp_path):
@@ -72,6 +81,12 @@ class TestSeed:
         assert second["accounts_added"] == 0
         assert first["managed_person_id"] == second["managed_person_id"]
         assert first["private_manager_id"] == second["private_manager_id"]
+
+        # Forecast category count stays stable across runs
+        cats_after_first = len(list_forecast_categories(conn))
+        seed(conn)
+        cats_after_third = len(list_forecast_categories(conn))
+        assert cats_after_first == cats_after_third
 
         # Counts in DB stay stable
         assert len(list_managed_persons(conn)) == 1

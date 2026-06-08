@@ -37,12 +37,15 @@ from src.db.queries_estate import (
     list_managed_persons,
     list_private_managers,
 )
+from src.db.queries_forecast import upsert_forecast_category
 from src.models.estate import (
     Account,
     ManagedPerson,
     PrivateManager,
     SignificantPerson,
 )
+from src.models.forecast import ForecastCategory
+from src.pipeline.categoriser import load_category_rules
 
 # ---------------------------------------------------------------------------
 # Seed data — all values traceable to a reference doc or memory file.
@@ -184,18 +187,52 @@ def _ensure_accounts(conn: sqlite3.Connection, managed_person_id: int) -> int:
     return inserted
 
 
+def _ensure_forecast_categories(conn: sqlite3.Connection) -> int:
+    """Mirror categoriser categories into forecast_categories.
+
+    Income rules → D_income, expense rules → D_expenditure. display_order
+    follows the order they appear in categories.json so the NCAT form
+    rendering matches Linda's mental ordering. Idempotent via upsert.
+    """
+    rules = load_category_rules()
+    touched = 0
+    for i, cat in enumerate(rules.get("expense_categories", [])):
+        upsert_forecast_category(
+            conn,
+            ForecastCategory(
+                section="D_expenditure",
+                category_name=cat["name"],
+                display_order=i,
+            ),
+        )
+        touched += 1
+    for i, cat in enumerate(rules.get("income_categories", [])):
+        upsert_forecast_category(
+            conn,
+            ForecastCategory(
+                section="D_income",
+                category_name=cat["name"],
+                display_order=i,
+            ),
+        )
+        touched += 1
+    return touched
+
+
 def seed(conn: sqlite3.Connection) -> dict:
     """Run the whole seed; return a summary dict."""
     mp_id = _ensure_managed_person(conn)
     pm_id = _ensure_private_manager(conn, mp_id)
     sp_count = _ensure_significant_people(conn, mp_id)
     acc_count = _ensure_accounts(conn, mp_id)
+    fc_count = _ensure_forecast_categories(conn)
     backfilled = backfill_transactions_account_id(conn)
     return {
         "managed_person_id": mp_id,
         "private_manager_id": pm_id,
         "significant_people_added": sp_count,
         "accounts_added": acc_count,
+        "forecast_categories_touched": fc_count,
         "transactions_backfilled": backfilled,
     }
 

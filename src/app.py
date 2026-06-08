@@ -16,13 +16,22 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.db.database import get_connection, init_db
 from src.views.dashboard import render_dashboard_view
 from src.views.export import render_export_view
+from src.views.forecast import render_forecast_view
 from src.views.identity import render_identity_view
 from src.views.inventory import render_inventory_view
 from src.views.login import render_login_view, resolve_profile_image
 from src.views.transactions import render_transactions_view
 from src.views.upload import render_upload_view
 
-VIEW_OPTIONS = ["Dashboard", "Upload", "Identity", "Inventory", "Transactions", "Export"]
+VIEW_OPTIONS = [
+    "Dashboard",
+    "Upload",
+    "Identity",
+    "Inventory",
+    "Forecast",
+    "Transactions",
+    "Export",
+]
 
 
 def _init_session_state() -> None:
@@ -95,6 +104,7 @@ def main() -> None:
         "Upload": render_upload_view,
         "Identity": render_identity_view,
         "Inventory": render_inventory_view,
+        "Forecast": render_forecast_view,
         "Transactions": render_transactions_view,
         "Export": render_export_view,
     }
