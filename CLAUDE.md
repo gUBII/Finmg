@@ -29,6 +29,7 @@ All data persisted in SQLite (no session-state dependency for data).
 - `src/views/dashboard.py` — Analytics KPIs + plotly charts + month status grid
 - `src/views/upload.py` — One-click PDF upload → parse → categorise → DB
 - `src/views/identity.py` — Identity & Contacts (Section A): managed person, private manager, significant people
+- `src/views/inventory.py` — Estate Inventory (Sections B + C): accounts (institution/account_number/bsb read-only), real estate, investments, motor vehicles, accommodation bonds, debts
 - `src/views/transactions.py` — Browse/edit/categorise with DB persistence
 - `src/views/export.py` — Excel export + ZIP download
 - `src/parser/pdf_extractor.py` — PDF → raw transactions

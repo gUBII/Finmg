@@ -280,6 +280,32 @@ def list_accounts(
     return [_row_to_dto(r, Account) for r in rows]
 
 
+def get_account(conn: sqlite3.Connection, acc_id: int) -> Account | None:
+    row = conn.execute(
+        "SELECT * FROM accounts WHERE id = ?", (acc_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_dto(row, Account)
+
+
+def update_account(conn: sqlite3.Connection, acc_id: int, acc: Account) -> None:
+    """Update a row in `accounts` — bookkeeping fields only.
+
+    `institution`, `account_number`, and `bsb` are evidence-grade: they come
+    from parsed PDF statements and the bank statements themselves are the
+    source of truth. The update API silently strips them from the payload so
+    a caller cannot accidentally null them out (the SP-UPDATE-FIELDS class of
+    bug, but at the API layer rather than the view layer). UI views must
+    additionally render these columns as disabled.
+    """
+    data = asdict(acc)
+    data.pop("id", None)
+    for evidence_field in ("institution", "account_number", "bsb"):
+        data.pop(evidence_field, None)
+    _update(conn, "accounts", acc_id, data)
+
+
 # ---------------------------------------------------------------------------
 # real_estate / investments / motor_vehicles / accommodation_bonds / debts
 # ---------------------------------------------------------------------------
@@ -298,6 +324,24 @@ def list_real_estate(
     return [_row_to_dto(r, RealEstate) for r in rows]
 
 
+def get_real_estate(conn: sqlite3.Connection, re_id: int) -> RealEstate | None:
+    row = conn.execute(
+        "SELECT * FROM real_estate WHERE id = ?", (re_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_dto(row, RealEstate)
+
+
+def update_real_estate(
+    conn: sqlite3.Connection, re_id: int, re_: RealEstate
+) -> None:
+    """Update all editable fields on a real_estate row."""
+    data = asdict(re_)
+    data.pop("id", None)
+    _update(conn, "real_estate", re_id, data)
+
+
 def insert_investment(conn: sqlite3.Connection, inv: Investment) -> int:
     return _insert(conn, "investments", inv)
 
@@ -310,6 +354,24 @@ def list_investments(
         (managed_person_id,),
     ).fetchall()
     return [_row_to_dto(r, Investment) for r in rows]
+
+
+def get_investment(conn: sqlite3.Connection, inv_id: int) -> Investment | None:
+    row = conn.execute(
+        "SELECT * FROM investments WHERE id = ?", (inv_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_dto(row, Investment)
+
+
+def update_investment(
+    conn: sqlite3.Connection, inv_id: int, inv: Investment
+) -> None:
+    """Update all editable fields on an investments row."""
+    data = asdict(inv)
+    data.pop("id", None)
+    _update(conn, "investments", inv_id, data)
 
 
 def insert_motor_vehicle(conn: sqlite3.Connection, mv: MotorVehicle) -> int:
@@ -326,6 +388,24 @@ def list_motor_vehicles(
     return [_row_to_dto(r, MotorVehicle) for r in rows]
 
 
+def get_motor_vehicle(conn: sqlite3.Connection, mv_id: int) -> MotorVehicle | None:
+    row = conn.execute(
+        "SELECT * FROM motor_vehicles WHERE id = ?", (mv_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_dto(row, MotorVehicle)
+
+
+def update_motor_vehicle(
+    conn: sqlite3.Connection, mv_id: int, mv: MotorVehicle
+) -> None:
+    """Update all editable fields on a motor_vehicles row."""
+    data = asdict(mv)
+    data.pop("id", None)
+    _update(conn, "motor_vehicles", mv_id, data)
+
+
 def insert_accommodation_bond(conn: sqlite3.Connection, bond: AccommodationBond) -> int:
     return _insert(conn, "accommodation_bonds", bond)
 
@@ -340,6 +420,26 @@ def list_accommodation_bonds(
     return [_row_to_dto(r, AccommodationBond) for r in rows]
 
 
+def get_accommodation_bond(
+    conn: sqlite3.Connection, bond_id: int
+) -> AccommodationBond | None:
+    row = conn.execute(
+        "SELECT * FROM accommodation_bonds WHERE id = ?", (bond_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_dto(row, AccommodationBond)
+
+
+def update_accommodation_bond(
+    conn: sqlite3.Connection, bond_id: int, bond: AccommodationBond
+) -> None:
+    """Update all editable fields on an accommodation_bonds row."""
+    data = asdict(bond)
+    data.pop("id", None)
+    _update(conn, "accommodation_bonds", bond_id, data)
+
+
 def insert_debt_liability(conn: sqlite3.Connection, debt: DebtLiability) -> int:
     return _insert(conn, "debts_liabilities", debt)
 
@@ -352,6 +452,26 @@ def list_debts_liabilities(
         (managed_person_id,),
     ).fetchall()
     return [_row_to_dto(r, DebtLiability) for r in rows]
+
+
+def get_debt_liability(
+    conn: sqlite3.Connection, debt_id: int
+) -> DebtLiability | None:
+    row = conn.execute(
+        "SELECT * FROM debts_liabilities WHERE id = ?", (debt_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_dto(row, DebtLiability)
+
+
+def update_debt_liability(
+    conn: sqlite3.Connection, debt_id: int, debt: DebtLiability
+) -> None:
+    """Update all editable fields on a debts_liabilities row."""
+    data = asdict(debt)
+    data.pop("id", None)
+    _update(conn, "debts_liabilities", debt_id, data)
 
 
 # ---------------------------------------------------------------------------
