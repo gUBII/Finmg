@@ -20,11 +20,15 @@ All data persisted in SQLite (no session-state dependency for data).
 ### Key Files
 - `src/app.py` — Entry: login gate → sidebar nav → view routing
 - `src/auth/auth.py` — SHA-256 credential check
-- `src/db/database.py` — SQLite init + connection
-- `src/db/queries.py` — All SQL query functions
+- `src/db/database.py` — SQLite init + connection (delegates to migrations runner)
+- `src/db/migrations.py` — Versioned SQL migration runner (001–005)
+- `src/db/queries.py` — All SQL query functions (transactions/PDFs)
+- `src/db/queries_estate.py` — CRUD for estate-inventory tables (Sections A/B/C)
+- `src/models/estate.py` — Frozen dataclass DTOs for estate tables
 - `src/views/login.py` — Login page with linda photo
 - `src/views/dashboard.py` — Analytics KPIs + plotly charts + month status grid
 - `src/views/upload.py` — One-click PDF upload → parse → categorise → DB
+- `src/views/identity.py` — Identity & Contacts (Section A): managed person, private manager, significant people
 - `src/views/transactions.py` — Browse/edit/categorise with DB persistence
 - `src/views/export.py` — Excel export + ZIP download
 - `src/parser/pdf_extractor.py` — PDF → raw transactions
@@ -34,6 +38,7 @@ All data persisted in SQLite (no session-state dependency for data).
 - `src/pipeline/excel_writer.py` — Budget template Excel output
 - `src/config/categories.json` — Category rules
 - `templates/monthly_template.xlsx` — Renato's budget template
+- `scripts/seed.py` — Idempotent seed for Ron, Linda, accounts, significant people
 
 ## Database Schema
 - `uploaded_pdfs` — PDF metadata + file hash for dedup
