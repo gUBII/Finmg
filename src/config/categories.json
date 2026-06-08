@@ -2,11 +2,11 @@
   "expense_categories": [
     {
       "name": "Groceries",
-      "patterns": ["WOOLWORTHS", "COLES", "ALDI", "IGA", "COSTCO", "FRUITY CAPERS", "GREEN VALLEY SPICES", "CASC SEAFOOD", "COSTI BROS", "LAKEMBA SEAFOOD", "FRESH FOOD", "FRUIT MARKET"]
+      "patterns": ["WOOLWORTHS", "COLES", "ALDI", "IGA", "COSTCO", "FRUITY CAPERS", "GREEN VALLEY SPICES", "CASC SEAFOOD", "COSTI BROS", "LAKEMBA SEAFOOD", "FRESH FOOD", "FRUIT MARKET", "METRO CHULLORA", "NATURES BEST", "ROSELANDS FRUIT WORL", "TRANSTASMAN FISHERI", "GET FISH PTY LTD"]
     },
     {
       "name": "Fast food & Restaurant",
-      "patterns": ["MCDONALDS", "HUNGRY JACKS", "KFC", "SUBWAY", "DOMINOS", "UBER EATS", "MENULOG", "DOORDASH", "CHICKEN LICKEN", "COCACOLAEPP", "WINGS & THINGS", "OUTBACK STEAKHOUSE", "THAI PARAGON", "PARAGON", "STEAKHOUSE", "PIZZA"]
+      "patterns": ["MCDONALDS", "HUNGRY JACKS", "KFC", "SUBWAY", "DOMINOS", "UBER EATS", "MENULOG", "DOORDASH", "CHICKEN LICKEN", "COCACOLAEPP", "WINGS & THINGS", "OUTBACK STEAKHOUSE", "THAI PARAGON", "PARAGON", "STEAKHOUSE", "PIZZA", "RESTAURANT", "CAFE", "PALACE CHINESE", "EAST SUSHI", "THAIHUTT", "HJS WILEY PARK", "BRIARS AT GREENLEES", "MOJO PICON", "LA FRUTTERIA", "CRAZY NONNA", "STEYNE HOTEL", "PAESANELLA", "PAULS CAFE", "CARVERY CATERING"]
     },
     {
       "name": "Medicine (Webster)",
@@ -14,7 +14,7 @@
     },
     {
       "name": "Medicine (PRN & Oil)",
-      "patterns": ["PHARMACY", "CHEMIST", "CHEMIST WAREHOUSE", "PRICELINE", "AMCAL", "YOUR CHOICE PHARMACY", "PHARMACY 4 LESS"]
+      "patterns": ["PHARMACY", "CHEMIST", "CHEMIST WAREHOUSE", "PRICELINE", "AMCAL", "YOUR CHOICE PHARMACY", "PHARMACY 4 LESS", "HEALTHY CARE"]
     },
     {
       "name": "Rent",
@@ -22,15 +22,15 @@
     },
     {
       "name": "Personal Cashout",
-      "patterns": ["ANZ ATM", "ATM WITHDRAWAL", "CASH WITHDRAWAL"]
+      "patterns": ["ANZ ATM", "ATM WITHDRAWAL", "CASH WITHDRAWAL", "ATM ROSELANDS BRANCH"]
     },
     {
       "name": "Car & Petrol",
-      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "PETROL", "E-TOLL", "LINKT", "OPAL"]
+      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "PETROL", "E-TOLL", "LINKT", "OPAL", "SUPER CHEAP AUTO", "SECURE PARKING"]
     },
     {
       "name": "Gifts  & Outing",
-      "patterns": ["BWS", "DAN MURPHY", "LIQUORLAND", "GIFT", "OUTING"]
+      "patterns": ["BWS", "DAN MURPHY", "LIQUORLAND", "GIFT", "OUTING", "READING CINEMAS", "TICKETMASTER", "SKY ZONE", "SHOWBAGS", "ACE ATTRACTIONS"]
     },
     {
       "name": "Debt(s)",
@@ -38,7 +38,7 @@
     },
     {
       "name": "Miscellaneous",
-      "patterns": []
+      "patterns": ["NRMA INSURANCE", "NRMA.COM.AU"]
     },
     {
       "name": "Office work & Stationary",
@@ -50,11 +50,11 @@
     },
     {
       "name": "Fashion & accessories",
-      "patterns": ["KMART", "BIG W", "TARGET", "COTTON ON", "UNIQLO", "H&M"]
+      "patterns": ["KMART", "BIG W", "TARGET", "COTTON ON", "UNIQLO", "H&M", "CONNOR CLOTHING", "TAROCASH"]
     },
     {
       "name": "Home & appliances",
-      "patterns": ["BUNNINGS", "IKEA", "HARVEY NORMAN", "JB HI-FI", "NEXTRA"]
+      "patterns": ["BUNNINGS", "IKEA", "HARVEY NORMAN", "JB HI-FI", "NEXTRA", "DOMAYNE", "JAYCAR ELECTRONICS"]
     }
   ],
   "income_categories": [
@@ -64,7 +64,7 @@
     },
     {
       "name": "Disability Support Pension",
-      "patterns": ["CENTRELINK", "SERVICES AUSTRALIA", "FAMILY TAX"]
+      "patterns": ["CENTRELINK", "SERVICES AUSTRALIA", "FAMILY TAX", "CTRLINK PENS", "PENSION/SUPERANNUATION"]
     },
     {
       "name": "Bonus",
