@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import sys
 import time
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -121,7 +122,7 @@ class TestUpdateManagedPerson:
     def test_none_id_row_is_rejected_gracefully(self, tmp_path):
         # Arrange
         conn = _conn(tmp_path)
-        _seed_ron(conn)
+        ron_id = _seed_ron(conn)
 
         # Act + Assert — id=999 doesn't exist; no row modified but no crash either
         update_managed_person(
@@ -130,7 +131,7 @@ class TestUpdateManagedPerson:
             ManagedPerson(surname="GHOST", given_names="Nobody"),
         )
         # The original Ron row is untouched
-        fetched = get_managed_person(conn, 1)
+        fetched = get_managed_person(conn, ron_id)
         assert fetched.surname == "GENTILI"
         conn.close()
 
@@ -248,6 +249,45 @@ class TestUpdateSignificantPerson:
         # Act + Assert
         result = get_significant_person(conn, 999)
         assert result is None
+        conn.close()
+
+    def test_replace_pattern_preserves_hidden_address_fields(self, tmp_path):
+        """Regression: SP-UPDATE-FIELDS — the data_editor only exposes a subset
+        of columns, so the view must use `dataclasses.replace(original, ...)`
+        to patch visible fields without nulling address_line1, address_line2,
+        postcode, and home_phone. This mirrors what the Identity view does on
+        Save Changes (src/views/identity.py:_render_significant_people_tab).
+        """
+        # Arrange
+        conn = _conn(tmp_path)
+        ron_id = _seed_ron(conn)
+        sp_id = insert_significant_person(
+            conn,
+            SignificantPerson(
+                managed_person_id=ron_id,
+                given_name="Anna",
+                surname="DELUCA",
+                address_line1="42 Some Street",
+                address_line2="Unit 7",
+                postcode="2204",
+                home_phone="02 9999 0000",
+                mobile="0400 000 000",
+            ),
+        )
+        original = get_significant_person(conn, sp_id)
+        assert original is not None
+
+        # Act — patch ONLY a visible column (mobile), like the data_editor does
+        patched = replace(original, mobile="0411 111 111")
+        update_significant_person(conn, sp_id, patched)
+
+        # Assert — hidden address columns survive the round-trip
+        refetched = get_significant_person(conn, sp_id)
+        assert refetched.mobile == "0411 111 111"
+        assert refetched.address_line1 == "42 Some Street"
+        assert refetched.address_line2 == "Unit 7"
+        assert refetched.postcode == "2204"
+        assert refetched.home_phone == "02 9999 0000"
         conn.close()
 
 

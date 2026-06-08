@@ -12,6 +12,7 @@ audit_log integration is intentionally deferred to S2.5.
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 
 import pandas as pd
 import streamlit as st
@@ -294,9 +295,11 @@ def _render_significant_people_tab(conn, mp_id: int) -> None:
             original = get_significant_person(conn, sp_id)
             if original is None:
                 continue
-            updated = SignificantPerson(
-                id=sp_id,
-                managed_person_id=mp_id,
+            # Patch only visible columns onto the fetched row so hidden fields
+            # (address_line1, address_line2, postcode, home_phone) survive the
+            # round-trip even though the data_editor never shows them.
+            updated = replace(
+                original,
                 surname=str(row["Surname"]).strip(),
                 given_name=str(row["Given name"]).strip(),
                 relationship=str(row["Relationship"]).strip() or None,
@@ -305,16 +308,7 @@ def _render_significant_people_tab(conn, mp_id: int) -> None:
                 consultation_status=str(row["Status"]),
                 notes=str(row["Notes"]).strip() or None,
             )
-            # Only write if something changed.
-            if (
-                updated.given_name != original.given_name
-                or updated.surname != original.surname
-                or updated.relationship != original.relationship
-                or updated.mobile != original.mobile
-                or updated.email != original.email
-                or updated.consultation_status != original.consultation_status
-                or updated.notes != original.notes
-            ):
+            if updated != original:
                 update_significant_person(conn, sp_id, updated)
                 changes += 1
         if changes:

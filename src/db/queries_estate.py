@@ -59,6 +59,8 @@ def _update(
     Always bumps `updated_at` to the current UTC timestamp. Commits before
     returning so callers don't need to.
     """
+    # Marker key only; the SQL fragment is emitted by the updated_at branch
+    # below, not from the value assigned here.
     fields_dict["updated_at"] = "datetime('now')"
     set_clauses = []
     params = []
