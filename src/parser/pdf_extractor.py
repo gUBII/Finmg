@@ -128,6 +128,10 @@ def extract_transactions(pdf_path: str) -> tuple[AccountMeta, list[Transaction]]
             y = round(float(w["top"]), 0)
             lines_by_y[y].append(w)
 
+        # Continuation-eligibility resets at each page boundary so the final-page
+        # disclaimer text cannot bleed onto the previous page's last transaction.
+        eligible_for_continuation = False
+
         for y in sorted(lines_by_y.keys()):
             line = _line_from_words(lines_by_y[y])
             raw = line["raw"].strip()
@@ -162,8 +166,9 @@ def extract_transactions(pdf_path: str) -> tuple[AccountMeta, list[Transaction]]
                 current_month_num = MONTH_MAP[month_name]
                 continue
 
-            # Check for "Total" row
+            # Check for "Total" row — marks end of transaction table on this page.
             if raw.startswith("Total"):
+                eligible_for_continuation = False
                 continue
 
             # Check for transaction date
@@ -203,8 +208,9 @@ def extract_transactions(pdf_path: str) -> tuple[AccountMeta, list[Transaction]]
                     month=f"{txn_date.year}-{txn_date.month:02d}",
                 )
                 transactions.append(txn)
+                eligible_for_continuation = True
 
-            elif line["desc_text"] and transactions:
+            elif eligible_for_continuation and line["desc_text"] and transactions:
                 # Continuation line — append description to previous transaction
                 extra = line["desc_text"].strip()
                 if extra and extra != "blank":
