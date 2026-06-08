@@ -50,6 +50,11 @@ def insert_pdf_and_transactions(
     Before inserting, any existing transactions for the same account within
     the PDF's date range are removed to prevent double-counting from
     rolling 120-day statements. Returns the pdf_id.
+
+    If a row exists in `accounts` matching `meta.account_number`, each
+    transaction is FK-linked to it via `account_id`. If not (e.g. seed has
+    not run yet, or this is a brand-new account number), `account_id` stays
+    NULL and `backfill_transactions_account_id` can close the gap later.
     """
     if txns:
         dates = [t.date.isoformat() for t in txns]
@@ -83,12 +88,19 @@ def insert_pdf_and_transactions(
     )
     pdf_id = cur.lastrowid
 
+    acc_row = conn.execute(
+        "SELECT id FROM accounts WHERE account_number = ?",
+        (meta.account_number,),
+    ).fetchone()
+    account_id = acc_row["id"] if acc_row else None
+
     conn.executemany(
         """
         INSERT INTO transactions
             (date, description, withdrawal, deposit, account_number,
-             account_type, category, month, is_internal_transfer, pdf_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             account_type, category, month, is_internal_transfer, pdf_id,
+             account_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         [
             (
@@ -102,6 +114,7 @@ def insert_pdf_and_transactions(
                 t.month,
                 int(t.is_internal_transfer),
                 pdf_id,
+                account_id,
             )
             for t in txns
         ],
