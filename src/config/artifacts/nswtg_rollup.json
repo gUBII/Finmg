@@ -1,0 +1,51 @@
+{
+  "_about": "Maps FinMg granular budget categories onto the NSWTG super-lines used by both the Annual Accounts (Section C, actuals) and the Plan (Section D, forecasts). Direction selects deposit vs withdrawal. Categories NOT listed under any line are intentionally unmapped: the NSWTG forms have no clean home for day-to-day personal-living spend (groceries, medicine, personal cashout, fast food, fashion, nicotine, home, office, misc). The audit/gap engine surfaces the unallocated total so Linda allocates it deliberately rather than the system guessing. Tunable: edit categories here, no code change.",
+  "_unmapped_personal_living": [
+    "Groceries", "Fast food & Restaurant", "Medicine (Webster)",
+    "Medicine (PRN & Oil)", "Personal Cashout", "Miscellaneous",
+    "Office work & Stationary", "Nicotine & cigarettes",
+    "Fashion & accessories", "Home & appliances"
+  ],
+  "income": {
+    "income_ndis": {"direction": "deposit", "categories": []},
+    "income_pensions": {"direction": "deposit", "categories": ["Disability Support Pension"]},
+    "income_rental": {"direction": "deposit", "categories": []},
+    "income_salary": {"direction": "deposit", "categories": []},
+    "income_super": {"direction": "deposit", "categories": []},
+    "income_other": {"direction": "deposit", "categories": ["Other", "Bonus", "Interest", "Savings"]}
+  },
+  "expenditure": {
+    "exp_accommodation": {"direction": "withdrawal", "categories": ["Rent"]},
+    "exp_debt": {"direction": "withdrawal", "categories": ["Debt(s)"]},
+    "exp_income_tax": {"direction": "withdrawal", "categories": []},
+    "exp_motor_vehicle": {"direction": "withdrawal", "categories": ["Car & Petrol"]},
+    "exp_nswtg_checking": {"direction": "withdrawal", "categories": []},
+    "exp_nswtg_admin": {"direction": "withdrawal", "categories": []},
+    "exp_professional": {"direction": "withdrawal", "categories": []},
+    "exp_property": {"direction": "withdrawal", "categories": []},
+    "exp_utilities": {"direction": "withdrawal", "categories": []},
+    "exp_gifts": {"direction": "withdrawal", "categories": ["Gifts  & Outing"]}
+  },
+  "_plan_note": "The Plan (Section D) taxonomy differs from the Annual Accounts: it HAS a 'Personal living expenses' line, so groceries/medicine/personal roll up cleanly there. Plan rollups read forecast_value (forward), not transaction actuals.",
+  "plan_income": {
+    "plan_pensions": {"direction": "deposit", "categories": ["Disability Support Pension"]},
+    "plan_investments": {"direction": "deposit", "categories": ["Interest"]},
+    "plan_super": {"direction": "deposit", "categories": []},
+    "plan_rental": {"direction": "deposit", "categories": []},
+    "plan_salary": {"direction": "deposit", "categories": ["Other", "Bonus", "Savings"]},
+    "plan_ndis": {"direction": "deposit", "categories": []}
+  },
+  "plan_expenditure": {
+    "plan_accommodation": {"direction": "withdrawal", "categories": ["Rent"]},
+    "plan_personal_living": {"direction": "withdrawal", "categories": [
+      "Groceries", "Fast food & Restaurant", "Medicine (Webster)", "Medicine (PRN & Oil)",
+      "Personal Cashout", "Gifts  & Outing", "Miscellaneous", "Office work & Stationary",
+      "Nicotine & cigarettes", "Fashion & accessories", "Home & appliances", "Car & Petrol"
+    ]},
+    "plan_property": {"direction": "withdrawal", "categories": []},
+    "plan_utilities": {"direction": "withdrawal", "categories": []},
+    "plan_debt": {"direction": "withdrawal", "categories": ["Debt(s)"]},
+    "plan_professional": {"direction": "withdrawal", "categories": []},
+    "plan_remuneration": {"direction": "withdrawal", "categories": []}
+  }
+}

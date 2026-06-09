@@ -1,0 +1,136 @@
+{
+  "key": "annual_accounts",
+  "title": "Private Manager Accounts (Annual)",
+  "template": "templates/nswtg/annual_accounts.pdf",
+  "sections": [
+    {
+      "key": "A_personal",
+      "title": "Section A — Personal information",
+      "bindings": [
+        {"field": "From", "resolver": "period", "args": {"which": "start"}},
+        {"field": "To", "resolver": "period", "args": {"which": "end"}},
+        {"field": "Customer reference numberRow1", "resolver": "managed_person", "args": {"column": "customer_reference_number"}},
+        {"field": "SurnameRow1", "resolver": "managed_person", "args": {"column": "surname"}},
+        {"field": "Given namesRow1", "resolver": "managed_person", "args": {"column": "given_names"}},
+        {"field": "SurnameRow1_2", "resolver": "private_manager", "args": {"column": "surname"}},
+        {"field": "Given name sRow1", "resolver": "private_manager", "args": {"column": "given_name"}},
+        {"field": "PhoneRow1", "resolver": "private_manager", "args": {"column": "mobile"}},
+        {"field": "EmailRow1", "resolver": "private_manager", "args": {"column": "email"}},
+        {"field": "AddressRow1", "resolver": "private_manager", "args": {"column": "address_line1"}},
+        {"field": "AddressRow2", "resolver": "private_manager", "args": {"column": "address_line2"}},
+        {"field": "Postcode", "resolver": "private_manager", "args": {"column": "postcode"}}
+      ]
+    },
+    {
+      "key": "B_real_estate",
+      "title": "Section B — Real estate",
+      "repeat_groups": [
+        {
+          "source": "real_estate",
+          "max_rows": 3,
+          "columns": [
+            {"fields": ["Postcode_2", "Postcode_3", "Postcode_4"], "resolver": "attr", "args": {"name": "postcode"}},
+            {"fields": ["Ownership Solejoint tenant tenants in commonRow1", "Ownership Solejoint tenant tenants in commonRow2", "Ownership Solejoint tenant tenants in commonRow3"], "resolver": "attr", "args": {"name": "ownership"}},
+            {"fields": ["Occupancy Managed person tenantvacantRow1", "Occupancy Managed person tenantvacantRow2", "Occupancy Managed person tenantvacantRow3"], "resolver": "attr", "args": {"name": "occupancy"}},
+            {"fields": ["fill_39", "fill_41", "fill_43"], "resolver": "attr_money", "args": {"name": "value"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_accounts",
+      "title": "Section B — Bank accounts",
+      "repeat_groups": [
+        {
+          "source": "accounts",
+          "max_rows": 3,
+          "columns": [
+            {"field_template": "Name of financial institutionRow{i}", "resolver": "attr", "args": {"name": "institution"}},
+            {"field_template": "Ownership SolejointRow{i}", "resolver": "attr_map", "args": {"name": "ownership", "mapping": {"sole": "Sole", "joint": "Joint"}}},
+            {"field_template": "BSBRow{i}", "resolver": "attr", "args": {"name": "bsb"}},
+            {"field_template": "Account numberRow{i}", "resolver": "attr", "args": {"name": "account_number"}},
+            {"fields": ["fill_50", "fill_51", "fill_52"], "resolver": "attr_money", "args": {"name": "current_balance"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_investments",
+      "title": "Section B — Investments",
+      "repeat_groups": [
+        {
+          "source": "investments",
+          "max_rows": 3,
+          "columns": [
+            {"field_template": "Investment typeRow{i}", "resolver": "attr", "args": {"name": "type"}},
+            {"fields": ["Ownership SolejointRow1_2", "Ownership SolejointRow2_2", "Ownership SolejointRow3_2"], "resolver": "attr_map", "args": {"name": "ownership", "mapping": {"sole": "Sole", "joint": "Joint"}}},
+            {"field_template": "DescriptionRow{i}", "resolver": "attr", "args": {"name": "description"}},
+            {"field_template": "Number of unitsRow{i}", "resolver": "attr", "args": {"name": "units"}},
+            {"fields": ["fill_56", "fill_57", "fill_58"], "resolver": "attr_money", "args": {"name": "amount"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_motor_vehicles",
+      "title": "Section B — Motor vehicles",
+      "repeat_groups": [
+        {
+          "source": "motor_vehicles",
+          "max_rows": 3,
+          "columns": [
+            {"field_template": "Make and modelRow{i}", "resolver": "attr", "args": {"name": "model"}},
+            {"fields": ["Ownership SolejointRow1_3", "Ownership SolejointRow2_3", "Ownership SolejointRow3_3"], "resolver": "attr_map", "args": {"name": "ownership", "mapping": {"sole": "Sole", "joint": "Joint"}}},
+            {"fields": ["fill_57_2", "fill_58_2", "fill_59"], "resolver": "attr_money", "args": {"name": "value"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_liabilities",
+      "title": "Section B — Liabilities",
+      "repeat_groups": [
+        {
+          "source": "debts",
+          "max_rows": 8,
+          "columns": [
+            {"field_template": "Liability typeRow{i}", "resolver": "attr", "args": {"name": "type"}},
+            {"field_template": "Owner of liability financial institutionRow{i}", "resolver": "attr", "args": {"name": "lender"}},
+            {"field_template": "TermRow{i}", "resolver": "attr", "args": {"name": "term"}},
+            {"fields": ["fill_62", "fill_63", "fill_64", "fill_65", "fill_66", "fill_67", "fill_68", "fill_69"], "resolver": "attr_money", "args": {"name": "amount"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "C_income",
+      "title": "Section C — Income (actuals)",
+      "bindings": [
+        {"field": "fill_6", "resolver": "actuals_rollup", "args": {"line": "income_ndis"}},
+        {"field": "fill_8", "resolver": "actuals_rollup", "args": {"line": "income_pensions"}},
+        {"field": "fill_10", "resolver": "actuals_rollup", "args": {"line": "income_rental"}},
+        {"field": "fill_12", "resolver": "actuals_rollup", "args": {"line": "income_salary"}},
+        {"field": "fill_14", "resolver": "actuals_rollup", "args": {"line": "income_super"}},
+        {"field": "fill_16", "resolver": "actuals_rollup", "args": {"line": "income_other"}},
+        {"field": "fill_18", "resolver": "actuals_period_total", "args": {"direction": "deposit"}}
+      ]
+    },
+    {
+      "key": "C_expenditure",
+      "title": "Section C — Expenditure (actuals)",
+      "bindings": [
+        {"field": "fill_21", "resolver": "actuals_rollup", "args": {"line": "exp_accommodation"}},
+        {"field": "fill_23", "resolver": "actuals_rollup", "args": {"line": "exp_debt"}},
+        {"field": "fill_25", "resolver": "actuals_rollup", "args": {"line": "exp_income_tax"}},
+        {"field": "fill_27", "resolver": "actuals_rollup", "args": {"line": "exp_motor_vehicle"}},
+        {"field": "fill_29", "resolver": "actuals_rollup", "args": {"line": "exp_nswtg_checking"}},
+        {"field": "fill_31", "resolver": "actuals_rollup", "args": {"line": "exp_nswtg_admin"}},
+        {"field": "fill_34", "resolver": "actuals_rollup", "args": {"line": "exp_professional"}},
+        {"field": "fill_36", "resolver": "actuals_rollup", "args": {"line": "exp_property"}},
+        {"field": "fill_39_2", "resolver": "actuals_rollup", "args": {"line": "exp_utilities"}},
+        {"field": "fill_41_2", "resolver": "actuals_rollup", "args": {"line": "exp_gifts"}},
+        {"field": "fill_43_2", "resolver": "actuals_period_total", "args": {"direction": "withdrawal"}}
+      ]
+    }
+  ]
+}

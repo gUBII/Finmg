@@ -1,0 +1,194 @@
+{
+  "key": "plan",
+  "title": "Private Manager's Plan",
+  "template": "templates/nswtg/plan.pdf",
+  "sections": [
+    {
+      "key": "A_managed_person",
+      "title": "Section A — Managed person",
+      "bindings": [
+        {"field": "Customer reference numberRow1", "resolver": "managed_person", "args": {"column": "customer_reference_number"}},
+        {"field": "SurnameRow1", "resolver": "managed_person", "args": {"column": "surname"}},
+        {"field": "Given namesRow1", "resolver": "managed_person", "args": {"column": "given_names"}},
+        {"field": "Other namesRow1", "resolver": "managed_person", "args": {"column": "other_names"}},
+        {"field": "Date of birthRow1", "resolver": "managed_person", "args": {"column": "dob"}},
+        {"field": "undefined", "type": "checkbox", "on_state": "/On", "resolver": "managed_person_truthy", "args": {"column": "interpreter_required"}},
+        {"field": "If yes what language", "resolver": "managed_person", "args": {"column": "interpreter_language"}},
+        {"field": "Current addressRow1", "resolver": "managed_person", "args": {"column": "address_line1"}},
+        {"field": "Current addressRow2", "resolver": "managed_person", "args": {"column": "address_line2"}},
+        {"field": "Postcode", "resolver": "managed_person", "args": {"column": "postcode"}},
+        {"field": "EmailRow1", "resolver": "managed_person", "args": {"column": "email"}},
+        {"field": "PhoneRow1", "resolver": "managed_person", "args": {"column": "phone"}},
+        {"field": "Age related", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "age_related"}},
+        {"field": "Dementia", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "dementia"}},
+        {"field": "Intellectual", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "intellectual"}},
+        {"field": "undefined_3", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "physical"}},
+        {"field": "Brain injury", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "brain_injury"}},
+        {"field": "Mental health", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "mental_health"}},
+        {"field": "undefined_4", "type": "checkbox", "on_state": "/On", "resolver": "disability_flag", "args": {"flag": "stroke"}},
+        {"field": "Does the managed person have a Will", "type": "checkbox", "on_state": "/Yes", "resolver": "managed_person_eq", "args": {"column": "has_will", "equals": "yes"}}
+      ]
+    },
+    {
+      "key": "A_private_managers",
+      "title": "Section A — Private managers",
+      "repeat_groups": [
+        {
+          "source": "private_managers",
+          "max_rows": 2,
+          "columns": [
+            {"fields": ["SurnameRow1_2", "SurnameRow1_3"], "resolver": "attr", "args": {"name": "surname"}},
+            {"fields": ["Given nameRow1", "Given nameRow1_2"], "resolver": "attr", "args": {"name": "given_name"}},
+            {"fields": ["RelationshipRow1", "RelationshipRow1_2"], "resolver": "attr", "args": {"name": "relationship"}},
+            {"fields": ["Current addressRow1_2", "Current addressRow1_3"], "resolver": "attr", "args": {"name": "address_line1"}},
+            {"fields": ["Current addressRow2_2", "Current addressRow2_3"], "resolver": "attr", "args": {"name": "address_line2"}},
+            {"fields": ["Postcode_2", "Postcode_3"], "resolver": "attr", "args": {"name": "postcode"}},
+            {"fields": ["Home phoneRow1", "Home phoneRow1_2"], "resolver": "attr", "args": {"name": "home_phone"}},
+            {"fields": ["MobileRow1", "MobileRow1_2"], "resolver": "attr", "args": {"name": "mobile"}},
+            {"fields": ["EmailRow1_2", "EmailRow1_3"], "resolver": "attr", "args": {"name": "email"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "A_significant_people",
+      "title": "Section A — Significant people",
+      "repeat_groups": [
+        {
+          "source": "significant_people",
+          "max_rows": 6,
+          "columns": [
+            {"fields": ["SurnameRow1_4", "SurnameRow1_5", "SurnameRow1_6", "SurnameRow1_7", "SurnameRow1_8", "SurnameRow1_9"], "resolver": "attr", "args": {"name": "surname"}},
+            {"fields": ["Given nameRow1_3", "Given nameRow1_4", "Given nameRow1_5", "Given nameRow1_6", "Given nameRow1_7", "Given nameRow1_8"], "resolver": "attr", "args": {"name": "given_name"}},
+            {"fields": ["RelationshipRow1_3", "RelationshipRow1_4", "RelationshipRow1_5", "RelationshipRow1_6", "RelationshipRow1_7", "RelationshipRow1_8"], "resolver": "attr", "args": {"name": "relationship"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_accounts",
+      "title": "Section B — Bank accounts",
+      "repeat_groups": [
+        {
+          "source": "accounts",
+          "max_rows": 5,
+          "columns": [
+            {"field_template": "Name of financial institutionRow{i}", "resolver": "attr", "args": {"name": "institution"}},
+            {"field_template": "Ownership SolejointRow{i}", "resolver": "attr_map", "args": {"name": "ownership", "mapping": {"sole": "Sole", "joint": "Joint"}}},
+            {"field_template": "BSBRow{i}", "resolver": "attr", "args": {"name": "bsb"}},
+            {"field_template": "Account numberRow{i}", "resolver": "attr", "args": {"name": "account_number"}},
+            {"fields": ["fill_73", "fill_74", "fill_75", "fill_76", "fill_77"], "resolver": "attr_money", "args": {"name": "current_balance"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_real_estate",
+      "title": "Section B — Real estate",
+      "repeat_groups": [
+        {
+          "source": "real_estate",
+          "max_rows": 3,
+          "columns": [
+            {"fields": ["Postcode_10", "Postcode_11", "Postcode_12"], "resolver": "attr", "args": {"name": "postcode"}},
+            {"fields": ["Ownership Solejoint tenant  tenants in commonRow1", "Ownership Solejoint tenant  tenants in commonRow2", "Ownership Solejoint tenant  tenants in commonRow3"], "resolver": "attr", "args": {"name": "ownership"}},
+            {"fields": ["Occupancy Managed person tenant vacantRow1", "Occupancy Managed person tenant vacantRow2", "Occupancy Managed person tenant vacantRow3"], "resolver": "attr", "args": {"name": "occupancy"}},
+            {"fields": ["fill_40", "fill_42", "fill_44"], "resolver": "attr_money", "args": {"name": "value"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_investments",
+      "title": "Section B — Investments",
+      "repeat_groups": [
+        {
+          "source": "investments",
+          "max_rows": 4,
+          "columns": [
+            {"field_template": "TypeRow{i}", "resolver": "attr", "args": {"name": "type"}},
+            {"fields": ["Ownership SolejointRow1_2", "Ownership SolejointRow2_2", "Ownership SolejointRow3_2", "Ownership SolejointRow4_2"], "resolver": "attr_map", "args": {"name": "ownership", "mapping": {"sole": "Sole", "joint": "Joint"}}},
+            {"field_template": "DescriptionRow{i}", "resolver": "attr", "args": {"name": "description"}},
+            {"field_template": "UnitsRow{i}", "resolver": "attr", "args": {"name": "units"}},
+            {"fields": ["fill_78", "fill_79", "fill_80", "fill_81"], "resolver": "attr_money", "args": {"name": "amount"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_motor_vehicles",
+      "title": "Section B — Motor vehicles",
+      "repeat_groups": [
+        {
+          "source": "motor_vehicles",
+          "max_rows": 3,
+          "columns": [
+            {"fields": ["TypeRow1_2", "TypeRow2_2", "TypeRow3_2"], "resolver": "attr", "args": {"name": "type"}},
+            {"field_template": "ModelRow{i}", "resolver": "attr", "args": {"name": "model"}},
+            {"field_template": "YearRow{i}", "resolver": "attr", "args": {"name": "year"}},
+            {"fields": ["Ownership SolejointRow1_3", "Ownership SolejointRow2_3", "Ownership SolejointRow3_3"], "resolver": "attr_map", "args": {"name": "ownership", "mapping": {"sole": "Sole", "joint": "Joint"}}},
+            {"fields": ["fill_82", "fill_83", "fill_84"], "resolver": "attr_money", "args": {"name": "value"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "B_accommodation_bond",
+      "title": "Section B — Accommodation bond",
+      "repeat_groups": [
+        {
+          "source": "accommodation_bonds",
+          "max_rows": 1,
+          "columns": [
+            {"fields": ["Facility nameRow1"], "resolver": "attr", "args": {"name": "facility_name"}},
+            {"fields": ["Facility nameRow1_2"], "resolver": "attr", "args": {"name": "facility_address"}},
+            {"fields": ["Date of entryRow1"], "resolver": "attr", "args": {"name": "date_of_entry"}},
+            {"fields": ["Paid  unpaidRow1"], "resolver": "attr", "args": {"name": "paid_unpaid"}},
+            {"fields": ["fill_86"], "resolver": "attr_money", "args": {"name": "amount"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "C_debts",
+      "title": "Section C — Debts and liabilities",
+      "repeat_groups": [
+        {
+          "source": "debts",
+          "max_rows": 5,
+          "columns": [
+            {"fields": ["LenderRow1", "LenderRow2", "LenderRow3", "LenderRow4", "LenderRow5"], "resolver": "attr", "args": {"name": "lender"}},
+            {"fields": ["TypeRow1_3", "TypeRow2_3", "TypeRow3_3", "TypeRow4_2", "TypeRow5"], "resolver": "attr", "args": {"name": "type"}},
+            {"fields": ["TermRow1", "TermRow2", "TermRow3", "TermRow4", "TermRow5"], "resolver": "attr", "args": {"name": "term"}},
+            {"fields": ["fill_88", "fill_89", "fill_90", "fill_91", "fill_92"], "resolver": "attr_money", "args": {"name": "amount"}}
+          ]
+        }
+      ]
+    },
+    {
+      "key": "D_income",
+      "title": "Section D — Forecast income (next 12 months)",
+      "bindings": [
+        {"field": "fill_19", "resolver": "forecast_rollup", "args": {"line": "plan_pensions"}},
+        {"field": "fill_20", "resolver": "forecast_rollup", "args": {"line": "plan_investments"}},
+        {"field": "fill_22", "resolver": "forecast_rollup", "args": {"line": "plan_super"}},
+        {"field": "fill_24", "resolver": "forecast_rollup", "args": {"line": "plan_rental"}},
+        {"field": "fill_26", "resolver": "forecast_rollup", "args": {"line": "plan_salary"}},
+        {"field": "fill_28", "resolver": "forecast_rollup", "args": {"line": "plan_ndis"}}
+      ]
+    },
+    {
+      "key": "D_expenditure",
+      "title": "Section D — Forecast expenditure (next 12 months)",
+      "bindings": [
+        {"field": "fill_31", "resolver": "forecast_rollup", "args": {"line": "plan_accommodation"}},
+        {"field": "fill_32", "resolver": "forecast_rollup", "args": {"line": "plan_personal_living"}},
+        {"field": "fill_34", "resolver": "forecast_rollup", "args": {"line": "plan_property"}},
+        {"field": "fill_36", "resolver": "forecast_rollup", "args": {"line": "plan_utilities"}},
+        {"field": "fill_38", "resolver": "forecast_rollup", "args": {"line": "plan_debt"}},
+        {"field": "fill_40_2", "resolver": "forecast_rollup", "args": {"line": "plan_professional"}},
+        {"field": "fill_42_2", "resolver": "forecast_rollup", "args": {"line": "plan_remuneration"}}
+      ]
+    }
+  ]
+}
