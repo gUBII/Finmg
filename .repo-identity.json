@@ -1,0 +1,25 @@
+{
+  "side": "workspace",
+  "semantic_id": "Finmg",
+  "source_path": "/Users/moofasa/Finmg",
+  "source_artifact": null,
+  "first_commit_sha": "06d935d8c569a72c0eba12dc016b671746ebcdb4",
+  "head_sha": "ea13b76aa1a840881d605582bf1cc97644ab0808",
+  "head_tree_sha": "a27107c695f004db2bd33c31869ef03d8af01b70",
+  "head_commit_date": "2026-03-23T01:11:02+11:00",
+  "branches": [
+    "backup/pre_cleanup_main",
+    "main"
+  ],
+  "tags": [],
+  "remote_urls": [
+    "https://github.com/gUBII/Finmg.git"
+  ],
+  "package_names": {},
+  "content_hash": "sha256:1f79a21faf73b1d07aae0e7092ba93f1f44ae4d7412d3c287c6ed90881831981",
+  "structural_hash": "sha256:fa1bd4ee0ff8ff1d8b50bf00e4825e1329feb85d0e7b6f9e7365de8acc1b2753",
+  "is_empty": false,
+  "has_uncommitted": true,
+  "size_bytes": 11456512,
+  "fingerprinted_at": "2026-06-07T07:16:00Z"
+}

@@ -22,11 +22,13 @@ Add CSV as a second ingestion path alongside PDF. **671 transactions** across 3 
 
 **Format:** `DD/MM/YYYY,"signed_amount",description[,,,,,]`
 
-| File | Rows | Account # | BSB | Account Type | Notes |
-|------|------|-----------|-----|--------------|-------|
-| `living_account(may2025-present).csv` | 358 | 178865319 | 012401 | ACCESS ACCOUNT | Has trailing empty columns |
-| `savings_account(may2025-present).csv` | 29 | 178870011 | 012401 | PROGRESS SAVER | Clean 3-column format |
-| `spendingaccount(may2025-present).csv` | 284 | 437669532 | 013711 | ANZ FIRST | Clean 3-column format |
+> **Account mapping CORRECTED 2026-06-08** (confirmed by Linda Jane Travia and verified against transaction data + ANZ PDF headers). The earlier version of this table had Living/Spending swapped — see [memory: finmg-account-mapping](../.claude/projects/-Users-moofasa-Finmg/memory/finmg_account_mapping.md) for the full forensic.
+
+| File | Rows | Account # | BSB | Account Type (per PDF) | Role |
+|------|------|-----------|-----|------------------------|------|
+| `living_account(may2025-present).csv` | 357 | **437669532** | 013711 | ACCESS ACCOUNT | LIVING — where LACTALIS wages and CTRLINK pension land (the "big" account, ~$27k) |
+| `spending_account(may2025-present).csv` | 283 | **178865319** | 012401 | ACCESS ACCOUNT | SPENDING — daily Visa Debit card purchases (the "small" account, ~$576) |
+| `savings_account(may2025-present).csv` | 28 | 178870011 | 012401 | PROGRESS SAVER | SAVINGS — weekly $200 sweeps from Living, interest credits |
 
 **Amount rules:**
 - Negative = withdrawal (e.g. `"-42.20"`)

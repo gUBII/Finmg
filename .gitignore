@@ -32,3 +32,5 @@ handoff/*.log
 
 # Local assets (large original)
 linda.png
+
+.devfleet-worktrees/
