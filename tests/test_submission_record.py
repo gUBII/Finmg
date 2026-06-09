@@ -66,6 +66,36 @@ def test_plan_maps_to_initial_plan_type(tmp_path):
     assert sub.type == "initial_plan"
 
 
+def test_attachments_match_anz_display_format_dates(tmp_path):
+    """Live ingests store report dates as '8 February 2026', not ISO.
+
+    Lexicographic comparison against the ISO period silently dropped every
+    real statement from the attachments index (caught by E2E 2026-06-10).
+    """
+    conn = _conn(tmp_path)
+    rid = _ron(conn)
+    meta = AccountMeta(account_type="ACCESS ACCOUNT", account_name="GENTILI RENATO",
+                       bsb="013711", account_number="437669532", balance=0.0,
+                       report_start="8 February 2026", report_end="8 June 2026")
+    txns = [Transaction(date=date(2026, 2, 9), description="x", withdrawal=None,
+                        deposit=10.0, account_number="437669532",
+                        account_type="ACCESS ACCOUNT", category="Other", month="2026-02")]
+    insert_pdf_and_transactions(conn, meta, txns, "in_period.pdf", "a" * 64)
+    old = AccountMeta(account_type="ACCESS ACCOUNT", account_name="GENTILI RENATO",
+                      bsb="013711", account_number="999999999", balance=0.0,
+                      report_start="1 January 2024", report_end="31 March 2024")
+    old_txns = [Transaction(date=date(2024, 1, 2), description="x", withdrawal=None,
+                            deposit=10.0, account_number="999999999",
+                            account_type="ACCESS ACCOUNT", category="Other", month="2024-01")]
+    insert_pdf_and_transactions(conn, old, old_txns, "out_of_period.pdf", "b" * 64)
+
+    sub = persist_submission(conn, "annual_accounts", rid, b"x",
+                             "2025-06-10", "2026-06-10", attachments_root=tmp_path / "a")
+    filenames = {a.filename for a in list_attachments(conn, sub.id)}
+    assert "in_period.pdf" in filenames
+    assert "out_of_period.pdf" not in filenames
+
+
 def test_attachments_index_includes_statements_in_period(tmp_path):
     conn = _conn(tmp_path)
     rid = _ron(conn)

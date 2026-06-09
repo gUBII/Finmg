@@ -13,6 +13,7 @@ import hashlib
 import json
 import sqlite3
 from dataclasses import replace
+from datetime import datetime
 from pathlib import Path
 
 from src.db.queries import get_uploaded_pdfs
@@ -38,11 +39,30 @@ def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _coerce_iso(value: str | None) -> str | None:
+    """Report dates are stored as ANZ display text ('8 February 2026') by the
+    PDF/CSV ingest paths, or as ISO in older rows. Normalise to ISO so they
+    compare correctly against the ISO period bounds."""
+    if not value:
+        return None
+    for fmt in ("%Y-%m-%d", "%d %B %Y"):
+        try:
+            return datetime.strptime(value.strip(), fmt).date().isoformat()
+        except ValueError:
+            continue
+    return None
+
+
 def _statements_in_period(conn, period_start: str | None, period_end: str | None) -> list[dict]:
-    """Ingested ANZ statements whose reporting window overlaps the period."""
+    """Ingested ANZ statements whose reporting window overlaps the period.
+
+    A statement with unparseable report dates is INCLUDED: over-attaching a
+    source statement is safer for an NCAT submission than silently omitting it.
+    """
     out = []
     for pdf in get_uploaded_pdfs(conn):
-        rs, re_ = pdf.get("report_start"), pdf.get("report_end")
+        rs = _coerce_iso(pdf.get("report_start"))
+        re_ = _coerce_iso(pdf.get("report_end"))
         if period_start and period_end and rs and re_:
             if re_ < period_start or rs > period_end:
                 continue
