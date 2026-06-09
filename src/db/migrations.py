@@ -69,7 +69,12 @@ def backup_db(db_path: Path, backup_dir: Path = BACKUP_DIR) -> Path | None:
 
 
 def apply_migration(conn: sqlite3.Connection, version: str, sql_path: Path) -> None:
-    """Apply one migration file inside a transaction and record its version."""
+    """Apply one migration file inside a transaction and record its version.
+
+    SQLite implicitly commits some DDL outside transactions, so we rely on
+    `BEGIN ... COMMIT` and a single `executescript` for the SQL body, followed
+    by an explicit insert into `schema_migrations`.
+    """
     sql_text = sql_path.read_text(encoding="utf-8")
     conn.executescript(sql_text)
     conn.execute(
