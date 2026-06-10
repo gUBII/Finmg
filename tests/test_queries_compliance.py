@@ -4,6 +4,7 @@ acknowledgements, attachments, gifts, consultation."""
 from __future__ import annotations
 
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -29,6 +30,7 @@ from src.db.queries_compliance import (
     list_field_rationales,
     list_gifts,
     list_submissions,
+    update_gift,
     update_submission,
     upsert_acknowledgement,
     upsert_compliance_setting,
@@ -262,6 +264,34 @@ def test_gift_insert_list(tmp_path):
     gifts = list_gifts(conn, rid)
     assert len(gifts) == 1
     assert gifts[0].section_76_assessment == "compliant"
+
+
+def test_gift_update_records_actual(tmp_path):
+    conn = _conn(tmp_path)
+    rid = _ron(conn)
+    gid = insert_gift(
+        conn,
+        Gift(
+            managed_person_id=rid,
+            occasion="christmas",
+            occasion_date="2026-12-25",
+            planned_amount=200.0,
+            section_76_assessment="compliant",
+        ),
+    )
+    original = list_gifts(conn, rid)[0]
+    update_gift(conn, replace(original, actual_amount=185.5, actual_transaction_id=None))
+    updated = list_gifts(conn, rid)[0]
+    assert updated.id == gid
+    assert updated.actual_amount == 185.5
+    assert updated.planned_amount == 200.0  # untouched
+
+
+def test_gift_update_requires_id(tmp_path):
+    conn = _conn(tmp_path)
+    rid = _ron(conn)
+    with pytest.raises(ValueError):
+        update_gift(conn, Gift(managed_person_id=rid, planned_amount=10.0))
 
 
 # --- consultation ----------------------------------------------------------

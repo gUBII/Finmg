@@ -297,6 +297,20 @@ def insert_gift(conn: sqlite3.Connection, gift: Gift) -> int:
     return cur.lastrowid
 
 
+def update_gift(conn: sqlite3.Connection, gift: Gift) -> None:
+    """Update a gift row in full from its DTO (e.g. recording the actual spend)."""
+    if gift.id is None:
+        raise ValueError("gift.id is required for update")
+    data = asdict(gift)
+    gift_id = data.pop("id")
+    assignments = ", ".join(f"{col} = ?" for col in data)
+    conn.execute(
+        f"UPDATE gifts SET {assignments} WHERE id = ?",
+        (*data.values(), gift_id),
+    )
+    conn.commit()
+
+
 def get_gift(conn: sqlite3.Connection, gift_id: int) -> Gift | None:
     row = conn.execute("SELECT * FROM gifts WHERE id = ?", (gift_id,)).fetchone()
     return _row_to_dto(row, Gift) if row else None

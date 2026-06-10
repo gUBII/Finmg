@@ -18,6 +18,7 @@ from src.views.compliance import render_compliance_view
 from src.views.dashboard import render_dashboard_view
 from src.views.export import render_export_view
 from src.views.forecast import render_forecast_view
+from src.views.gifts import render_gifts_view
 from src.views.identity import render_identity_view
 from src.views.inventory import render_inventory_view
 from src.views.login import render_login_view, resolve_profile_image
@@ -31,6 +32,7 @@ VIEW_OPTIONS = [
     "Identity",
     "Inventory",
     "Forecast",
+    "Gifts",
     "Submissions",
     "Compliance",
     "Transactions",
@@ -61,6 +63,15 @@ def _render_sidebar() -> str:
     if current_view not in VIEW_OPTIONS:
         current_view = VIEW_OPTIONS[0]
 
+    # Programmatic navigation (e.g. dashboard quick-links set `pending_view`):
+    # widget state must be written BEFORE the radio instantiates this run.
+    pending = st.session_state.pop("pending_view", None)
+    if pending in VIEW_OPTIONS:
+        current_view = pending
+        st.session_state.nav_radio = pending
+    if "nav_radio" not in st.session_state:
+        st.session_state.nav_radio = current_view
+
     with st.sidebar:
         profile_image = resolve_profile_image()
         if profile_image is not None:
@@ -70,11 +81,7 @@ def _render_sidebar() -> str:
         st.caption("Private household finance dashboard")
         st.divider()
 
-        selected_view = st.radio(
-            "Navigate",
-            VIEW_OPTIONS,
-            index=VIEW_OPTIONS.index(current_view),
-        )
+        selected_view = st.radio("Navigate", VIEW_OPTIONS, key="nav_radio")
 
         st.divider()
         st.caption("Period: Jun 2025 – Jun 2026")
@@ -82,6 +89,7 @@ def _render_sidebar() -> str:
         if st.button("Log Out", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.current_view = VIEW_OPTIONS[0]
+            st.session_state.pending_view = VIEW_OPTIONS[0]
             st.rerun()
 
     st.session_state.current_view = selected_view
@@ -109,6 +117,7 @@ def main() -> None:
         "Identity": render_identity_view,
         "Inventory": render_inventory_view,
         "Forecast": render_forecast_view,
+        "Gifts": render_gifts_view,
         "Submissions": render_submission_view,
         "Compliance": render_compliance_view,
         "Transactions": render_transactions_view,

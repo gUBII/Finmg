@@ -1,6 +1,8 @@
-"""Analytics dashboard with KPIs, month status grid, and plotly charts."""
+"""Analytics dashboard with NCAT readiness strip, KPIs, month grid, and charts."""
 
 from __future__ import annotations
+
+from datetime import date, timedelta
 
 import pandas as pd
 import plotly.express as px
@@ -16,6 +18,12 @@ from src.db.queries import (
     get_monthly_totals,
     get_transaction_count,
 )
+from src.db.queries_compliance import list_gifts
+from src.db.queries_estate import bootstrap_managed_person_if_empty
+from src.services.artifacts.resolvers import Ctx
+from src.services.artifacts.spec import load_spec
+from src.services.audit import audit_artifact
+from src.services.compliance.engine import evaluate_compliance
 
 # Fiscal year months Jun 2025 → Jun 2026
 FISCAL_MONTHS = [
@@ -78,12 +86,75 @@ def _render_month_status_grid(conn) -> None:
     st.dataframe(styled, use_container_width=True, hide_index=True)
 
 
+def _render_ncat_strip(conn) -> None:
+    """Compliance + submission readiness at a glance, fed by the S5 engines."""
+    mp_id = bootstrap_managed_person_if_empty(conn, "GENTILI", "Renato")
+    today = date.today()
+    trailing_start = (today - timedelta(days=365)).isoformat()
+    forward_end = (today.replace(year=today.year + 1) - timedelta(days=1)).isoformat()
+
+    compliance = evaluate_compliance(
+        conn, mp_id, trailing_start, today.isoformat(), as_of=today.isoformat()
+    )
+    accounts_report = audit_artifact(
+        conn,
+        load_spec("annual_accounts"),
+        Ctx(conn=conn, managed_person_id=mp_id,
+            period_start=trailing_start, period_end=today.isoformat()),
+    )
+    plan_report = audit_artifact(
+        conn,
+        load_spec("plan"),
+        Ctx(conn=conn, managed_person_id=mp_id,
+            period_start=today.isoformat(), period_end=forward_end),
+    )
+    gifts = list_gifts(conn, mp_id)
+    flagged_gifts = sum(1 for g in gifts if g.section_76_assessment != "compliant")
+
+    st.subheader("NCAT readiness")
+    c1, c2, c3, c4, c5 = st.columns(5)
+    c1.metric("Compliance blocks", str(len(compliance.blocking)))
+    c2.metric("Warnings", str(len(compliance.warnings)),
+              help="Includes 🔮 forward-looking forecast warnings.")
+    c3.metric("Accounts ready", f"{accounts_report.completeness * 100:.0f}%",
+              help="Annual Accounts artifact — fields filled or rationalised.")
+    c4.metric("Plan ready", f"{plan_report.completeness * 100:.0f}%",
+              help="Private Manager's Plan artifact — fields filled or rationalised.")
+    c5.metric("Gift flags", f"{flagged_gifts} of {len(gifts)}")
+
+    if compliance.is_blocked:
+        st.error(
+            f"{len(compliance.blocking)} enforced rule(s) failing — submission blocked: "
+            + "; ".join(g.finding.title for g in compliance.blocking)
+        )
+    elif compliance.warnings:
+        forecast_n = len(compliance.forecast_findings)
+        suffix = f" ({forecast_n} 🔮 forecast)" if forecast_n else ""
+        st.warning(
+            f"{len(compliance.warnings)} compliance warning(s){suffix} — review in Compliance."
+        )
+
+    nav1, nav2, nav3 = st.columns(3)
+    quick_links = (
+        (nav1, "Open Compliance →", "Compliance", "dash_nav_compliance"),
+        (nav2, "Open Submissions →", "Submissions", "dash_nav_submissions"),
+        (nav3, "Open Gifts →", "Gifts", "dash_nav_gifts"),
+    )
+    for col, label, view, key in quick_links:
+        if col.button(label, key=key, use_container_width=True):
+            st.session_state.pending_view = view
+            st.rerun()
+
+
 def render_dashboard_view() -> None:
     """Render the analytics dashboard backed by SQLite."""
     st.title("Dashboard")
 
     conn = get_connection()
     init_db(conn)
+
+    _render_ncat_strip(conn)
+    st.divider()
 
     txn_count = get_transaction_count(conn)
     if txn_count == 0:
