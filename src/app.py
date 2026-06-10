@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.db.database import get_connection, init_db
 from src.views.compliance import render_compliance_view
+from src.views.consultation import render_consultation_view
 from src.views.dashboard import render_dashboard_view
 from src.views.export import render_export_view
 from src.views.forecast import render_forecast_view
@@ -22,6 +23,7 @@ from src.views.gifts import render_gifts_view
 from src.views.identity import render_identity_view
 from src.views.inventory import render_inventory_view
 from src.views.login import render_login_view, resolve_profile_image
+from src.views.one_off import render_one_off_view
 from src.views.submission import render_submission_view
 from src.views.transactions import render_transactions_view
 from src.views.upload import render_upload_view
@@ -33,6 +35,8 @@ VIEW_OPTIONS = [
     "Inventory",
     "Forecast",
     "Gifts",
+    "One-off Events",
+    "Consultations",
     "Submissions",
     "Compliance",
     "Transactions",
@@ -118,6 +122,8 @@ def main() -> None:
         "Inventory": render_inventory_view,
         "Forecast": render_forecast_view,
         "Gifts": render_gifts_view,
+        "One-off Events": render_one_off_view,
+        "Consultations": render_consultation_view,
         "Submissions": render_submission_view,
         "Compliance": render_compliance_view,
         "Transactions": render_transactions_view,

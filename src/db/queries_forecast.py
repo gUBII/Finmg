@@ -15,7 +15,7 @@ from __future__ import annotations
 import sqlite3
 from dataclasses import asdict, fields, replace
 
-from src.models.forecast import Forecast, ForecastCategory
+from src.models.forecast import Forecast, ForecastCategory, OneOffEvent
 
 # section → which transactions column to sum
 _SECTION_TO_COLUMN = {
@@ -216,3 +216,72 @@ def compute_actual_value(
         (category_name, date_from, date_to),
     ).fetchone()
     return float(row["total"] or 0.0)
+
+
+# ---------------------------------------------------------------------------
+# one_off_events (Section E) + one_off_dismissals (candidate triage, 007)
+# ---------------------------------------------------------------------------
+
+def insert_one_off_event(conn: sqlite3.Connection, event: OneOffEvent) -> int:
+    data = asdict(event)
+    data.pop("id", None)
+    cols = ", ".join(data.keys())
+    placeholders = ", ".join("?" for _ in data)
+    cur = conn.execute(
+        f"INSERT INTO one_off_events ({cols}) VALUES ({placeholders})",
+        tuple(data.values()),
+    )
+    conn.commit()
+    return cur.lastrowid
+
+
+def update_one_off_event(conn: sqlite3.Connection, event: OneOffEvent) -> None:
+    if event.id is None:
+        raise ValueError("event.id is required for update")
+    data = asdict(event)
+    event_id = data.pop("id")
+    assignments = ", ".join(f"{col} = ?" for col in data)
+    conn.execute(
+        f"UPDATE one_off_events SET {assignments}, updated_at = datetime('now') "
+        "WHERE id = ?",
+        (*data.values(), event_id),
+    )
+    conn.commit()
+
+
+def list_one_off_events(
+    conn: sqlite3.Connection,
+    managed_person_id: int,
+    status: str | None = None,
+) -> list[OneOffEvent]:
+    sql = "SELECT * FROM one_off_events WHERE managed_person_id = ?"
+    params: list = [managed_person_id]
+    if status is not None:
+        sql += " AND status = ?"
+        params.append(status)
+    sql += " ORDER BY date_occurred IS NULL, date_occurred, id"
+    rows = conn.execute(sql, params).fetchall()
+    return [_row_to_dto(r, OneOffEvent) for r in rows]
+
+
+def insert_one_off_dismissal(
+    conn: sqlite3.Connection,
+    transaction_id: int,
+    reason: str | None = None,
+    recorded_by: str | None = None,
+) -> None:
+    """Mark a candidate transaction as reviewed-and-not-a-one-off (idempotent)."""
+    conn.execute(
+        "INSERT INTO one_off_dismissals (transaction_id, reason, recorded_by) "
+        "VALUES (?, ?, ?) "
+        "ON CONFLICT(transaction_id) DO UPDATE SET "
+        "  reason = excluded.reason, recorded_by = excluded.recorded_by, "
+        "  recorded_at = datetime('now')",
+        (transaction_id, reason, recorded_by),
+    )
+    conn.commit()
+
+
+def dismissed_transaction_ids(conn: sqlite3.Connection) -> set[int]:
+    rows = conn.execute("SELECT transaction_id FROM one_off_dismissals").fetchall()
+    return {r["transaction_id"] for r in rows}
