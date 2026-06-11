@@ -24,6 +24,7 @@ from src.services.one_off import (
     dismiss_candidate,
     record_one_off_event,
 )
+from src.ui.help import page_header, section_header, widget_help
 
 STATUS_LABELS = {
     "anticipated": "Anticipated",
@@ -33,7 +34,7 @@ STATUS_LABELS = {
 
 
 def _render_candidates(conn, mp_id: int) -> None:
-    st.subheader("Candidates for review")
+    section_header("Candidates for review", "one_off.candidates")
     st.caption(
         "Large unusual transactions (internal transfers and routine categories "
         "like the pension and rent are excluded). Confirm what belongs in "
@@ -45,6 +46,7 @@ def _render_candidates(conn, mp_id: int) -> None:
         step=100.0,
         value=DEFAULT_THRESHOLD,
         key="oneoff_threshold",
+        help=widget_help("one_off.threshold"),
     )
     candidates = detect_candidates(conn, threshold=threshold)
     if not candidates:
@@ -88,7 +90,7 @@ def _render_candidates(conn, mp_id: int) -> None:
 
 
 def _render_events(conn, mp_id: int) -> None:
-    st.subheader("Section E events")
+    section_header("Section E events", "one_off.events")
     events = list_one_off_events(conn, mp_id)
     if not events:
         st.info("No one-off events recorded yet.")
@@ -106,11 +108,11 @@ def _render_events(conn, mp_id: int) -> None:
     styled = df.style.format(
         {"Amount": lambda v: "—" if pd.isna(v) else f"${v:,.2f}"}
     )
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    st.dataframe(styled, width="stretch", hide_index=True)
 
 
 def _render_add_form(conn, mp_id: int) -> None:
-    st.subheader("Add an anticipated / proposed event")
+    section_header("Add an anticipated / proposed event", "one_off.add")
     st.caption(
         "Future one-offs with no bank transaction yet (e.g. planned surgery, "
         "expected refund). §14 events may need NSWTG approval before proceeding "
@@ -156,7 +158,7 @@ def _render_add_form(conn, mp_id: int) -> None:
 
 
 def render_one_off_view() -> None:
-    st.title("One-off Events")
+    page_header("One-off Events", "one_off")
     st.caption(
         "Plan Section E — one-off receipts and expenditures, detected from the "
         "bank ledger or added ahead of time."
