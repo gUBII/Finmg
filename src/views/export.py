@@ -17,11 +17,12 @@ from src.db.queries import (
 from src.pipeline.merger import merge_accounts
 from src.pipeline.month_splitter import split_by_month
 from src.pipeline.excel_writer import write_budget_excel
+from src.ui.help import page_header, section_header
 
 
 def render_export_view() -> None:
     """Render export controls backed by SQLite."""
-    st.title("Export")
+    page_header("Export", "export")
     st.caption("Generate monthly budget workbooks from your stored transactions.")
 
     conn = get_connection()
@@ -34,7 +35,7 @@ def render_export_view() -> None:
         return
 
     # Month checkboxes
-    st.subheader("Select Months")
+    section_header("Select Months", "export.select_months")
     selected_months = []
     cols = st.columns(min(len(months), 6))
     for i, month in enumerate(months):
@@ -49,7 +50,7 @@ def render_export_view() -> None:
         conn.close()
         return
 
-    if st.button("Generate Excel Workbooks", type="primary", use_container_width=True):
+    if st.button("Generate Excel Workbooks", type="primary", width="stretch"):
         exported_files = []
 
         for month in sorted(selected_months):
@@ -80,7 +81,7 @@ def render_export_view() -> None:
     # Show downloads
     exported_files = st.session_state.get("exported_files", [])
     if exported_files:
-        st.subheader("Downloads")
+        section_header("Downloads", "export.downloads")
 
         for filepath in exported_files:
             path = Path(filepath)
@@ -115,7 +116,7 @@ def render_export_view() -> None:
                 zip_buffer.getvalue(),
                 "FinMg_Exports.zip",
                 "application/zip",
-                use_container_width=True,
+                width="stretch",
                 key="dl_zip",
             )
 
