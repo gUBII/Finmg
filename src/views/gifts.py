@@ -18,6 +18,7 @@ from src.db.queries_compliance import list_gifts
 from src.db.queries_estate import bootstrap_managed_person_if_empty, list_significant_people
 from src.models.compliance import Gift
 from src.services.gifts import record_gift_actual
+from src.ui.help import page_header, section_header, widget_help
 
 OCCASION_LABELS = {
     "birthday": "Birthday",
@@ -69,7 +70,7 @@ def _ledger_frame(gifts: list[Gift], names: dict[int, str]) -> pd.DataFrame:
 
 
 def render_gifts_view() -> None:
-    st.title("Gifts")
+    page_header("Gifts", "gifts")
     st.caption(
         "Section 76 gift ledger — planned estimates from the submitted Plan, "
         "actuals recorded as gifts are given. Flags come from the compliance engine."
@@ -101,7 +102,7 @@ def render_gifts_view() -> None:
     k4.metric("§76 flagged", f"{len(flagged)} of {len(gifts)}")
 
     # ----------------------------------------------------------------- ledger
-    st.subheader("Ledger")
+    section_header("Ledger", "gifts.ledger")
     df = _ledger_frame(gifts, names)
 
     def _style_flag(val):
@@ -112,7 +113,7 @@ def render_gifts_view() -> None:
     styled = df.style.map(_style_flag, subset=["§76"]).format(
         {"Planned": "${:,.2f}", "Actual": lambda v: "—" if pd.isna(v) else f"${v:,.2f}"}
     )
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    st.dataframe(styled, width="stretch", hide_index=True)
 
     # ------------------------------------------------------------ flag detail
     if flagged:
@@ -126,7 +127,7 @@ def render_gifts_view() -> None:
                 )
 
     # ---------------------------------------------------------- record actual
-    st.subheader("Record an actual")
+    section_header("Record an actual", "gifts.record_actual")
     st.caption(
         "When a planned gift is actually given, record the real amount here — "
         "the change is written to the immutable audit log."
@@ -156,7 +157,7 @@ def render_gifts_view() -> None:
         st.rerun()
 
     # ------------------------------------------------------------------ chart
-    st.subheader("Planned vs actual by recipient")
+    section_header("Planned vs actual by recipient", "gifts.chart")
     by_recipient = (
         df.assign(Actual=df["Actual"].fillna(0.0).astype(float))
         .groupby("Recipient", as_index=False)[["Planned", "Actual"]]
@@ -179,6 +180,6 @@ def render_gifts_view() -> None:
         height=max(350, 28 * by_recipient["Recipient"].nunique()),
         margin=dict(t=20, b=20),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     conn.close()
