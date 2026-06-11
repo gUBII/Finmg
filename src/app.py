@@ -18,6 +18,7 @@ from src.ui.help import render_nav_help
 from src.views.compliance import render_compliance_view
 from src.views.consultation import render_consultation_view
 from src.views.dashboard import render_dashboard_view
+from src.views.estate_changes import render_estate_changes_view
 from src.views.export import render_export_view
 from src.views.forecast import render_forecast_view
 from src.views.gifts import render_gifts_view
@@ -38,6 +39,7 @@ VIEW_OPTIONS = [
     "Gifts",
     "One-off Events",
     "Consultations",
+    "Changes in Estate",
     "Submissions",
     "Compliance",
     "Transactions",
@@ -126,6 +128,7 @@ def main() -> None:
         "Gifts": render_gifts_view,
         "One-off Events": render_one_off_view,
         "Consultations": render_consultation_view,
+        "Changes in Estate": render_estate_changes_view,
         "Submissions": render_submission_view,
         "Compliance": render_compliance_view,
         "Transactions": render_transactions_view,

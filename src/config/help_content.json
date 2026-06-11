@@ -35,7 +35,6 @@
   "nav.Export": {
     "what": "Download the monthly Excel budget files."
   },
-
   "dashboard": {
     "what": "Your home page. It shows how ready you are for NSW Trustee & Guardian reporting, the headline money numbers, and whether any bank statements are missing.",
     "source": "Everything here is calculated live from the transactions and estate details stored in this app — nothing is typed in by hand.",
@@ -63,7 +62,6 @@
   "dashboard.months_complete": {
     "what": "How many of the 13 fiscal months have statements loaded for all three accounts."
   },
-
   "upload": {
     "what": "Where bank statements enter the system. Drop in ANZ Transaction Report PDFs and press Process — the app reads every transaction, sorts it into a budget category, and stores it permanently.",
     "source": "Only ANZ statement PDFs for Ron's three accounts are expected. Each file is fingerprinted, so uploading the same statement twice is harmless — it is detected and skipped.",
@@ -82,7 +80,6 @@
     "source": "A copy of each file is kept in the app's private data folder; the fingerprint stops the same statement loading twice.",
     "do": "If Withdrawals or Deposits showed MISMATCH when a file was processed, the statement did not parse cleanly and its numbers cannot be trusted yet — flag it to Farhan."
   },
-
   "transactions": {
     "what": "Every single bank transaction the app has read, in one searchable table. This is the raw material behind the Dashboard, the Forecast actuals, the gift checks, and the NSWTG forms.",
     "source": "Read straight from the uploaded ANZ statements. The app guesses each transaction's category from its description; the guess is usually right but not always.",
@@ -96,7 +93,6 @@
     "source": "Category choices come from the budget template list, plus Internal Transfer for money moving between Ron's own accounts.",
     "do": "Pick the right category from the dropdown in any row, then press Save Changes below. Every change is recorded with what it was before, so there is always an audit trail."
   },
-
   "gifts": {
     "what": "The gift ledger. NSW law (Guardianship/Trustee rules, §76) only allows gifts from Ron's estate within strict limits, so every planned and actual gift is tracked here.",
     "source": "The planned amounts come from the handwritten gift forecast in the Plan you submitted (48 gifts). Flags are raised automatically by the compliance engine.",
@@ -117,7 +113,6 @@
     "what": "A bar chart of planned (grey) versus actually given (green) for each recipient.",
     "do": "If a green bar grows past its grey bar, that person has received more than planned — worth a note before NSWTG asks."
   },
-
   "one_off": {
     "what": "One-off receipts and expenditures — the big, unusual money events that are not part of normal weekly living. These fill Section E of the Plan and feed the change-in-circumstances rules.",
     "source": "The app watches the bank ledger for large unusual transactions and queues them below for your decision; future events with no bank transaction yet are added by hand.",
@@ -141,7 +136,6 @@
     "do": "Use status Anticipated for things likely to happen, Proposed for things needing a decision. Some proposed events need NSWTG approval before spending — the Compliance page flags those.",
     "ref": "NSWTG handbook §14"
   },
-
   "consultations": {
     "what": "Your record of consulting Ron and the significant people before big decisions. NSWTG expects a private manager to consult and to be able to show they did.",
     "source": "Every entry you log here is also written to the permanent audit log.",
@@ -156,7 +150,6 @@
     "what": "Every consultation logged so far, newest first.",
     "do": "Before a submission, skim this list — if a big decision from the year is missing, log it now with the real date it happened."
   },
-
   "forecast": {
     "what": "Ron's 12-month money plan — what you expect to come in and go out, category by category. This becomes Section D of the Private Manager's Plan.",
     "source": "The Actual column is what really happened over the previous 12 months of bank statements; the Forecast column starts as a copy of it and is yours to adjust.",
@@ -174,7 +167,6 @@
     "what": "Expected money out, in the same categories as the budget template.",
     "do": "Adjust any category you know will change and give the reason. The total here is what NSWTG compares future spending against."
   },
-
   "identity": {
     "what": "The who's-who of the management order: Ron's identity, your details as his manager, and the significant people in his life. This fills Section A of the Plan.",
     "source": "Entered and kept up to date by you — the bank statements cannot supply these details.",
@@ -193,7 +185,6 @@
     "what": "Family and friends who matter to Ron's affairs — the people you consult and the gift recipients. Status tracks whether each person is active, estranged, or deceased.",
     "do": "Edit details in the table and press Save Changes, or add a new person below. The Consultations and Gifts pages both draw their name lists from here."
   },
-
   "inventory": {
     "what": "Everything Ron owns and owes: bank accounts, property, investments, vehicles, the aged-care accommodation bond, and any debts. This fills Sections B and C of the Plan.",
     "source": "The bank accounts arrive automatically from uploaded statements; everything else is entered here from the real documents.",
@@ -227,7 +218,6 @@
     "what": "Anything Ron owes: outstanding fees, loans, or unpaid bills (Section C of the Plan).",
     "do": "Mark each item paid or unpaid and keep amounts current. An empty list is fine if it is genuinely true."
   },
-
   "submissions": {
     "what": "Where the actual NSWTG paperwork is produced. The app fills the official PDF forms — the Annual Accounts (last year's actuals) and the Private Manager's Plan (next year's forecast) — straight from the data on the other pages.",
     "source": "Every field is pulled live from Identity, Inventory, Forecast, Gifts, One-off Events, and the bank transactions. Nothing is retyped.",
@@ -249,7 +239,6 @@
     "what": "Creates the filled official PDF exactly as NSWTG expects it.",
     "do": "Download to check it, and use 'Save to submissions register' when you lodge — that keeps a permanent fingerprinted copy with the bank statements for the period attached, which is your proof of what was sent."
   },
-
   "compliance": {
     "what": "The NSWTG rule book, live. Each rule from the private-manager handbook is checked against Ron's actual data, continuously.",
     "source": "Rules cover things like keeping estate money in Ron's sole name, the §76 gift limits, reportable changes in the estate, and yearly investment reviews.",
@@ -268,7 +257,6 @@
     "what": "Early warnings about where things are heading: gift spending on track to pass the §76 limit, a category running well over forecast, or the estate draining faster than planned.",
     "do": "These are not breaches yet — they exist so you can adjust course months before a real problem appears in the Annual Accounts."
   },
-
   "export": {
     "what": "Turns the stored transactions into the monthly Excel budget workbooks (the same format as the original handwritten budget template).",
     "source": "One workbook per month, built from the categorised transactions across all three accounts.",
@@ -280,5 +268,34 @@
   "export.downloads": {
     "what": "The workbooks generated in this session, ready to save to your computer.",
     "do": "Files are also kept in the app's exports folder, so regenerating is always safe."
+  },
+  "nav.Changes in Estate": {
+    "what": "Ask NSWTG for permission before big changes to Ron's estate — selling property, paying a bond, investing, legal action."
+  },
+  "estate_changes": {
+    "what": "The Change-in-Estate workflow. Some changes to Ron's estate are big enough that NSWTG must approve them BEFORE they happen — the handbook lists 12 trigger events (§14). This page covers all 18 categories on the form's Appendix A, shows you exactly which documents NSWTG wants for each, and tracks every proposal from draft to decision.",
+    "source": "Handbook §14 (Appendix 2) and the submission form's Appendix A, sections A–R.",
+    "do": "Before committing to any significant change — selling the car, paying an aged-care bond, renovating, legal action — record it here first and check the document list. If you're unsure whether something needs approval, record it anyway and ask NSWTG.",
+    "ref": "Handbook §14; NSW Trustee and Guardian Act 2009"
+  },
+  "estate_changes.propose": {
+    "what": "Start a new proposal. Choose the category and the panel shows what the change means, whether it's one of the 12 handbook triggers, and the documents NSWTG requires.",
+    "source": "Categories and document lists come from Appendix A of the official submission form.",
+    "do": "Describe the change in plain words, enter the dollar amount, tick affordability only once you've checked the estate can pay for it, and note what family members think (the form asks for their views).",
+    "ref": "Form Appendix A §9.0–9.1"
+  },
+  "estate_changes.register": {
+    "what": "Every proposal you've recorded, with its current status: Draft (preparing), Submitted (waiting on NSWTG/NCAT), Approved, or Rejected.",
+    "source": "Saved from the form above. Status changes and dates are written to the audit log automatically.",
+    "do": "When you post or email the form to NSWTG, press 'Mark as submitted'. When the decision letter arrives, record the approval or rejection and type in the reference number from the letter. A rejected proposal can be fixed and resubmitted.",
+    "ref": "Handbook §14"
+  },
+  "estate_changes.subsection": {
+    "what": "The 18 kinds of change on the form, A to R.",
+    "do": "Pick the closest match; use R — Miscellaneous if nothing fits."
+  },
+  "estate_changes.views": {
+    "what": "NSWTG asks what family and significant people think of the change.",
+    "do": "One person per line, separating name, relationship and their view with | — get views in writing where possible."
   }
 }
