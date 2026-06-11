@@ -23,12 +23,13 @@ from src.services.compliance.engine import (
     set_rule_mode,
 )
 from src.services.compliance.rules import all_rules
+from src.ui.help import page_header, section_header
 
 _MODES = [OFF, WARN, ENFORCE]
 
 
 def render_compliance_view() -> None:
-    st.title("Compliance")
+    page_header("Compliance", "compliance")
     st.caption("Handbook-sourced rules. Toggle enforcement; review live findings.")
 
     conn = get_connection()
@@ -50,7 +51,7 @@ def render_compliance_view() -> None:
         st.success("No enforced rules failing — submission not blocked.")
 
     # ---------------------------------------------------------------- toggles
-    st.subheader("Rules")
+    section_header("Rules", "compliance.rules")
     for rule in all_rules():
         current = effective_mode(conn, rule.key)
         col1, col2 = st.columns([3, 2])
@@ -70,7 +71,7 @@ def render_compliance_view() -> None:
                 st.rerun()
 
     # --------------------------------------------------------------- findings
-    st.subheader("Current findings")
+    section_header("Current findings", "compliance.findings")
     state = result.state_findings
     if not state:
         st.info("No current state findings.")
@@ -78,7 +79,7 @@ def render_compliance_view() -> None:
         render = st.error if g.mode == ENFORCE else st.warning
         render(f"**[{g.mode}] {g.finding.handbook_ref} — {g.finding.title}**\n\n{g.finding.detail}")
 
-    st.subheader("🔮 Forecast — early warnings")
+    section_header("🔮 Forecast — early warnings", "compliance.forecast_warnings")
     forecast = result.forecast_findings
     if not forecast:
         st.info("No anomalies projected for the current period.")
