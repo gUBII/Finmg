@@ -1,10 +1,67 @@
+# FinMg theme — "calm ledger": warm paper surfaces, deep teal primary,
+# serif headings. Semantic color tokens (green/orange/red) are the single
+# source of truth for status colors; views reference them via st.badge and
+# :color[] markdown rather than hardcoding hex values.
+
 [theme]
 base = "light"
 primaryColor = "#2F6B60"
 backgroundColor = "#F7F3EB"
 secondaryBackgroundColor = "#EAE3D4"
 textColor = "#1F2A2E"
-font = "sans serif"
+borderColor = "#D9CFBB"
+showWidgetBorder = true
+showSidebarBorder = true
+
+font = "sans-serif"
+headingFont = "Georgia, 'Times New Roman', serif"
+baseRadius = "10px"
+buttonRadius = "8px"
+
+linkColor = "#2F6B60"
+linkUnderline = false
+
+dataframeHeaderBackgroundColor = "#EAE3D4"
+dataframeBorderColor = "#D9CFBB"
+
+metricValueFontWeight = 600
+
+# Semantic status tokens (st.badge / :color[] / st.success-warning-error)
+greenColor = "#1E7B4F"
+greenBackgroundColor = "#E2EFE5"
+greenTextColor = "#175E3D"
+orangeColor = "#B45309"
+orangeBackgroundColor = "#F6E9D4"
+orangeTextColor = "#8A3E07"
+redColor = "#B3261E"
+redBackgroundColor = "#F7E2E0"
+redTextColor = "#8C1D17"
+blueColor = "#1D5D8A"
+blueBackgroundColor = "#E0EAF2"
+blueTextColor = "#174A6E"
+grayColor = "#6B7066"
+grayBackgroundColor = "#ECE7DC"
+grayTextColor = "#4F544B"
+violetColor = "#6D5A8E"
+violetBackgroundColor = "#EBE5F2"
+violetTextColor = "#554570"
+
+# Native-chart categorical palette, harmonised with the paper/teal direction.
+chartCategoricalColors = [
+  "#2F6B60", "#B45309", "#1D5D8A", "#8C5A3B",
+  "#6D5A8E", "#1E7B4F", "#B3261E", "#6B7066",
+]
+
+[theme.sidebar]
+backgroundColor = "#EFE9DB"
+secondaryBackgroundColor = "#E3DAC5"
+borderColor = "#D2C7AE"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
 
 [server]
 runOnSave = true
