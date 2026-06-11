@@ -20,6 +20,7 @@ from src.services.artifacts.spec import load_spec
 from src.services.audit import audit_artifact, record_rationale
 from src.services.compliance.engine import evaluate_compliance
 from src.services.submission_record import persist_submission
+from src.ui.help import page_header, section_header, widget_help
 
 ARTIFACTS = {
     "annual_accounts": "Annual Accounts — past-year actuals",
@@ -36,7 +37,7 @@ def _default_period(artifact_key: str) -> tuple[date, date]:
 
 
 def render_submission_view() -> None:
-    st.title("Submissions")
+    page_header("Submissions", "submissions")
     st.caption("Generate, audit, and download NSWTG submission artifacts.")
 
     conn = get_connection()
@@ -48,6 +49,7 @@ def render_submission_view() -> None:
         options=list(ARTIFACTS.keys()),
         format_func=lambda k: ARTIFACTS[k],
         key="sub_artifact",
+        help=widget_help("submissions.artifact_picker"),
     )
     default_start, default_end = _default_period(artifact_key)
     col1, col2 = st.columns(2)
@@ -70,7 +72,7 @@ def render_submission_view() -> None:
     report = audit_artifact(conn, spec, ctx)
 
     # --------------------------------------------------------------- readiness
-    st.subheader("Readiness")
+    section_header("Readiness", "submissions.readiness")
     m1, m2, m3 = st.columns(3)
     m1.metric("Completeness", f"{report.completeness * 100:.0f}%")
     m2.metric("Open gaps", str(len(report.gaps)))
@@ -91,7 +93,7 @@ def render_submission_view() -> None:
                 st.warning(f"**{g.finding.handbook_ref} — {g.finding.title}**\n\n{g.finding.detail}")
 
     # ------------------------------------------------------------------ gaps
-    st.subheader("Section completeness & gaps")
+    section_header("Section completeness & gaps", "submissions.gaps")
     for section in report.sections:
         pct = section.completeness * 100
         title = f"{section.title} — {pct:.0f}% ({section.filled}/{section.total})"
@@ -120,7 +122,7 @@ def render_submission_view() -> None:
                     st.error("Rationale cannot be empty.")
 
     # -------------------------------------------------------------- generate
-    st.subheader("Generate")
+    section_header("Generate", "submissions.generate")
     filled = fill_artifact(spec, ctx)
     st.caption(f"{len(filled.resolved)} fields filled · {len(filled.blanks)} blank.")
     dl_col, save_col = st.columns(2)
