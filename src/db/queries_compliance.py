@@ -167,17 +167,45 @@ def list_audit(
     conn: sqlite3.Connection,
     table_name: str | None = None,
     limit: int = 200,
+    action: str | None = None,
+    search: str | None = None,
 ) -> list[AuditEntry]:
+    """Newest-first audit entries, optionally filtered.
+
+    `search` matches case-insensitively against reason, actor, and the
+    before/after JSON payloads.
+    """
+    clauses, params = [], []
     if table_name:
-        rows = conn.execute(
-            "SELECT * FROM audit_log WHERE table_name = ? ORDER BY id DESC LIMIT ?",
-            (table_name, limit),
-        ).fetchall()
-    else:
-        rows = conn.execute(
-            "SELECT * FROM audit_log ORDER BY id DESC LIMIT ?", (limit,)
-        ).fetchall()
+        clauses.append("table_name = ?")
+        params.append(table_name)
+    if action:
+        clauses.append("action = ?")
+        params.append(action)
+    if search:
+        like = f"%{search}%"
+        clauses.append(
+            "(reason LIKE ? OR actor_user LIKE ? OR before_json LIKE ? OR after_json LIKE ?)"
+        )
+        params.extend([like, like, like, like])
+    where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+    rows = conn.execute(
+        f"SELECT * FROM audit_log {where} ORDER BY id DESC LIMIT ?",
+        (*params, limit),
+    ).fetchall()
     return [_row_to_dto(r, AuditEntry) for r in rows]
+
+
+def list_audit_tables(conn: sqlite3.Connection) -> list[str]:
+    """Distinct table names appearing in the audit log (for filter pickers)."""
+    rows = conn.execute(
+        "SELECT DISTINCT table_name FROM audit_log ORDER BY table_name"
+    ).fetchall()
+    return [r["table_name"] for r in rows]
+
+
+def count_audit(conn: sqlite3.Connection) -> int:
+    return conn.execute("SELECT COUNT(*) FROM audit_log").fetchone()[0]
 
 
 # ---------------------------------------------------------------------------

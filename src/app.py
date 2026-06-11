@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.db.database import get_connection, init_db
 from src.ui.help import render_nav_help
+from src.views.audit import render_audit_view
 from src.views.compliance import render_compliance_view
 from src.views.consultation import render_consultation_view
 from src.views.dashboard import render_dashboard_view
@@ -42,6 +43,7 @@ VIEW_OPTIONS = [
     "Changes in Estate",
     "Submissions",
     "Compliance",
+    "Audit Log",
     "Transactions",
     "Export",
 ]
@@ -131,6 +133,7 @@ def main() -> None:
         "Changes in Estate": render_estate_changes_view,
         "Submissions": render_submission_view,
         "Compliance": render_compliance_view,
+        "Audit Log": render_audit_view,
         "Transactions": render_transactions_view,
         "Export": render_export_view,
     }

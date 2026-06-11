@@ -46,3 +46,22 @@ def test_estate_changes_subsection_switch_shows_trigger():
     assert not at.exception
     warnings = " ".join(w.value for w in at.warning)
     assert "Handbook §14 trigger" in warnings
+
+
+def test_audit_view_renders():
+    at = _run("Audit Log")
+    assert not at.exception
+    titles = [t.value for t in at.title]
+    assert any("Audit Log" in t for t in titles)
+    labels = [m.label for m in at.metric]
+    assert any("Total entries" in l for l in labels)
+    assert at.selectbox(key="audit_table") is not None
+    assert at.selectbox(key="audit_action") is not None
+
+
+def test_audit_view_filters_rerun():
+    at = _run("Audit Log")
+    at.selectbox(key="audit_action").set_value("update").run()
+    assert not at.exception
+    at.text_input(key="audit_search").set_value("zzz-no-such-entry").run()
+    assert not at.exception

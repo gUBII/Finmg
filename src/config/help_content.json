@@ -297,5 +297,27 @@
   "estate_changes.views": {
     "what": "NSWTG asks what family and significant people think of the change.",
     "do": "One person per line, separating name, relationship and their view with | — get views in writing where possible."
+  },
+  "nav.Audit Log": {
+    "what": "The permanent, tamper-proof record of every action taken in the app. Read-only."
+  },
+  "audit": {
+    "what": "A complete history of every consequential action: gifts edited, one-offs confirmed or dismissed, compliance rules toggled, submissions generated, estate changes moved through their lifecycle. Entries can never be edited or deleted — the database itself refuses.",
+    "source": "Written automatically by the app whenever something changes. Nothing here is typed in by hand.",
+    "do": "Nothing — this page is for looking, not doing. If NCAT or NSWTG ever asks 'when did you decide X?', the answer is here. It's also how you check what happened if something looks unexpected.",
+    "ref": "Handbook §4.3 (records of income and expenditure)"
+  },
+  "audit.trail": {
+    "what": "The newest entries first. Each row says when, who, what kind of action, which area of the app, and why.",
+    "source": "Filters narrow by area (e.g. just Gifts), by action type, or by searching the text of the entries.",
+    "do": "Use the search box to find a specific decision — for example a recipient's name, or 'dismissed'."
+  },
+  "audit.detail": {
+    "what": "The full before-and-after snapshot of one entry, exactly as recorded.",
+    "do": "Pick an entry from the list. 'Before' is empty for brand-new records."
+  },
+  "audit.search": {
+    "what": "Matches the reason text, the person who acted, and the recorded data.",
+    "do": "Try a name, an amount, or a word like 'rejected'."
   }
 }

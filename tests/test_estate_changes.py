@@ -165,6 +165,23 @@ def test_status_change_is_audited(conn, mp_id):
     assert json.loads(status_entries[0].after_json)["status"] == "submitted"
 
 
+# ------------------------------------------------------- audit query filters
+
+def test_list_audit_filters_by_action_and_search(conn, mp_id):
+    change = record_change(conn, mp_id, "M", "Sell the unit", recorded_by="Linda")
+    update_change_status(conn, change.submission.id, "submitted", recorded_by="Linda")
+
+    inserts = list_audit(conn, action="insert")
+    assert inserts and all(a.action == "insert" for a in inserts)
+
+    hits = list_audit(conn, search="Appendix A §M")  # matches the reason text
+    assert hits
+    payload_hits = list_audit(conn, search="sale of property")  # matches after_json
+    assert payload_hits
+    misses = list_audit(conn, search="zzz-no-such-entry")
+    assert misses == []
+
+
 # ------------------------------------------------------------ list_changes
 
 def test_list_changes_returns_composites_newest_first(conn, mp_id):
