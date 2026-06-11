@@ -31,22 +31,25 @@ from src.views.submission import render_submission_view
 from src.views.transactions import render_transactions_view
 from src.views.upload import render_upload_view
 
-VIEW_OPTIONS = [
-    "Dashboard",
-    "Upload",
-    "Identity",
-    "Inventory",
-    "Forecast",
-    "Gifts",
-    "One-off Events",
-    "Consultations",
-    "Changes in Estate",
-    "Submissions",
-    "Compliance",
-    "Audit Log",
-    "Transactions",
-    "Export",
-]
+# Sidebar navigation, grouped by how Linda actually works: the everyday
+# loop, Ron's estate records, the NSWTG approval/submission surfaces, and
+# the reference material. VIEW_OPTIONS stays the flat source of truth for
+# routing, login redirects, and the help-registry completeness test.
+NAV_GROUPS = {
+    "Day to day": ["Dashboard", "Upload", "Transactions"],
+    "Ron's estate": [
+        "Identity",
+        "Inventory",
+        "Forecast",
+        "Gifts",
+        "One-off Events",
+        "Consultations",
+    ],
+    "NSWTG": ["Changes in Estate", "Submissions", "Compliance"],
+    "Records": ["Audit Log", "Export"],
+}
+
+VIEW_OPTIONS = [view for views in NAV_GROUPS.values() for view in views]
 
 
 def _init_session_state() -> None:
@@ -67,19 +70,36 @@ def _ensure_db() -> None:
     conn.close()
 
 
+def _nav_key(group_title: str) -> str:
+    slug = group_title.lower().replace(" ", "_").replace("'", "")
+    return f"nav_radio_{slug}"
+
+
+def _on_nav_change(changed_title: str) -> None:
+    """One selection across all group radios: picking in one clears the rest."""
+    chosen = st.session_state.get(_nav_key(changed_title))
+    if chosen is None:
+        return
+    st.session_state.current_view = chosen
+    for title in NAV_GROUPS:
+        if title != changed_title:
+            st.session_state[_nav_key(title)] = None
+
+
 def _render_sidebar() -> str:
     current_view = st.session_state.get("current_view", VIEW_OPTIONS[0])
     if current_view not in VIEW_OPTIONS:
         current_view = VIEW_OPTIONS[0]
 
     # Programmatic navigation (e.g. dashboard quick-links set `pending_view`):
-    # widget state must be written BEFORE the radio instantiates this run.
+    # widget state must be written BEFORE the radios instantiate this run.
     pending = st.session_state.pop("pending_view", None)
     if pending in VIEW_OPTIONS:
         current_view = pending
-        st.session_state.nav_radio = pending
-    if "nav_radio" not in st.session_state:
-        st.session_state.nav_radio = current_view
+    for title, views in NAV_GROUPS.items():
+        st.session_state[_nav_key(title)] = (
+            current_view if current_view in views else None
+        )
 
     with st.sidebar:
         profile_image = resolve_profile_image()
@@ -90,8 +110,17 @@ def _render_sidebar() -> str:
         st.caption("Private household finance dashboard")
         st.divider()
 
-        selected_view = st.radio("Navigate", VIEW_OPTIONS, key="nav_radio")
+        for title, views in NAV_GROUPS.items():
+            st.radio(
+                title,
+                views,
+                index=None,
+                key=_nav_key(title),
+                on_change=_on_nav_change,
+                args=(title,),
+            )
         render_nav_help(VIEW_OPTIONS)
+        selected_view = current_view
 
         st.divider()
         st.caption("Period: Jun 2025 – Jun 2026")
