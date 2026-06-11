@@ -81,7 +81,22 @@ def _render_trail(conn) -> list:
         }
         for e in entries
     )
-    st.dataframe(df, width="stretch", hide_index=True)
+    df["When"] = pd.to_datetime(df["When"])
+    st.dataframe(
+        df,
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "#": st.column_config.NumberColumn("#", width="small"),
+            "When": st.column_config.DatetimeColumn(
+                "When", format="DD MMM YYYY · HH:mm", width="medium"
+            ),
+            "Who": st.column_config.TextColumn("Who", width="small"),
+            "Action": st.column_config.TextColumn("Action", width="small"),
+            "Area": st.column_config.TextColumn("Area", width="medium"),
+            "Reason": st.column_config.TextColumn("Reason", width="large"),
+        },
+    )
     if len(entries) == DEFAULT_LIMIT:
         st.caption(
             f"Showing the most recent {DEFAULT_LIMIT} entries — "

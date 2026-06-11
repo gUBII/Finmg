@@ -74,7 +74,8 @@ def _render_propose(conn, mp_id: int) -> None:
         key="cie_subsection",
         help=widget_help("estate_changes.subsection"),
     )
-    _subsection_brief(letter, registry[letter])
+    with st.container(border=True):
+        _subsection_brief(letter, registry[letter])
 
     with st.form("cie_propose_form", clear_on_submit=True):
         description = st.text_area(
@@ -159,7 +160,8 @@ def _render_register(conn, mp_id: int) -> None:
         title = entry.get("title", sub.trigger_subsection)
         badge = status_chip(sub.status, STATUS_WORDING.get(sub.status))
         desc = detail.description if detail else ""
-        with st.expander(f"§{sub.trigger_subsection} {title} — {desc[:60]} {badge}"):
+        short = desc if len(desc) <= 60 else f"{desc[:60]}…"
+        with st.expander(f"§{sub.trigger_subsection} {title} — {short} {badge}"):
             if detail:
                 st.write(desc)
                 meta = []
