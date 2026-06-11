@@ -23,18 +23,15 @@ from src.services.compliance.engine import evaluate_compliance
 from src.services.lodgement import TYPE_LABELS, build_lodgement_zip, mark_lodged
 from src.services.submission_record import persist_submission
 from src.ui.help import page_header, section_header, widget_help
+from src.ui.status import status_chip
 
 ARTIFACTS = {
     "annual_accounts": "Annual Accounts — past-year actuals",
     "plan": "Private Manager's Plan — forward forecast",
 }
 
-STATUS_BADGES = {
-    "draft": "📝 Draft",
-    "submitted": "📤 Lodged",
-    "approved": "✅ Approved",
-    "rejected": "❌ Rejected",
-}
+# Context-specific wording on top of the shared status vocabulary.
+STATUS_WORDING = {"submitted": "Lodged"}
 
 
 def _default_period(artifact_key: str) -> tuple[date, date]:
@@ -107,9 +104,9 @@ def render_submission_view() -> None:
         pct = section.completeness * 100
         title = f"{section.title} — {pct:.0f}% ({section.filled}/{section.total})"
         if not section.gaps:
-            st.markdown(f"✅ {title}")
+            st.markdown(f"{status_chip('ok', 'Complete')} {title}")
             continue
-        with st.expander(f"⚠️ {title} — {len(section.gaps)} gap(s)"):
+        with st.expander(f"{status_chip('missing', f'{len(section.gaps)} gap(s)')} {title}"):
             st.write("Blank fields:", ", ".join(section.gaps))
             st.caption(
                 "Fill these in the Identity / Inventory / Forecast views, or record "
@@ -180,9 +177,9 @@ def _render_register(conn, mp_id: int) -> None:
 
     for sub in saved:
         label = TYPE_LABELS.get(sub.type, sub.type)
-        badge = STATUS_BADGES.get(sub.status, sub.status)
+        badge = status_chip(sub.status, STATUS_WORDING.get(sub.status))
         n_attach = len(list_attachments(conn, sub.id))
-        with st.expander(f"#{sub.id} {label} · {badge} · {n_attach} attachment(s)"):
+        with st.expander(f"#{sub.id} {label} {badge} · {n_attach} attachment(s)"):
             if sub.submitted_at:
                 st.caption(f"Lodged {sub.submitted_at} by {sub.submitted_by or '—'}")
             zip_key = f"lodgement_zip_{sub.id}"

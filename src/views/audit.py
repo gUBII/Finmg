@@ -16,6 +16,7 @@ import streamlit as st
 from src.db.database import get_connection, init_db
 from src.db.queries_compliance import count_audit, list_audit, list_audit_tables
 from src.ui.help import page_header, section_header, widget_help
+from src.ui.status import status_label
 
 TABLE_LABELS = {
     "submissions": "Submissions & estate changes",
@@ -27,8 +28,6 @@ TABLE_LABELS = {
     "consultation_log": "Consultations",
     "category_overrides": "Category changes",
 }
-
-ACTION_LABELS = {"insert": "➕ added", "update": "✏️ changed", "delete": "🗑️ removed"}
 
 DEFAULT_LIMIT = 100
 
@@ -51,7 +50,7 @@ def _render_trail(conn) -> list:
     action_choice = f2.selectbox(
         "Action",
         options=["All", "insert", "update", "delete"],
-        format_func=lambda a: "All actions" if a == "All" else ACTION_LABELS[a],
+        format_func=lambda a: "All actions" if a == "All" else status_label(a),
         key="audit_action",
     )
     search = f3.text_input(
@@ -76,7 +75,7 @@ def _render_trail(conn) -> list:
             "#": e.id,
             "When": e.timestamp,
             "Who": e.actor_user or "system",
-            "Action": ACTION_LABELS.get(e.action, e.action),
+            "Action": status_label(e.action),
             "Area": _label(e.table_name),
             "Reason": e.reason or "",
         }

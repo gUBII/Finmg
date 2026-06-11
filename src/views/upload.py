@@ -23,6 +23,7 @@ from src.pipeline.categoriser import categorise_all, load_category_rules
 from src.pipeline.merger import detect_internal_transfers
 from src.pipeline.month_splitter import split_by_month
 from src.ui.help import page_header, section_header, widget_help
+from src.ui.status import cell_css
 
 EXPECTED_TOTALS = {
     "178865319": {"withdrawals": 28171.78, "deposits": 30125.60},
@@ -84,9 +85,9 @@ def _render_month_status_grid(conn) -> None:
 
     def _style_cell(val):
         if val == "✓" or val == "Complete":
-            return "background-color: #d4edda; color: #155724; text-align: center"
+            return cell_css("ok", center=True)
         if val == "⚠" or (isinstance(val, str) and "/" in val):
-            return "background-color: #fff3cd; color: #856404; text-align: center"
+            return cell_css("missing", center=True)
         return ""
 
     styled = df.style.map(_style_cell, subset=[c for c in df.columns if c != "Account"])

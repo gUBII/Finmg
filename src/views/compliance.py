@@ -24,6 +24,7 @@ from src.services.compliance.engine import (
 )
 from src.services.compliance.rules import all_rules
 from src.ui.help import page_header, section_header
+from src.ui.status import status_chip, status_label
 
 _MODES = [OFF, WARN, ENFORCE]
 
@@ -65,6 +66,7 @@ def render_compliance_view() -> None:
                 index=_MODES.index(current),
                 key=f"mode_{rule.key}",
                 label_visibility="collapsed",
+                format_func=status_label,
             )
             if chosen != current:
                 set_rule_mode(conn, rule.key, chosen, recorded_by="Linda")
@@ -77,7 +79,10 @@ def render_compliance_view() -> None:
         st.info("No current state findings.")
     for g in state:
         render = st.error if g.mode == ENFORCE else st.warning
-        render(f"**[{g.mode}] {g.finding.handbook_ref} — {g.finding.title}**\n\n{g.finding.detail}")
+        render(
+            f"{status_chip(g.mode)} **{g.finding.handbook_ref} — {g.finding.title}**"
+            f"\n\n{g.finding.detail}"
+        )
 
     section_header("🔮 Forecast — early warnings", "compliance.forecast_warnings")
     forecast = result.forecast_findings
@@ -85,6 +90,9 @@ def render_compliance_view() -> None:
         st.info("No anomalies projected for the current period.")
     for g in forecast:
         render = st.error if g.mode == ENFORCE else st.warning
-        render(f"**[{g.mode}] {g.finding.handbook_ref} — {g.finding.title}**\n\n{g.finding.detail}")
+        render(
+            f"{status_chip(g.mode)} **{g.finding.handbook_ref} — {g.finding.title}**"
+            f"\n\n{g.finding.detail}"
+        )
 
     conn.close()

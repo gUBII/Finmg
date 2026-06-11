@@ -19,6 +19,7 @@ from src.db.queries_estate import bootstrap_managed_person_if_empty, list_signif
 from src.models.compliance import Gift
 from src.services.gifts import record_gift_actual
 from src.ui.help import page_header, section_header, widget_help
+from src.ui.status import PALETTE, cell_css
 
 OCCASION_LABELS = {
     "birthday": "Birthday",
@@ -107,7 +108,7 @@ def render_gifts_view() -> None:
 
     def _style_flag(val):
         if isinstance(val, str) and val.startswith("🚩"):
-            return "background-color: #fff3cd; color: #856404"
+            return cell_css("missing")
         return ""
 
     styled = df.style.map(_style_flag, subset=["§76"]).format(
@@ -174,7 +175,7 @@ def render_gifts_view() -> None:
         orientation="h",
         barmode="group",
         labels={"Amount": "Amount ($)", "Type": ""},
-        color_discrete_map={"Planned": "#aab7c4", "Actual": "#2ecc71"},
+        color_discrete_map={"Planned": PALETTE["gray"], "Actual": PALETTE["green"]},
     )
     fig.update_layout(
         height=max(350, 28 * by_recipient["Recipient"].nunique()),

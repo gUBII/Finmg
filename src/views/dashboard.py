@@ -25,6 +25,7 @@ from src.services.artifacts.spec import load_spec
 from src.services.audit import audit_artifact
 from src.services.compliance.engine import evaluate_compliance
 from src.ui.help import page_header, section_header, widget_help
+from src.ui.status import PALETTE, cell_css
 
 # Fiscal year months Jun 2025 → Jun 2026
 FISCAL_MONTHS = [
@@ -78,9 +79,9 @@ def _render_month_status_grid(conn) -> None:
 
     def _style_cell(val):
         if val == "✓" or val == "Complete":
-            return "background-color: #d4edda; color: #155724; text-align: center"
+            return cell_css("ok", center=True)
         if val == "⚠" or (isinstance(val, str) and "/" in val):
-            return "background-color: #fff3cd; color: #856404; text-align: center"
+            return cell_css("missing", center=True)
         return ""
 
     styled = df.style.map(_style_cell, subset=[c for c in df.columns if c != "Account"])
@@ -230,7 +231,7 @@ def render_dashboard_view() -> None:
                 barmode="group",
                 title=trend_title,
                 labels={"value": "Amount ($)", "month_label": "Month", "variable": "Type"},
-                color_discrete_map={"expenses": "#e74c3c", "income": "#2ecc71"},
+                color_discrete_map={"expenses": PALETTE["red"], "income": PALETTE["green"]},
             )
             if filter_month:
                 selected_label = _short_month(filter_month)
@@ -286,7 +287,7 @@ def render_dashboard_view() -> None:
                         x=selected_row["month_label"],
                         y=selected_row["cumulative_net"],
                         mode="markers",
-                        marker=dict(size=14, color="#f39c12", symbol="star"),
+                        marker=dict(size=14, color=PALETTE["orange"], symbol="star"),
                         name="selected",
                         showlegend=False,
                     )
@@ -306,7 +307,7 @@ def render_dashboard_view() -> None:
                 orientation="h",
                 title=f"Top 5 Spending Categories" + (f" — {_short_month(filter_month)}" if filter_month else ""),
                 labels={"total_withdrawals": "Amount ($)", "category": ""},
-                color_discrete_sequence=["#e74c3c"],
+                color_discrete_sequence=[PALETTE["red"]],
             )
             fig.update_layout(height=350, margin=dict(t=40, b=20), yaxis=dict(autorange="reversed"))
             st.plotly_chart(fig, width="stretch")

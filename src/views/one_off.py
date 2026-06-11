@@ -25,12 +25,7 @@ from src.services.one_off import (
     record_one_off_event,
 )
 from src.ui.help import page_header, section_header, widget_help
-
-STATUS_LABELS = {
-    "anticipated": "Anticipated",
-    "proposed": "Proposed",
-    "completed": "Completed",
-}
+from src.ui.status import status_label
 
 
 def _render_candidates(conn, mp_id: int) -> None:
@@ -100,7 +95,7 @@ def _render_events(conn, mp_id: int) -> None:
             "Date": e.date_occurred or "—",
             "Type": "Receipt" if e.event_type == "receipt" else "Expenditure",
             "Description": e.event_description,
-            "Status": STATUS_LABELS.get(e.status, e.status),
+            "Status": status_label(e.status),
             "Amount": e.amount,
         }
         for e in events
@@ -126,7 +121,7 @@ def _render_add_form(conn, mp_id: int) -> None:
         )
         status = c2.selectbox(
             "Status", ["anticipated", "proposed", "completed"],
-            format_func=lambda s: STATUS_LABELS[s], key="oneoff_add_status",
+            format_func=status_label, key="oneoff_add_status",
         )
         amount = c3.number_input(
             "Amount ($)", min_value=0.0, step=100.0, key="oneoff_add_amount"

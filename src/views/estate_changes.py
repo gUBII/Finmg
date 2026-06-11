@@ -21,13 +21,10 @@ from src.services.estate_changes import (
     update_change_status,
 )
 from src.ui.help import page_header, section_header, widget_help
+from src.ui.status import status_chip
 
-STATUS_BADGES = {
-    "draft": "📝 Draft",
-    "submitted": "📤 Submitted — awaiting NSWTG/NCAT",
-    "approved": "✅ Approved",
-    "rejected": "❌ Rejected",
-}
+# Context-specific wording on top of the shared status vocabulary.
+STATUS_WORDING = {"submitted": "Submitted — awaiting NSWTG/NCAT"}
 
 
 def _parse_views(text: str) -> list[dict]:
@@ -160,19 +157,20 @@ def _render_register(conn, mp_id: int) -> None:
         sub, detail = change.submission, change.detail
         entry = registry.get(sub.trigger_subsection, {})
         title = entry.get("title", sub.trigger_subsection)
-        badge = STATUS_BADGES.get(sub.status, sub.status)
+        badge = status_chip(sub.status, STATUS_WORDING.get(sub.status))
         desc = detail.description if detail else ""
-        with st.expander(f"§{sub.trigger_subsection} {title} — {desc[:60]} · {badge}"):
+        with st.expander(f"§{sub.trigger_subsection} {title} — {desc[:60]} {badge}"):
             if detail:
                 st.write(desc)
                 meta = []
                 if detail.amount:
                     meta.append(f"Amount: ${detail.amount:,.2f}")
                 meta.append(
-                    "Affordability confirmed" if detail.affordability_confirmed
-                    else "⚠️ Affordability not yet confirmed"
+                    status_chip("ok", "Affordability confirmed")
+                    if detail.affordability_confirmed
+                    else status_chip("missing", "Affordability not yet confirmed")
                 )
-                st.caption(" · ".join(meta))
+                st.markdown(" · ".join(meta))
                 if detail.views_json:
                     views = json.loads(detail.views_json)
                     st.markdown(
