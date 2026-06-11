@@ -30,6 +30,7 @@ from src.db.queries_estate import (
     update_significant_person,
 )
 from src.models.estate import ManagedPerson, PrivateManager, SignificantPerson
+from src.ui.help import page_header, section_header
 
 _HAS_WILL_OPTIONS = [None, "yes", "no", "unsure"]
 _HAS_WILL_LABELS = {None: "— unset —", "yes": "yes", "no": "no", "unsure": "unsure"}
@@ -39,7 +40,7 @@ _STATUS_OPTIONS = ["active", "estranged", "deceased"]
 
 def render_identity_view() -> None:
     """Render the Identity & Contacts management page."""
-    st.title("Identity & Contacts")
+    page_header("Identity & Contacts", "identity")
 
     conn = get_connection()
     init_db(conn)
@@ -67,7 +68,7 @@ def render_identity_view() -> None:
 # ---------------------------------------------------------------------------
 
 def _render_managed_person_tab(conn, mp_id: int) -> None:
-    st.subheader("Managed Person — Section A.1")
+    section_header("Managed Person — Section A.1", "identity.managed_person")
     mp = get_managed_person(conn, mp_id)
     if mp is None:
         st.error("No managed person record found.")
@@ -130,7 +131,7 @@ def _render_managed_person_tab(conn, mp_id: int) -> None:
                 value=mp.customer_reference_number or "",
             )
 
-        submitted = st.form_submit_button("Save", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Save", type="primary", width="stretch")
 
     if submitted:
         # Validate and normalise disability_flags at the form boundary.
@@ -172,7 +173,7 @@ def _render_managed_person_tab(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_private_manager_tab(conn, mp_id: int) -> None:
-    st.subheader("Private Manager — Section A.2")
+    section_header("Private Manager — Section A.2", "identity.private_manager")
     managers = list_private_managers(conn, mp_id)
 
     if len(managers) > 1:
@@ -221,7 +222,7 @@ def _render_private_manager_tab(conn, mp_id: int) -> None:
                 value=pm.remuneration_order_date or "",
             )
 
-        submitted = st.form_submit_button("Save", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Save", type="primary", width="stretch")
 
     if submitted:
         updated = PrivateManager(
@@ -249,7 +250,7 @@ def _render_private_manager_tab(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_significant_people_tab(conn, mp_id: int) -> None:
-    st.subheader("Significant People — Section A.3")
+    section_header("Significant People — Section A.3", "identity.significant_people")
 
     people = list_significant_people(conn, mp_id, include_estranged=True, include_deceased=True)
 
@@ -282,13 +283,13 @@ def _render_significant_people_tab(conn, mp_id: int) -> None:
                 "Status", options=_STATUS_OPTIONS
             ),
         },
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         num_rows="fixed",
         key="sp_editor",
     )
 
-    if st.button("Save Changes", type="primary", use_container_width=True):
+    if st.button("Save Changes", type="primary", width="stretch"):
         changes = 0
         for _, row in edited.iterrows():
             sp_id = int(row["id"])
