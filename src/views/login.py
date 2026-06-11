@@ -28,7 +28,7 @@ def render_login_view() -> None:
     with center:
         profile_image = resolve_profile_image()
         if profile_image is not None:
-            st.image(str(profile_image), use_container_width=True)
+            st.image(str(profile_image), width="stretch")
         else:
             st.markdown("## FinMg")
 
@@ -38,7 +38,7 @@ def render_login_view() -> None:
         with st.form("login_form", clear_on_submit=False):
             username = st.text_input("Username")
             password = st.text_input("Password", type="password")
-            submitted = st.form_submit_button("Log In", use_container_width=True)
+            submitted = st.form_submit_button("Log In", width="stretch")
 
         if submitted:
             if check_credentials(username, password):

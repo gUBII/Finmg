@@ -62,5 +62,223 @@
   },
   "dashboard.months_complete": {
     "what": "How many of the 13 fiscal months have statements loaded for all three accounts."
+  },
+
+  "upload": {
+    "what": "Where bank statements enter the system. Drop in ANZ Transaction Report PDFs and press Process — the app reads every transaction, sorts it into a budget category, and stores it permanently.",
+    "source": "Only ANZ statement PDFs for Ron's three accounts are expected. Each file is fingerprinted, so uploading the same statement twice is harmless — it is detected and skipped.",
+    "do": "After each new statement arrives, upload that month's PDFs for all three accounts, then check the Month Status grid below turns green."
+  },
+  "upload.uploader": {
+    "what": "Drop PDF files here or browse for them. You can add several at once; press Process to run them all."
+  },
+  "upload.month_status": {
+    "what": "The same 13-month coverage grid as the Dashboard: ✓ means that account's statement for the month is loaded, ⚠ means it is missing.",
+    "source": "Worked out from the PDFs uploaded on this page.",
+    "do": "Upload missing statements until every month reads Complete. Remember the Spending card only started in August 2025 — earlier ⚠ marks on that row are expected, not real gaps."
+  },
+  "upload.uploaded_files": {
+    "what": "Every PDF processed so far, with the totals the app read out of it.",
+    "source": "A copy of each file is kept in the app's private data folder; the fingerprint stops the same statement loading twice.",
+    "do": "If Withdrawals or Deposits showed MISMATCH when a file was processed, the statement did not parse cleanly and its numbers cannot be trusted yet — flag it to Farhan."
+  },
+
+  "transactions": {
+    "what": "Every single bank transaction the app has read, in one searchable table. This is the raw material behind the Dashboard, the Forecast actuals, the gift checks, and the NSWTG forms.",
+    "source": "Read straight from the uploaded ANZ statements. The app guesses each transaction's category from its description; the guess is usually right but not always.",
+    "do": "Use the filters to narrow things down, fix any wrong categories in the table, then press Save Changes. Getting categories right here makes every other page more accurate."
+  },
+  "transactions.search": {
+    "what": "Type part of a description (a shop name, a person, a reference number) to find matching transactions. Not case-sensitive."
+  },
+  "transactions.editor": {
+    "what": "The table itself. Only the Category column can be changed — everything else is locked to exactly what the bank statement says.",
+    "source": "Category choices come from the budget template list, plus Internal Transfer for money moving between Ron's own accounts.",
+    "do": "Pick the right category from the dropdown in any row, then press Save Changes below. Every change is recorded with what it was before, so there is always an audit trail."
+  },
+
+  "gifts": {
+    "what": "The gift ledger. NSW law (Guardianship/Trustee rules, §76) only allows gifts from Ron's estate within strict limits, so every planned and actual gift is tracked here.",
+    "source": "The planned amounts come from the handwritten gift forecast in the Plan you submitted (48 gifts). Flags are raised automatically by the compliance engine.",
+    "do": "When a gift is actually given, record the real amount below. Keep an eye on the 🚩 flags — they are the rows NSWTG would question.",
+    "ref": "NSW Trustee and Guardian Act §76; NSWTG handbook §4.6"
+  },
+  "gifts.ledger": {
+    "what": "Every gift for the year: who it is for, the occasion, what was planned, and what was actually spent. 🚩 means the compliance engine thinks the gift may exceed what §76 allows.",
+    "source": "Planned figures from the submitted Plan; actuals from what you record on this page.",
+    "do": "Open the flagged-rows panel below the table to read exactly why each 🚩 was raised."
+  },
+  "gifts.record_actual": {
+    "what": "Where you record what a gift actually cost once it has been given.",
+    "source": "The dropdown lists every planned gift; the amount box starts at the planned figure.",
+    "do": "Pick the gift, enter the real amount, press Record actual. The change is written to the permanent audit log, so NSWTG can see planned vs actual honestly."
+  },
+  "gifts.chart": {
+    "what": "A bar chart of planned (grey) versus actually given (green) for each recipient.",
+    "do": "If a green bar grows past its grey bar, that person has received more than planned — worth a note before NSWTG asks."
+  },
+
+  "one_off": {
+    "what": "One-off receipts and expenditures — the big, unusual money events that are not part of normal weekly living. These fill Section E of the Plan and feed the change-in-circumstances rules.",
+    "source": "The app watches the bank ledger for large unusual transactions and queues them below for your decision; future events with no bank transaction yet are added by hand.",
+    "do": "Work the candidate queue to zero: confirm real one-offs, dismiss the rest. Both choices are recorded permanently.",
+    "ref": "NSWTG handbook §14 (changes in the estate)"
+  },
+  "one_off.candidates": {
+    "what": "Transactions the app thinks might be one-offs. Routine items are already excluded — the pension, rent, savings transfers, interest, and money moving between Ron's own accounts.",
+    "source": "Anything left in the bank ledger above the threshold that you have not yet confirmed or dismissed.",
+    "do": "Open each one. If it is a genuine one-off (an insurance payout, a large purchase, unexpected wages), press Confirm. If it is ordinary, press Dismiss with a short reason. Either way it leaves the queue for good."
+  },
+  "one_off.threshold": {
+    "what": "Only transactions at or above this dollar amount appear in the queue. Lower it to cast a wider net, raise it to see only the big items."
+  },
+  "one_off.events": {
+    "what": "The confirmed Section E list: completed one-offs from the bank ledger plus anticipated or proposed future events.",
+    "do": "This list goes into the Plan artifact, so keep it honest and complete."
+  },
+  "one_off.add": {
+    "what": "Add a future one-off the bank has not seen yet — planned surgery, an expected refund, a proposed large purchase.",
+    "do": "Use status Anticipated for things likely to happen, Proposed for things needing a decision. Some proposed events need NSWTG approval before spending — the Compliance page flags those.",
+    "ref": "NSWTG handbook §14"
+  },
+
+  "consultations": {
+    "what": "Your record of consulting Ron and the significant people before big decisions. NSWTG expects a private manager to consult and to be able to show they did.",
+    "source": "Every entry you log here is also written to the permanent audit log.",
+    "do": "Whenever you discuss a major decision — the accommodation bond, selling something, a large purchase — log it the same day while it is fresh.",
+    "ref": "NSWTG handbook §4.2"
+  },
+  "consultations.log_form": {
+    "what": "Log one conversation: when, who, about what, and what they thought.",
+    "do": "Pick the person (or 'Ron / external party'), name the decision, and write a sentence or two of their view. Short and honest beats long and vague."
+  },
+  "consultations.history": {
+    "what": "Every consultation logged so far, newest first.",
+    "do": "Before a submission, skim this list — if a big decision from the year is missing, log it now with the real date it happened."
+  },
+
+  "forecast": {
+    "what": "Ron's 12-month money plan — what you expect to come in and go out, category by category. This becomes Section D of the Private Manager's Plan.",
+    "source": "The Actual column is what really happened over the previous 12 months of bank statements; the Forecast column starts as a copy of it and is yours to adjust.",
+    "do": "Review each category. If next year will differ from last year (a price rise, a new expense), change the Forecast and say why in the override reason — NSWTG likes a number with an explanation.",
+    "ref": "Private Manager's Plan, Section D"
+  },
+  "forecast.period": {
+    "what": "The 12 months the forecast covers, normally starting today. Actuals are always drawn from the matching 12 months just past."
+  },
+  "forecast.income": {
+    "what": "Expected money in: the pension, interest, and anything else arriving in Ron's accounts.",
+    "do": "Check the pension figure first — it is the backbone of the budget. A reason is required wherever your forecast differs from the trailing actual."
+  },
+  "forecast.expenditure": {
+    "what": "Expected money out, in the same categories as the budget template.",
+    "do": "Adjust any category you know will change and give the reason. The total here is what NSWTG compares future spending against."
+  },
+
+  "identity": {
+    "what": "The who's-who of the management order: Ron's identity, your details as his manager, and the significant people in his life. This fills Section A of the Plan.",
+    "source": "Entered and kept up to date by you — the bank statements cannot supply these details.",
+    "do": "Fill the gaps when you have the documents to hand (date of birth, Centrelink CRN, contact details). The Submissions page lists exactly which of these are still missing."
+  },
+  "identity.managed_person": {
+    "what": "Ron's legal identity for the forms: full name, date of birth, address, Centrelink reference, and whether he has a Will.",
+    "do": "The Will question matters more than it looks — a manager must not dispose of anything specifically left in a Will, so NSWTG always asks.",
+    "ref": "NSWTG handbook §4.8"
+  },
+  "identity.private_manager": {
+    "what": "Your own details and the appointment: who you are, how you were appointed, and the date of the financial management order.",
+    "do": "Check the order date and appointment type against the NCAT paperwork — these are copied straight onto every form."
+  },
+  "identity.significant_people": {
+    "what": "Family and friends who matter to Ron's affairs — the people you consult and the gift recipients. Status tracks whether each person is active, estranged, or deceased.",
+    "do": "Edit details in the table and press Save Changes, or add a new person below. The Consultations and Gifts pages both draw their name lists from here."
+  },
+
+  "inventory": {
+    "what": "Everything Ron owns and owes: bank accounts, property, investments, vehicles, the aged-care accommodation bond, and any debts. This fills Sections B and C of the Plan.",
+    "source": "The bank accounts arrive automatically from uploaded statements; everything else is entered here from the real documents.",
+    "do": "Keep balances and valuations current — NSWTG compares this inventory year to year, and unexplained jumps invite questions."
+  },
+  "inventory.accounts": {
+    "what": "Ron's bank and credit-union accounts. The institution, account number, and BSB are locked because they come straight from the parsed statements.",
+    "do": "Set each account's role (living, spending, savings) and keep the balance fields current — balances are one of the items NSWTG always wants."
+  },
+  "inventory.real_estate": {
+    "what": "Any property Ron owns or part-owns, with ownership type, who lives there, and its value.",
+    "do": "Selling or mortgaging property is a major change in the estate — it must be reported to NSWTG, and the app will flag it.",
+    "ref": "NSWTG handbook §14"
+  },
+  "inventory.investments": {
+    "what": "Shares, term deposits, managed funds — anything invested rather than sitting in a bank account.",
+    "do": "NSWTG expects investments to be reviewed at least yearly; record the current value and the review date.",
+    "ref": "NSWTG handbook §6.1"
+  },
+  "inventory.vehicles": {
+    "what": "Cars or other vehicles owned by Ron, with registration and value.",
+    "do": "Include insurance details where asked — evidence of insurance is part of the annual paperwork.",
+    "ref": "NSWTG handbook §6.4"
+  },
+  "inventory.bonds": {
+    "what": "The refundable accommodation deposit (RAD/bond) held by Ron's aged-care home — usually the single largest asset in the estate.",
+    "do": "Record the amount and the facility. Changes to the bond (top-ups, refunds) are reportable changes in the estate.",
+    "ref": "NSWTG handbook §14"
+  },
+  "inventory.debts": {
+    "what": "Anything Ron owes: outstanding fees, loans, or unpaid bills (Section C of the Plan).",
+    "do": "Mark each item paid or unpaid and keep amounts current. An empty list is fine if it is genuinely true."
+  },
+
+  "submissions": {
+    "what": "Where the actual NSWTG paperwork is produced. The app fills the official PDF forms — the Annual Accounts (last year's actuals) and the Private Manager's Plan (next year's forecast) — straight from the data on the other pages.",
+    "source": "Every field is pulled live from Identity, Inventory, Forecast, Gifts, One-off Events, and the bank transactions. Nothing is retyped.",
+    "do": "Pick the form and period, close the listed gaps (or record why a section is genuinely not applicable), then generate and download the filled PDF."
+  },
+  "submissions.artifact_picker": {
+    "what": "Annual Accounts looks backward over the last 12 months of actuals; the Plan looks forward over the next 12 months of forecasts."
+  },
+  "submissions.readiness": {
+    "what": "Three gauges: how much of the form can be filled, how many fields are still blank, and whether any enforced compliance rule is currently blocking the submission.",
+    "do": "A block means a rule you set to Enforce on the Compliance page is failing — fix the underlying issue or review the rule before generating."
+  },
+  "submissions.gaps": {
+    "what": "Each section of the form with its completeness and the exact blank fields.",
+    "source": "Gaps are blank because the underlying data has not been entered yet — usually on the Identity, Inventory, or Forecast page.",
+    "do": "Fill real gaps at the source page. If a section truly does not apply to Ron (for example, no real estate), record an N/A rationale instead — that clears the section honestly and is kept on the audit record."
+  },
+  "submissions.generate": {
+    "what": "Creates the filled official PDF exactly as NSWTG expects it.",
+    "do": "Download to check it, and use 'Save to submissions register' when you lodge — that keeps a permanent fingerprinted copy with the bank statements for the period attached, which is your proof of what was sent."
+  },
+
+  "compliance": {
+    "what": "The NSWTG rule book, live. Each rule from the private-manager handbook is checked against Ron's actual data, continuously.",
+    "source": "Rules cover things like keeping estate money in Ron's sole name, the §76 gift limits, reportable changes in the estate, and yearly investment reviews.",
+    "do": "Leave rules on Warn day to day. Switch a rule to Enforce to make it physically block a submission until fixed; switch to Off only with a good reason — every toggle is audit-logged.",
+    "ref": "NSWTG private manager handbook"
+  },
+  "compliance.rules": {
+    "what": "Every rule with its handbook reference and its mode. 🔮 marks forward-looking rules that project ahead rather than checking the past.",
+    "do": "Off = ignored, Warn = shows findings but never blocks, Enforce = a failing rule blocks the Submissions page. Changes take effect immediately."
+  },
+  "compliance.findings": {
+    "what": "Rules failing right now, based on what has already happened.",
+    "do": "Read the detail under each finding — it names the exact transactions or records causing it. Fix the cause, not the symptom."
+  },
+  "compliance.forecast_warnings": {
+    "what": "Early warnings about where things are heading: gift spending on track to pass the §76 limit, a category running well over forecast, or the estate draining faster than planned.",
+    "do": "These are not breaches yet — they exist so you can adjust course months before a real problem appears in the Annual Accounts."
+  },
+
+  "export": {
+    "what": "Turns the stored transactions into the monthly Excel budget workbooks (the same format as the original handwritten budget template).",
+    "source": "One workbook per month, built from the categorised transactions across all three accounts.",
+    "do": "Tick the months you need, generate, then download individually or all at once as a ZIP."
+  },
+  "export.select_months": {
+    "what": "The months available to export — only months with uploaded statements appear here."
+  },
+  "export.downloads": {
+    "what": "The workbooks generated in this session, ready to save to your computer.",
+    "do": "Files are also kept in the app's exports folder, so regenerating is always safe."
   }
 }
