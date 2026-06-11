@@ -14,6 +14,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.db.database import get_connection, init_db
+from src.ui.help import render_nav_help
 from src.views.compliance import render_compliance_view
 from src.views.consultation import render_consultation_view
 from src.views.dashboard import render_dashboard_view
@@ -86,11 +87,12 @@ def _render_sidebar() -> str:
         st.divider()
 
         selected_view = st.radio("Navigate", VIEW_OPTIONS, key="nav_radio")
+        render_nav_help(VIEW_OPTIONS)
 
         st.divider()
         st.caption("Period: Jun 2025 – Jun 2026")
 
-        if st.button("Log Out", use_container_width=True):
+        if st.button("Log Out", width="stretch"):
             st.session_state.authenticated = False
             st.session_state.current_view = VIEW_OPTIONS[0]
             st.session_state.pending_view = VIEW_OPTIONS[0]

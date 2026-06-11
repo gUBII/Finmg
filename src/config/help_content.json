@@ -1,0 +1,66 @@
+{
+  "nav.Dashboard": {
+    "what": "Your at-a-glance overview — NCAT readiness, money in and out, and which months still need statements."
+  },
+  "nav.Upload": {
+    "what": "Add ANZ statement PDFs; the app reads every transaction automatically."
+  },
+  "nav.Identity": {
+    "what": "Who's who — Ron's details, your details as manager, and the significant people (Plan Section A)."
+  },
+  "nav.Inventory": {
+    "what": "Everything Ron owns and owes — accounts, property, investments, vehicles, bonds, debts (Plan Sections B–C)."
+  },
+  "nav.Forecast": {
+    "what": "The 12-month income and spending plan (Plan Section D)."
+  },
+  "nav.Gifts": {
+    "what": "The gift ledger — planned vs actually given, with §76 limit flags."
+  },
+  "nav.One-off Events": {
+    "what": "Large unusual transactions — confirm real one-offs or dismiss them (Plan Section E)."
+  },
+  "nav.Consultations": {
+    "what": "Your record of consulting Ron and the family on big decisions (Plan Section F)."
+  },
+  "nav.Submissions": {
+    "what": "Generate the NSWTG forms — Annual Accounts and the Plan — and see what's missing first."
+  },
+  "nav.Compliance": {
+    "what": "The rule book on a switchboard — warnings, blocks, and early warnings before they become problems."
+  },
+  "nav.Transactions": {
+    "what": "Every bank transaction — browse, search, and fix categories."
+  },
+  "nav.Export": {
+    "what": "Download the monthly Excel budget files."
+  },
+
+  "dashboard": {
+    "what": "Your home page. It shows how ready you are for NSW Trustee & Guardian reporting, the headline money numbers, and whether any bank statements are missing.",
+    "source": "Everything here is calculated live from the transactions and estate details stored in this app — nothing is typed in by hand.",
+    "do": "Glance at the NCAT readiness strip first. If anything is red or yellow, the quick-link buttons take you straight to the page that fixes it."
+  },
+  "dashboard.ncat_readiness": {
+    "what": "Five gauges for your reporting obligations: compliance blocks (must fix before submitting), warnings (worth reviewing), how complete each of the two NSWTG forms is, and gifts that may breach the gift rules.",
+    "source": "The compliance engine checks the NSWTG handbook rules against the live data; the two 'ready' percentages come from the same audit the Submissions page uses.",
+    "do": "Aim for 0 blocks and rising 'ready' percentages. Use the buttons below the gauges to jump straight to Compliance, Submissions, or Gifts.",
+    "ref": "NSWTG handbook §4.6 (gifts), §14 (changes in estate), §16.2 (prohibitions)"
+  },
+  "dashboard.month_status": {
+    "what": "A grid of the 13 statement months (Jun 2025 – Jun 2026) for each of Ron's three ANZ accounts. ✓ means that month's statement is loaded; ⚠ means it is missing.",
+    "source": "Coverage is worked out from the statement PDFs you have uploaded.",
+    "do": "If a month shows ⚠, find that statement and add it on the Upload page. One quirk to remember: the Spending card only existed from August 2025, so earlier ⚠ marks for it are not real gaps."
+  },
+  "dashboard.charts": {
+    "what": "Four pictures of the money story: monthly spending vs income, where the money goes by category, the running net position, and the top five spending categories.",
+    "source": "Drawn from the categorised bank transactions. The 'View' picker above filters the category charts to a single month; the trend lines always show the full year.",
+    "do": "Use these to spot odd months before NSWTG does — a spike worth explaining often becomes a one-off event or a note in the accounts."
+  },
+  "dashboard.view_filter": {
+    "what": "Filter the totals and category charts to a single month, or keep the whole year in view."
+  },
+  "dashboard.months_complete": {
+    "what": "How many of the 13 fiscal months have statements loaded for all three accounts."
+  }
+}

@@ -24,6 +24,7 @@ from src.services.artifacts.resolvers import Ctx
 from src.services.artifacts.spec import load_spec
 from src.services.audit import audit_artifact
 from src.services.compliance.engine import evaluate_compliance
+from src.ui.help import page_header, section_header, widget_help
 
 # Fiscal year months Jun 2025 → Jun 2026
 FISCAL_MONTHS = [
@@ -83,7 +84,7 @@ def _render_month_status_grid(conn) -> None:
         return ""
 
     styled = df.style.map(_style_cell, subset=[c for c in df.columns if c != "Account"])
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    st.dataframe(styled, width="stretch", hide_index=True)
 
 
 def _render_ncat_strip(conn) -> None:
@@ -111,7 +112,7 @@ def _render_ncat_strip(conn) -> None:
     gifts = list_gifts(conn, mp_id)
     flagged_gifts = sum(1 for g in gifts if g.section_76_assessment != "compliant")
 
-    st.subheader("NCAT readiness")
+    section_header("NCAT readiness", "dashboard.ncat_readiness")
     c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Compliance blocks", str(len(compliance.blocking)))
     c2.metric("Warnings", str(len(compliance.warnings)),
@@ -141,14 +142,14 @@ def _render_ncat_strip(conn) -> None:
         (nav3, "Open Gifts →", "Gifts", "dash_nav_gifts"),
     )
     for col, label, view, key in quick_links:
-        if col.button(label, key=key, use_container_width=True):
+        if col.button(label, key=key, width="stretch"):
             st.session_state.pending_view = view
             st.rerun()
 
 
 def render_dashboard_view() -> None:
     """Render the analytics dashboard backed by SQLite."""
-    st.title("Dashboard")
+    page_header("Dashboard", "dashboard")
 
     conn = get_connection()
     init_db(conn)
@@ -164,7 +165,7 @@ def render_dashboard_view() -> None:
 
     months = get_distinct_months(conn)
     month_options = ["All (YTD)"] + months
-    selected = st.selectbox("View", month_options)
+    selected = st.selectbox("View", month_options, help=widget_help("dashboard.view_filter"))
     filter_month = None if selected == "All (YTD)" else selected
 
     # Monthly totals for KPIs
@@ -193,13 +194,18 @@ def render_dashboard_view() -> None:
         color = "normal" if net_position >= 0 else "inverse"
         st.metric("Net Position", f"${net_position:+,.2f}")
     with col4:
-        st.metric("Months Complete", f"{months_complete}/13")
+        st.metric(
+            "Months Complete",
+            f"{months_complete}/13",
+            help=widget_help("dashboard.months_complete"),
+        )
 
     # Month status grid
-    st.subheader("Month Status")
+    section_header("Month Status", "dashboard.month_status")
     _render_month_status_grid(conn)
 
     # Charts (2×2)
+    section_header("Charts", "dashboard.charts")
     # Trend/cumulative charts always show all months (filtering to one month
     # makes them meaningless as time-series). Category charts respect the filter.
     all_monthly = get_monthly_totals(conn)
@@ -235,7 +241,7 @@ def render_dashboard_view() -> None:
                     ]
                     trace.marker.opacity = opacities
             fig.update_layout(height=350, margin=dict(t=40, b=20))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     with chart_col2:
         # Category breakdown - donut (respects filter)
@@ -253,7 +259,7 @@ def render_dashboard_view() -> None:
                 hole=0.4,
             )
             fig.update_layout(height=350, margin=dict(t=40, b=20))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     chart_col3, chart_col4 = st.columns(2)
 
@@ -285,7 +291,7 @@ def render_dashboard_view() -> None:
                         showlegend=False,
                     )
             fig.update_layout(height=350, margin=dict(t=40, b=20))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     with chart_col4:
         # Top 5 spending categories - horizontal bar
@@ -303,6 +309,6 @@ def render_dashboard_view() -> None:
                 color_discrete_sequence=["#e74c3c"],
             )
             fig.update_layout(height=350, margin=dict(t=40, b=20), yaxis=dict(autorange="reversed"))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     conn.close()
