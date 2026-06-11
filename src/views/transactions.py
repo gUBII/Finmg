@@ -14,11 +14,12 @@ from src.db.queries import (
     update_transaction_category,
 )
 from src.pipeline.categoriser import get_all_category_names, load_category_rules
+from src.ui.help import page_header, section_header, widget_help
 
 
 def render_transactions_view() -> None:
     """Render a filterable, editable transactions table backed by SQLite."""
-    st.title("Transactions")
+    page_header("Transactions", "transactions")
 
     conn = get_connection()
     init_db(conn)
@@ -49,7 +50,9 @@ def render_transactions_view() -> None:
         cat_options = ["All"] + all_cats
         selected_category = st.selectbox("Category", cat_options)
 
-    search = st.text_input("Description search")
+    search = st.text_input(
+        "Description search", help=widget_help("transactions.search")
+    )
 
     # Resolve account number from label
     filter_month = None if selected_month == "All" else selected_month
@@ -97,6 +100,7 @@ def render_transactions_view() -> None:
     display_df.columns = ["ID", "Date", "Description", "Withdrawal", "Deposit",
                           "Account Type", "Category", "Month"]
 
+    section_header("Edit categories", "transactions.editor")
     edited_df = st.data_editor(
         display_df,
         column_config={
@@ -112,12 +116,12 @@ def render_transactions_view() -> None:
             ),
             "Month": st.column_config.TextColumn("Month", disabled=True),
         },
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         key="txn_editor",
     )
 
-    if st.button("Save Changes", type="primary", use_container_width=True):
+    if st.button("Save Changes", type="primary", width="stretch"):
         changes = 0
         for idx, row in edited_df.iterrows():
             original_cat = display_df.loc[idx, "Category"]
