@@ -22,6 +22,7 @@ from src.parser.pdf_extractor import extract_transactions, validate_totals
 from src.pipeline.categoriser import categorise_all, load_category_rules
 from src.pipeline.merger import detect_internal_transfers
 from src.pipeline.month_splitter import split_by_month
+from src.ui.help import page_header, section_header, widget_help
 
 EXPECTED_TOTALS = {
     "178865319": {"withdrawals": 28171.78, "deposits": 30125.60},
@@ -89,12 +90,12 @@ def _render_month_status_grid(conn) -> None:
         return ""
 
     styled = df.style.map(_style_cell, subset=[c for c in df.columns if c != "Account"])
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    st.dataframe(styled, width="stretch", hide_index=True)
 
 
 def render_upload_view() -> None:
     """Render one-click upload → full pipeline → DB persistence."""
-    st.title("Upload")
+    page_header("Upload", "upload")
     st.caption("Upload ANZ bank statement PDFs. Processing is automatic.")
 
     conn = get_connection()
@@ -106,9 +107,10 @@ def render_upload_view() -> None:
         type=["pdf"],
         accept_multiple_files=True,
         key="pdf_uploader",
+        help=widget_help("upload.uploader"),
     )
 
-    if uploaded_files and st.button("Process", type="primary", use_container_width=True):
+    if uploaded_files and st.button("Process", type="primary", width="stretch"):
         config = load_category_rules()
         results = []
 
@@ -194,19 +196,19 @@ def render_upload_view() -> None:
             st.success(f"{name}: {validation['transaction_count']} transactions processed")
 
     # Month status grid
-    st.subheader("Month Status")
+    section_header("Month Status", "upload.month_status")
     _render_month_status_grid(conn)
 
     # Previously uploaded PDFs
     pdfs = get_uploaded_pdfs(conn)
     if pdfs:
-        st.subheader("Uploaded Files")
+        section_header("Uploaded Files", "upload.uploaded_files")
         pdf_df = pd.DataFrame(pdfs)[
             ["filename", "account_type", "account_number", "transaction_count",
              "parsed_withdrawals", "parsed_deposits", "uploaded_at"]
         ]
         pdf_df.columns = ["File", "Account Type", "Account #", "Txns",
                           "Withdrawals", "Deposits", "Uploaded"]
-        st.dataframe(pdf_df, use_container_width=True, hide_index=True)
+        st.dataframe(pdf_df, width="stretch", hide_index=True)
 
     conn.close()
