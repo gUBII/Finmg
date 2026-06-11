@@ -35,6 +35,7 @@ from src.services.forecast import (
     save_forecast_override,
     _trailing_window,
 )
+from src.ui.help import page_header, section_header, widget_help
 
 
 def _default_period() -> tuple[date, date]:
@@ -44,7 +45,7 @@ def _default_period() -> tuple[date, date]:
 
 
 def render_forecast_view() -> None:
-    st.title("Forecast (Section D)")
+    page_header("Forecast (Section D)", "forecast")
 
     conn = get_connection()
     init_db(conn)
@@ -68,6 +69,7 @@ def render_forecast_view() -> None:
             "Forecast period start",
             value=default_start,
             key="fc_start",
+            help=widget_help("forecast.period"),
         )
     with col2:
         period_end = st.date_input(
@@ -110,6 +112,7 @@ def render_forecast_view() -> None:
     tab_income, tab_expenditure = st.tabs(["Income", "Expenditure"])
 
     with tab_income:
+        section_header("Income", "forecast.income")
         _render_section_editor(
             conn,
             mp_id,
@@ -121,6 +124,7 @@ def render_forecast_view() -> None:
         )
 
     with tab_expenditure:
+        section_header("Expenditure", "forecast.expenditure")
         _render_section_editor(
             conn,
             mp_id,
@@ -179,7 +183,7 @@ def _render_section_editor(
                 max_chars=300,
             ),
         },
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         num_rows="fixed",
         key=f"fc_editor_{key_suffix}",
