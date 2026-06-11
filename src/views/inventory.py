@@ -58,6 +58,7 @@ from src.models.estate import (
     MotorVehicle,
     RealEstate,
 )
+from src.ui.help import page_header, section_header
 
 _ROLE_OPTIONS = [None, "living", "spending", "savings", "other"]
 _OWNERSHIP_OPTIONS = [None, "sole", "joint"]
@@ -68,7 +69,7 @@ _PAID_UNPAID_OPTIONS = [None, "paid", "unpaid"]
 
 def render_inventory_view() -> None:
     """Render the Estate Inventory management page."""
-    st.title("Estate Inventory")
+    page_header("Estate Inventory", "inventory")
 
     conn = get_connection()
     init_db(conn)
@@ -126,7 +127,7 @@ def _coerce_str(raw) -> str | None:
 # ---------------------------------------------------------------------------
 
 def _render_accounts_tab(conn, mp_id: int) -> None:
-    st.subheader("Bank & credit-union accounts — Section B.1")
+    section_header("Bank & credit-union accounts — Section B.1", "inventory.accounts")
     st.caption(
         "Institution, account number, and BSB come from parsed bank statements "
         "and are evidence-grade — they cannot be edited here. Use the editable "
@@ -168,7 +169,7 @@ def _render_accounts_tab(conn, mp_id: int) -> None:
             "Ownership": st.column_config.SelectboxColumn("Ownership", options=["sole", "joint"]),
             "Current balance": st.column_config.NumberColumn("Current balance", format="%.2f"),
         },
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         num_rows="fixed",
         key="acc_editor",
@@ -205,7 +206,7 @@ def _render_accounts_tab(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_real_estate_tab(conn, mp_id: int) -> None:
-    st.subheader("Real estate — Section B.2")
+    section_header("Real estate — Section B.2", "inventory.real_estate")
     items = list_real_estate(conn, mp_id)
 
     if items:
@@ -230,7 +231,7 @@ def _render_real_estate_tab(conn, mp_id: int) -> None:
                 "Occupancy": st.column_config.SelectboxColumn("Occupancy", options=_REAL_ESTATE_OCCUPANCY_OPTIONS),
                 "Value": st.column_config.NumberColumn("Value", format="%.2f"),
             },
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             num_rows="fixed",
             key="re_editor",
@@ -306,7 +307,7 @@ def _render_add_real_estate_form(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_investments_tab(conn, mp_id: int) -> None:
-    st.subheader("Investments — Section B.3")
+    section_header("Investments — Section B.3", "inventory.investments")
     items = list_investments(conn, mp_id)
 
     if items:
@@ -331,7 +332,7 @@ def _render_investments_tab(conn, mp_id: int) -> None:
                 "Units": st.column_config.NumberColumn("Units", format="%.4f"),
                 "Amount": st.column_config.NumberColumn("Amount", format="%.2f"),
             },
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             num_rows="fixed",
             key="inv_editor",
@@ -408,7 +409,7 @@ def _render_add_investment_form(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_motor_vehicles_tab(conn, mp_id: int) -> None:
-    st.subheader("Motor vehicles — Section B.4")
+    section_header("Motor vehicles — Section B.4", "inventory.vehicles")
     items = list_motor_vehicles(conn, mp_id)
 
     if items:
@@ -432,7 +433,7 @@ def _render_motor_vehicles_tab(conn, mp_id: int) -> None:
                 "Year": st.column_config.NumberColumn("Year", format="%d"),
                 "Value": st.column_config.NumberColumn("Value", format="%.2f"),
             },
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             num_rows="fixed",
             key="mv_editor",
@@ -505,7 +506,7 @@ def _render_add_motor_vehicle_form(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_accommodation_bonds_tab(conn, mp_id: int) -> None:
-    st.subheader("Accommodation bonds — Section B.5")
+    section_header("Accommodation bonds — Section B.5", "inventory.bonds")
     items = list_accommodation_bonds(conn, mp_id)
 
     if items:
@@ -528,7 +529,7 @@ def _render_accommodation_bonds_tab(conn, mp_id: int) -> None:
                 "Paid/unpaid": st.column_config.SelectboxColumn("Paid/unpaid", options=_PAID_UNPAID_OPTIONS),
                 "Amount": st.column_config.NumberColumn("Amount", format="%.2f"),
             },
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             num_rows="fixed",
             key="bond_editor",
@@ -601,7 +602,7 @@ def _render_add_accommodation_bond_form(conn, mp_id: int) -> None:
 # ---------------------------------------------------------------------------
 
 def _render_debts_tab(conn, mp_id: int) -> None:
-    st.subheader("Debts and liabilities — Section C")
+    section_header("Debts and liabilities — Section C", "inventory.debts")
     items = list_debts_liabilities(conn, mp_id)
 
     if items:
@@ -622,7 +623,7 @@ def _render_debts_tab(conn, mp_id: int) -> None:
                 "id": st.column_config.NumberColumn("ID", disabled=True),
                 "Amount": st.column_config.NumberColumn("Amount", format="%.2f"),
             },
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             num_rows="fixed",
             key="debt_editor",
