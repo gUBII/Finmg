@@ -20,6 +20,7 @@ from src.db.queries_estate import (
 )
 from src.models.compliance import ConsultationLogEntry
 from src.services.consultations import record_consultation
+from src.ui.help import page_header, section_header
 
 RON_OPTION = "Ron (managed person) / external party"
 
@@ -36,7 +37,7 @@ def _people_options(conn, mp_id: int) -> dict[str, int | None]:
 
 
 def _render_log_form(conn, mp_id: int, options: dict[str, int | None]) -> None:
-    st.subheader("Log a consultation")
+    section_header("Log a consultation", "consultations.log_form")
     with st.form("consult_form", clear_on_submit=True):
         c1, c2 = st.columns(2)
         consult_date = c1.date_input(
@@ -71,7 +72,7 @@ def _render_log_form(conn, mp_id: int, options: dict[str, int | None]) -> None:
 
 
 def _render_history(entries, id_to_label: dict[int | None, str]) -> None:
-    st.subheader("History")
+    section_header("History", "consultations.history")
     if not entries:
         st.info("No consultations logged yet.")
         return
@@ -84,11 +85,11 @@ def _render_history(entries, id_to_label: dict[int | None, str]) -> None:
         }
         for e in entries
     )
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(df, width="stretch", hide_index=True)
 
 
 def render_consultation_view() -> None:
-    st.title("Consultations")
+    page_header("Consultations", "consultations")
     st.caption(
         "Plan Section F — the consultation trail with Ron and the significant "
         "people (handbook §4.2). Every entry is written to the immutable audit log."
