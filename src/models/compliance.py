@@ -109,6 +109,24 @@ class AuditEntry:
 
 
 @dataclass(frozen=True)
+class EstateChangeDetail:
+    """The substance of one Change-in-Estate proposal (S8, migration 008).
+
+    Pairs 1:1 with a `submissions` row of type 'change_in_estate' — the
+    submission carries the Appendix-A letter, status lifecycle, and NCAT
+    references; this carries what is actually proposed. `views_json` is a JSON
+    array of {name, relationship, view} per form §9.1.
+    """
+    submission_id: int
+    description: str
+    id: int | None = None
+    amount: float | None = None
+    affordability_confirmed: bool = False
+    views_json: str | None = None
+    notes: str | None = None
+
+
+@dataclass(frozen=True)
 class ComplianceSetting:
     """Per-rule toggle for the compliance engine.
 

@@ -1,0 +1,177 @@
+{
+  "A": {
+    "title": "Carers",
+    "summary": "Hiring private carers for Ron, or extra care on top of what a facility provides.",
+    "handbook_trigger": null,
+    "required_attachments": [
+      "Quote or invoice showing the proposed annual carer cost"
+    ],
+    "notes": "Private care NOT funded by NDIS or a home care package. Nursing home fees are excluded too. NSWTG will ask whether the carers are qualified and whether the estate can afford the cost."
+  },
+  "B": {
+    "title": "Gifts",
+    "summary": "A gift from Ron's estate beyond the usual seasonal pattern — anything larger or more regular than birthdays/Christmas.",
+    "handbook_trigger": null,
+    "required_attachments": [],
+    "notes": "Only seasonal gifts (Christmas, weddings, birthdays) are expected. Gifts must satisfy §76 of the NSW Trustee and Guardian Act 2009 — the Gifts page tracks this. Larger donations: contact the NSWTG client service team first."
+  },
+  "C": {
+    "title": "Holiday",
+    "summary": "A holiday paid for from Ron's estate.",
+    "handbook_trigger": null,
+    "required_attachments": [
+      "Travel quotes (attach if obtained)"
+    ],
+    "notes": "NSWTG asks whether the estate can afford it, whether travel insurance is in place, and whether the costs are primarily for Ron rather than a carer."
+  },
+  "D": {
+    "title": "Investment changes",
+    "summary": "Investing Ron's funds or changing how they are invested.",
+    "handbook_trigger": "Investing managed person's funds — Prudent Person Principle (Trustee Act 1925 §14C); duty to diversify and distribute risk.",
+    "required_attachments": [
+      "Statement of Advice from a licensed financial advisor (required if the portfolio is over $100,000; not required for term deposits below $500,000)"
+    ],
+    "notes": "NSWTG checks compliance with §14C Trustee Act 1925 and asks whether funds go overseas, into a business, a speculative investment, or a trust."
+  },
+  "E": {
+    "title": "Legal proceedings",
+    "summary": "Starting, continuing, or defending legal action on Ron's behalf.",
+    "handbook_trigger": "Legal proceedings — commence, continue, or defend.",
+    "required_attachments": [
+      "Copy of independent legal advice (attach if sought)"
+    ],
+    "notes": "NSWTG asks whether the proceedings were in place before or after the financial management order."
+  },
+  "F": {
+    "title": "Legal costs",
+    "summary": "Paying legal costs for proceedings on Ron's behalf.",
+    "handbook_trigger": "Payment of legal costs — for proceedings on managed person's behalf.",
+    "required_attachments": [
+      "Solicitor recommendation (attach if extra Directions and Authorities are needed from NSWTG)"
+    ],
+    "notes": "NSWTG asks for a legal cost agreement, whether costs are reasonable and affordable, and whether they are already in the expenditure forecast (Section D)."
+  },
+  "G": {
+    "title": "Purchase of motor vehicle",
+    "summary": "Buying (or modifying) a vehicle for Ron.",
+    "handbook_trigger": "Purchase of motor vehicle — necessary and beneficial for the managed person.",
+    "required_attachments": [
+      "Quote for the vehicle and any modifications"
+    ],
+    "notes": "The vehicle should be registered in Ron's name, insured, used exclusively for him, and the estate must afford both purchase and running costs."
+  },
+  "H": {
+    "title": "Sale of motor vehicle",
+    "summary": "Selling a vehicle Ron owns.",
+    "handbook_trigger": null,
+    "required_attachments": [
+      "Valuation (attach if obtained)"
+    ],
+    "notes": "NSWTG asks why it is being sold, what the proceeds are for, whether the vehicle is mentioned in the Will, and whether the buyer is a family member."
+  },
+  "I": {
+    "title": "Past gratuitous care",
+    "summary": "Paying a family member or carer for past unpaid care, out of a compensation settlement.",
+    "handbook_trigger": "Past gratuitous care — payment for past unpaid care from a compensation settlement.",
+    "required_attachments": [
+      "Schedule of damages",
+      "Calculation of the total amount",
+      "Terms of settlement",
+      "Judgement order",
+      "Written confirmation from the claimant this will be the only claim",
+      "Evidence the claimant provided care at their economic loss",
+      "Centrelink medical clearance statement, including preclusion period",
+      "Any past experience or reimbursement claim pending",
+      "Statement of Advice including report on life expectancy",
+      "Statement of Particulars"
+    ],
+    "notes": "The heaviest evidence burden in Appendix A — all ten documents are required. NSWTG also checks for conflict of interest in paying the claim."
+  },
+  "J": {
+    "title": "Real estate — occupation of property",
+    "summary": "A family member or someone else living in Ron's property at reduced or no rent.",
+    "handbook_trigger": "Occupation of managed person's property by family member — at reduced or no rent.",
+    "required_attachments": [
+      "Real estate agent rental appraisal (attach if sought)"
+    ],
+    "notes": "Do NOT use this section if the occupant is a joint owner. NSWTG asks who pays the outgoings (rates, strata, insurance, repairs) and the Centrelink impact."
+  },
+  "K": {
+    "title": "Real estate — lease of property",
+    "summary": "Leasing out property Ron owns.",
+    "handbook_trigger": "Lease of real estate — leasing owned property.",
+    "required_attachments": [
+      "Independent real estate agent rental appraisal",
+      "Renovation quote (attach if renovations are required)"
+    ],
+    "notes": "If the proposed rent is below market value, NSWTG requires the reasons and an affordability check."
+  },
+  "L": {
+    "title": "Real estate — purchase of property",
+    "summary": "Buying property on Ron's behalf — to live in or as an investment.",
+    "handbook_trigger": "Purchase of real estate — buying property on managed person's behalf.",
+    "required_attachments": [
+      "Property valuation by a licensed valuer",
+      "Building inspection report",
+      "Pest inspection report"
+    ],
+    "notes": "NSWTG asks the funding source, who will live there, whether an occupational therapist inspected it for Ron's needs, and the Centrelink impact."
+  },
+  "M": {
+    "title": "Real estate — sale of property",
+    "summary": "Selling property Ron owns.",
+    "handbook_trigger": "Sale of real estate — selling owned property.",
+    "required_attachments": [
+      "Two real estate agent appraisals OR one licensed valuation",
+      "Copy of the Will (required if the property is specifically left to someone)"
+    ],
+    "notes": "If sold to a family member or friend, the price must be consistent with the appraisal. Sale proceeds routing (bond → Q, investment → D, new property → L) must be declared."
+  },
+  "N": {
+    "title": "Real estate — modifications / renovations",
+    "summary": "Building work on property Ron owns.",
+    "handbook_trigger": "Modify / renovate property — work on owned property.",
+    "required_attachments": [
+      "At least two quotes from a licensed builder or tradesperson"
+    ],
+    "notes": "NSWTG checks local government approvals, that the work is by a licensed tradesperson, and whether the work is for Ron's needs or to ready the property for sale/rental."
+  },
+  "O": {
+    "title": "Reimbursement of expenses",
+    "summary": "Paying someone back for money they spent on Ron's behalf.",
+    "handbook_trigger": null,
+    "required_attachments": [
+      "Receipts for every payment claimed",
+      "Bank statements supporting the payments"
+    ],
+    "notes": "All payments must have been for Ron's direct benefit. NSWTG asks whether this is a final reimbursement."
+  },
+  "P": {
+    "title": "Remuneration",
+    "summary": "Linda being paid for acting as private manager — only possible with a Supreme Court order.",
+    "handbook_trigger": "Remuneration for management services — only with Supreme Court remuneration order.",
+    "required_attachments": [
+      "Certified copy of the NSW Supreme Court remuneration order",
+      "Copy of the invoice created in accordance with the order"
+    ],
+    "notes": "The invoice must be sent to NSWTG for approval BEFORE any funds are processed. Without a court order, no remuneration is permitted (handbook §4.10)."
+  },
+  "Q": {
+    "title": "Residential accommodation bond",
+    "summary": "Paying a refundable accommodation deposit (RAD/RAC/DAC) so Ron can enter an aged care facility.",
+    "handbook_trigger": "Entering aged care facility — RAC / DAC payment requires approval before signing the Residential Care Agreement.",
+    "required_attachments": [
+      "Residential Care Agreement (do not sign before NSWTG approval)"
+    ],
+    "notes": "Approval is required BEFORE signing. NSWTG asks whether the estate will still have sufficient funds after the bond is paid."
+  },
+  "R": {
+    "title": "Miscellaneous",
+    "summary": "Any proposed change to Ron's estate not covered by sections A–Q.",
+    "handbook_trigger": null,
+    "required_attachments": [
+      "Copies of supporting documents such as invoices"
+    ],
+    "notes": "Provide the reason, why it is in Ron's best interest, its affordability, and the amount to be approved. For urgent approval, contact the NSWTG Client Service Team."
+  }
+}

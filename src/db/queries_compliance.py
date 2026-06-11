@@ -24,6 +24,7 @@ from src.models.compliance import (
     AuditEntry,
     ComplianceSetting,
     ConsultationLogEntry,
+    EstateChangeDetail,
     FieldRationale,
     Gift,
     Submission,
@@ -229,6 +230,64 @@ def list_submissions(
             (managed_person_id,),
         ).fetchall()
     return [_row_to_dto(r, Submission) for r in rows]
+
+
+# ---------------------------------------------------------------------------
+# estate_change_details (1:1 with a change_in_estate submission)
+# ---------------------------------------------------------------------------
+
+def _detail_from_row(row: sqlite3.Row) -> EstateChangeDetail:
+    dto = _row_to_dto(row, EstateChangeDetail)
+    # SQLite stores the flag as INTEGER 0/1.
+    return EstateChangeDetail(
+        **{**asdict(dto), "affordability_confirmed": bool(row["affordability_confirmed"])}
+    )
+
+
+def insert_estate_change_detail(conn: sqlite3.Connection, detail: EstateChangeDetail) -> int:
+    cur = conn.execute(
+        "INSERT INTO estate_change_details "
+        "(submission_id, description, amount, affordability_confirmed, views_json, notes) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (
+            detail.submission_id,
+            detail.description,
+            detail.amount,
+            int(detail.affordability_confirmed),
+            detail.views_json,
+            detail.notes,
+        ),
+    )
+    conn.commit()
+    return cur.lastrowid
+
+
+def get_estate_change_detail(
+    conn: sqlite3.Connection, submission_id: int
+) -> EstateChangeDetail | None:
+    row = conn.execute(
+        "SELECT * FROM estate_change_details WHERE submission_id = ?", (submission_id,)
+    ).fetchone()
+    return _detail_from_row(row) if row else None
+
+
+def update_estate_change_detail(conn: sqlite3.Connection, detail: EstateChangeDetail) -> None:
+    if detail.id is None:
+        raise ValueError("detail.id is required for update")
+    conn.execute(
+        "UPDATE estate_change_details SET description = ?, amount = ?, "
+        "affordability_confirmed = ?, views_json = ?, notes = ?, "
+        "updated_at = datetime('now') WHERE id = ?",
+        (
+            detail.description,
+            detail.amount,
+            int(detail.affordability_confirmed),
+            detail.views_json,
+            detail.notes,
+            detail.id,
+        ),
+    )
+    conn.commit()
 
 
 # ---------------------------------------------------------------------------
