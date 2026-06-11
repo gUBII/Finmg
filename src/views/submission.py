@@ -13,18 +13,27 @@ from datetime import date, timedelta
 import streamlit as st
 
 from src.db.database import get_connection, init_db
+from src.db.queries_compliance import list_attachments, list_submissions
 from src.db.queries_estate import bootstrap_managed_person_if_empty
 from src.services.artifacts.fill import fill_artifact
 from src.services.artifacts.resolvers import Ctx
 from src.services.artifacts.spec import load_spec
 from src.services.audit import audit_artifact, record_rationale
 from src.services.compliance.engine import evaluate_compliance
+from src.services.lodgement import TYPE_LABELS, build_lodgement_zip, mark_lodged
 from src.services.submission_record import persist_submission
 from src.ui.help import page_header, section_header, widget_help
 
 ARTIFACTS = {
     "annual_accounts": "Annual Accounts — past-year actuals",
     "plan": "Private Manager's Plan — forward forecast",
+}
+
+STATUS_BADGES = {
+    "draft": "📝 Draft",
+    "submitted": "📤 Lodged",
+    "approved": "✅ Approved",
+    "rejected": "❌ Rejected",
 }
 
 
@@ -151,4 +160,55 @@ def render_submission_view() -> None:
                 f"(sha {sub.generated_pdf_sha[:12]}…)."
             )
 
+    # ------------------------------------------------- register & lodgement
+    st.divider()
+    _render_register(conn, mp_id)
+
     conn.close()
+
+
+def _render_register(conn, mp_id: int) -> None:
+    section_header("Register & lodgement", "submissions.register")
+    saved = [
+        s for s in list_submissions(conn, mp_id)
+        if s.generated_pdf_path  # estate-change drafts without a PDF live in their own view
+    ]
+    if not saved:
+        st.info("Nothing saved yet — generate a form above and press "
+                "'Save to submissions register'.")
+        return
+
+    for sub in saved:
+        label = TYPE_LABELS.get(sub.type, sub.type)
+        badge = STATUS_BADGES.get(sub.status, sub.status)
+        n_attach = len(list_attachments(conn, sub.id))
+        with st.expander(f"#{sub.id} {label} · {badge} · {n_attach} attachment(s)"):
+            if sub.submitted_at:
+                st.caption(f"Lodged {sub.submitted_at} by {sub.submitted_by or '—'}")
+            zip_key = f"lodgement_zip_{sub.id}"
+            prep_col, action_col = st.columns(2)
+            if prep_col.button(
+                "Prepare lodgement bundle",
+                key=f"lodge_prep_{sub.id}",
+                help=widget_help("submissions.bundle"),
+            ):
+                try:
+                    st.session_state[zip_key] = build_lodgement_zip(conn, sub.id)
+                except ValueError as exc:
+                    st.error(str(exc))
+            if zip_key in st.session_state:
+                prep_col.download_button(
+                    "Download bundle (ZIP)",
+                    data=st.session_state[zip_key],
+                    file_name=f"FinMg_lodgement_{sub.type}_{sub.id}.zip",
+                    mime="application/zip",
+                    type="primary",
+                    key=f"lodge_dl_{sub.id}",
+                )
+            if sub.status == "draft":
+                if action_col.button(
+                    "Mark as lodged with NSWTG",
+                    key=f"lodge_mark_{sub.id}",
+                ):
+                    mark_lodged(conn, sub.id, recorded_by="Linda")
+                    st.rerun()

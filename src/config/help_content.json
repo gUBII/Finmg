@@ -319,5 +319,15 @@
   "audit.search": {
     "what": "Matches the reason text, the person who acted, and the recorded data.",
     "do": "Try a name, an amount, or a word like 'rejected'."
+  },
+  "submissions.register": {
+    "what": "Every form you've saved, with its lodgement status. The bundle button packs everything NSWTG needs into one ZIP file: the filled form, the bank statements that back it, and a cover sheet listing the contents.",
+    "source": "Saved forms from the Generate section above. The attached statements were matched automatically to the reporting period when you saved.",
+    "do": "Prepare the bundle, download it, send it to NSWTG (post or email), then press 'Mark as lodged' so the record shows when it went. If the cover sheet says a statement is MISSING, re-upload that statement before lodging.",
+    "ref": "Handbook §5.4 (annual accounts lodgement)"
+  },
+  "submissions.bundle": {
+    "what": "Builds the ZIP: filled PDF + source statements + cover sheet.",
+    "do": "Check the MANIFEST.txt inside before sending — it lists anything missing."
   }
 }
