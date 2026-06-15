@@ -14,9 +14,9 @@
   "expenditure_benchmarks": {
     "Rent": {
       "type": "cycle_amount",
-      "amount": null,
+      "amount": 250.00,
       "cycle": "weekly",
-      "reason": "Rent is paid via internal transfer from the Living Account and is not captured as a categorised expense. Set 'amount' before generating; until then it flags rather than fabricates."
+      "reason": "Ron's $250/wk share of a $500/wk shared tenancy (all bills included; Linda pays the other $250). Paid fortnightly ($500) from Ron's account from 16 Jun 2026, when NCAT approved rent transfers. Previously on hold (Linda covered Ron's share) pending NCAT approval, so it does not appear in trailing actuals. $250 x 52 = $13,000/yr."
     }
   },
   "one_off_categories": {
