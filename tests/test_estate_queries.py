@@ -331,9 +331,12 @@ class TestInsertSetsAccountIdInline:
         assert all(r["account_id"] == living_acc_id for r in rows)
         conn.close()
 
-    def test_account_id_stays_null_when_account_not_seeded(self, tmp_path):
+    def test_new_upload_auto_registers_account_when_person_exists(self, tmp_path):
+        # A managed person exists but the account has not been seeded. Upload
+        # now auto-registers the account from the parsed header and FK-links the
+        # transactions, rather than leaving account_id NULL.
         conn = _conn(tmp_path)
-        _seed_ron(conn)  # but NO accounts row inserted
+        _seed_ron(conn)  # person exists; NO accounts row pre-seeded
 
         meta = AccountMeta(
             account_type="ACCESS ACCOUNT",
@@ -360,8 +363,11 @@ class TestInsertSetsAccountIdInline:
             "h_noacc",
         )
 
+        acc = get_account_by_number(conn, "437669532")
+        assert acc is not None  # auto-registered from the header
+        assert acc.institution == "ANZ"
         rows = conn.execute("SELECT account_id FROM transactions").fetchall()
-        assert all(r["account_id"] is None for r in rows)
+        assert all(r["account_id"] == acc.id for r in rows)
         conn.close()
 
 
@@ -373,9 +379,9 @@ class TestTransactionAccountFkBackfill:
 
     def test_backfill_links_legacy_transactions_to_accounts(self, tmp_path):
         conn = _conn(tmp_path)
-        ron_id = _seed_ron(conn)
 
-        # 1. Insert transactions FIRST, before the account exists → NULL account_id.
+        # 1. Insert transactions with NO managed person present, so auto-register
+        #    no-ops and account_id stays NULL — the genuine legacy scenario.
         meta = AccountMeta(
             account_type="ACCESS ACCOUNT",
             account_name="GENTILI RENATO",
@@ -406,7 +412,8 @@ class TestTransactionAccountFkBackfill:
         ).fetchall()
         assert all(r["account_id"] is None for r in before)
 
-        # 2. Now insert the account and run backfill.
+        # 2. Now seed the person + account and run backfill.
+        ron_id = _seed_ron(conn)
         living_acc_id = insert_account(
             conn,
             Account(
@@ -427,7 +434,6 @@ class TestTransactionAccountFkBackfill:
 
     def test_backfill_is_idempotent(self, tmp_path):
         conn = _conn(tmp_path)
-        ron_id = _seed_ron(conn)
         meta = AccountMeta(
             account_type="ACCESS ACCOUNT",
             account_name="GENTILI RENATO",
@@ -437,7 +443,8 @@ class TestTransactionAccountFkBackfill:
             report_start="01 May 2025",
             report_end="30 Jun 2025",
         )
-        # Insert before account exists so backfill has work to do.
+        # Insert with no managed person so auto-register no-ops and account_id is
+        # NULL — backfill then has legacy work to do.
         insert_pdf_and_transactions(
             conn,
             meta,
@@ -453,6 +460,7 @@ class TestTransactionAccountFkBackfill:
             "x.pdf",
             "h1",
         )
+        ron_id = _seed_ron(conn)
         insert_account(
             conn,
             Account(
