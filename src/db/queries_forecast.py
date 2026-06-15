@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import sqlite3
 from dataclasses import asdict, fields, replace
+from datetime import date
 
 from src.models.forecast import Forecast, ForecastCategory, OneOffEvent
 
@@ -22,6 +23,9 @@ _SECTION_TO_COLUMN = {
     "D_income": "deposit",
     "D_expenditure": "withdrawal",
 }
+
+# Average days per month (365.25 / 12) for converting a coverage span to months.
+_DAYS_PER_MONTH = 30.4375
 
 
 def _row_to_dto(row: sqlite3.Row, dto_class):
@@ -216,6 +220,54 @@ def compute_actual_value(
         (category_name, date_from, date_to),
     ).fetchone()
     return float(row["total"] or 0.0)
+
+
+def section_coverage_days(
+    conn: sqlite3.Connection,
+    section: str,
+    date_from: str,
+    date_to: str,
+) -> int:
+    """Span (in inclusive days) of dates carrying real data for `section` in the window.
+
+    Coverage is computed section-wide (any non-internal transaction whose
+    relevant column is non-null), not per-category: a category with a single
+    transaction must not read as "1 day of data" and annualize to absurdity.
+    Returns 0 when the section has no data in the window.
+    """
+    column = _SECTION_TO_COLUMN.get(section)
+    if column is None:
+        return 0
+    row = conn.execute(
+        f"SELECT MIN(date) AS lo, MAX(date) AS hi "
+        "FROM transactions "
+        f"WHERE {column} IS NOT NULL "
+        "  AND date >= ? AND date <= ? "
+        "  AND COALESCE(is_internal_transfer, 0) = 0",
+        (date_from, date_to),
+    ).fetchone()
+    if not row or row["lo"] is None:
+        return 0
+    return (date.fromisoformat(row["hi"]) - date.fromisoformat(row["lo"])).days + 1
+
+
+def compute_actual_with_coverage(
+    conn: sqlite3.Connection,
+    category_name: str,
+    section: str,
+    date_from: str,
+    date_to: str,
+) -> tuple[float, int, float]:
+    """Return (raw_total, section_coverage_days, months_with_data) for a category.
+
+    `raw_total` reuses `compute_actual_value`. Coverage is section-wide so all
+    categories in a section share one annualization basis. `months_with_data`
+    is the coverage span expressed in average months for display.
+    """
+    total = compute_actual_value(conn, category_name, section, date_from, date_to)
+    cov_days = section_coverage_days(conn, section, date_from, date_to)
+    months = round(cov_days / _DAYS_PER_MONTH, 1) if cov_days else 0.0
+    return total, cov_days, months
 
 
 # ---------------------------------------------------------------------------
