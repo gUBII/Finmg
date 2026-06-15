@@ -7,6 +7,8 @@ import streamlit as st
 
 from src.db.database import get_connection, init_db
 from src.db.queries import (
+    account_display_name,
+    get_account_display_names,
     get_all_transactions,
     get_distinct_accounts,
     get_distinct_months,
@@ -95,10 +97,14 @@ def render_transactions_view() -> None:
     category_options = expense_cats + income_cats + ["Internal Transfer", "Uncategorised"]
 
     df = pd.DataFrame(rows)
+    account_names = get_account_display_names(conn)
+    df["account_name"] = df["account_number"].map(
+        lambda n: account_names.get(n) or account_display_name(n)
+    )
     display_df = df[["id", "date", "description", "withdrawal", "deposit",
-                      "account_type", "category", "month"]].copy()
+                      "account_name", "category", "month"]].copy()
     display_df.columns = ["ID", "Date", "Description", "Withdrawal", "Deposit",
-                          "Account Type", "Category", "Month"]
+                          "Account", "Category", "Month"]
 
     section_header("Edit categories", "transactions.editor")
     edited_df = st.data_editor(
@@ -109,7 +115,7 @@ def render_transactions_view() -> None:
             "Description": st.column_config.TextColumn("Description", disabled=True),
             "Withdrawal": st.column_config.NumberColumn("Withdrawal", format="$%.2f", disabled=True),
             "Deposit": st.column_config.NumberColumn("Deposit", format="$%.2f", disabled=True),
-            "Account Type": st.column_config.TextColumn("Account Type", disabled=True),
+            "Account": st.column_config.TextColumn("Account", disabled=True),
             "Category": st.column_config.SelectboxColumn(
                 "Category",
                 options=category_options,

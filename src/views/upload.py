@@ -12,6 +12,8 @@ import streamlit as st
 
 from src.db.database import get_connection, init_db
 from src.db.queries import (
+    account_display_name,
+    get_account_display_names,
     get_account_types,
     get_month_account_coverage,
     get_uploaded_pdfs,
@@ -176,7 +178,11 @@ def render_upload_view() -> None:
             st.divider()
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric("Account", meta.account_type)
+                st.metric(
+                    "Account",
+                    get_account_display_names(conn).get(meta.account_number)
+                    or account_display_name(meta.account_number),
+                )
                 st.caption(f"BSB: {meta.bsb} | Acct: {meta.account_number}")
             with col2:
                 match_w = validation.get("withdrawals_match")
@@ -205,10 +211,16 @@ def render_upload_view() -> None:
     if pdfs:
         section_header("Uploaded Files", "upload.uploaded_files")
         pdf_df = pd.DataFrame(pdfs)[
-            ["filename", "account_type", "account_number", "transaction_count",
+            ["filename", "account_number", "transaction_count",
              "parsed_withdrawals", "parsed_deposits", "uploaded_at"]
         ]
-        pdf_df.columns = ["File", "Account Type", "Account #", "Txns",
+        _names = get_account_display_names(conn)
+        pdf_df.insert(
+            1,
+            "Account",
+            pdf_df["account_number"].map(lambda n: _names.get(n) or account_display_name(n)),
+        )
+        pdf_df.columns = ["File", "Account", "Account #", "Txns",
                           "Withdrawals", "Deposits", "Uploaded"]
         st.dataframe(pdf_df, width="stretch", hide_index=True)
 
