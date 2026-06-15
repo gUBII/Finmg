@@ -37,6 +37,12 @@ from src.db.queries_forecast import (
 )
 from src.models.forecast import Forecast
 
+# Provenance marker appended to generator-authored override reasons. Lets a
+# re-run refresh its own prior proposals while leaving Linda's manual edits
+# (which never carry this tag) untouched.
+_AUTO_TAG = " [auto]"
+_MONEY_TOLERANCE = 0.01
+
 
 def _trailing_window(period_start: str, period_end: str) -> tuple[str, str]:
     """Return the trailing-actuals window aligned to the forecast window length.
@@ -110,6 +116,77 @@ def bootstrap_forecast_period(
         )
         materialised += 1
     return materialised
+
+
+def _is_manual_override(row: Forecast) -> bool:
+    """True if this row carries a Linda-authored override the generator must keep.
+
+    A manual override has a non-empty reason that does NOT end with the
+    generator's provenance tag. Rows still at their bootstrap default
+    (forecast == actual, no reason) or previously written by the generator
+    (reason tagged `[auto]`) are eligible for refresh.
+    """
+    reason = (row.override_reason or "").strip()
+    if not reason:
+        return False
+    return not reason.endswith(_AUTO_TAG.strip())
+
+
+def generate_forecast_proposals(
+    conn: sqlite3.Connection,
+    managed_person_id: int,
+    period_start: str,
+    period_end: str,
+    benchmarks: dict | None = None,
+) -> dict:
+    """Fill annualized, benchmark-corrected proposals for every Section D row.
+
+    Bootstraps the period first (refreshing raw `actual_value` and keying the
+    rows), then writes each proposal's `forecast_value` + `override_reason`,
+    skipping rows Linda has manually overridden. Idempotent: re-running with
+    the same data reproduces the same proposals.
+
+    Returns `{updated, skipped, flagged}`.
+    """
+    from src.services.forecast_generator import generate_category_proposals
+
+    bootstrap_forecast_period(conn, managed_person_id, period_start, period_end)
+    existing = list_forecasts(conn, managed_person_id, period_start, period_end)
+    by_cat = {r.category_id: r for r in existing}
+
+    proposals = generate_category_proposals(
+        conn, managed_person_id, period_start, period_end, benchmarks=benchmarks
+    )
+
+    updated = skipped = flagged = 0
+    for p in proposals:
+        if p.flag:
+            flagged += 1
+        row = by_cat.get(p.category_id)
+        if row is not None and _is_manual_override(row):
+            skipped += 1
+            continue
+
+        if p.override_reason and abs(p.proposed_value - p.actual_value) > _MONEY_TOLERANCE:
+            reason = f"{p.override_reason}{_AUTO_TAG}"
+        else:
+            reason = None
+
+        upsert_forecast(
+            conn,
+            Forecast(
+                managed_person_id=managed_person_id,
+                period_start=period_start,
+                period_end=period_end,
+                category_id=p.category_id,
+                actual_value=p.actual_value,
+                forecast_value=p.proposed_value,
+                override_reason=reason,
+            ),
+        )
+        updated += 1
+
+    return {"updated": updated, "skipped": skipped, "flagged": flagged}
 
 
 class ForecastOverrideError(ValueError):

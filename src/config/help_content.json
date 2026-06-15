@@ -167,6 +167,16 @@
     "what": "Expected money out, in the same categories as the budget template.",
     "do": "Adjust any category you know will change and give the reason. The total here is what NSWTG compares future spending against."
   },
+  "forecast.generate": {
+    "what": "Fills every Forecast with a realistic full-year estimate instead of a raw copy of incomplete statements: it scales partial data up to 12 months, applies known rates (like the pension) and skips one-off payments.",
+    "do": "Click it, then review. It writes a reason on every figure it changes and never overwrites a number you typed yourself. Flagged rows still need your eyes."
+  },
+  "forecast.months_of_data": {
+    "what": "How many months of real bank-statement data sit behind a category. Fewer than 12 means the raw Actual is only a slice of the year."
+  },
+  "forecast.annualized": {
+    "what": "The Actual stretched to a full-year equivalent (Actual divided by months of data, times twelve). It is the starting point for the Forecast before any known rate or one-off adjustment."
+  },
   "identity": {
     "what": "The who's-who of the management order: Ron's identity, your details as his manager, and the significant people in his life. This fills Section A of the Plan.",
     "source": "Entered and kept up to date by you — the bank statements cannot supply these details.",

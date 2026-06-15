@@ -1,0 +1,32 @@
+{
+  "_doc": "Domain benchmarks for the Section D forecast generator. Category keys MUST match forecast_categories.category_name EXACTLY (note the double space in 'Gifts  & Outing'). Benchmarks override naive annualization. A null amount means 'flag for input', never fabricate.",
+  "annualization": {
+    "min_coverage_days": 14,
+    "fortnights_per_year": 26.0893
+  },
+  "income_benchmarks": {
+    "Disability Support Pension": {
+      "type": "fortnightly_rate",
+      "rate": 1420.30,
+      "reason": "Benchmark from observed steady-state Centrelink DSP rate $1420.30/fortnight x 26.0893; trailing deposits are incomplete so naive scaling understates."
+    }
+  },
+  "expenditure_benchmarks": {
+    "Rent": {
+      "type": "cycle_amount",
+      "amount": null,
+      "cycle": "weekly",
+      "reason": "Rent is paid via internal transfer from the Living Account and is not captured as a categorised expense. Set 'amount' before generating; until then it flags rather than fabricates."
+    }
+  },
+  "one_off_categories": {
+    "Other": {
+      "reason": "Single non-recurring receipt (e.g. final/back pay from LACTALIS); routed to Section E one-off, excluded from the recurring Section D forecast."
+    }
+  },
+  "seasonality_flags": {
+    "Gifts  & Outing": "Lumpy/seasonal spend — naive scaling may mislead; verify against expected events.",
+    "Home & appliances": "One-off-heavy (furniture/whitegoods) — verify before trusting the scaled value.",
+    "Miscellaneous": "Contains recurring NRMA insurance miscategorised here — verify and consider re-categorising."
+  }
+}

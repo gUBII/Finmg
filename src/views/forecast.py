@@ -32,9 +32,11 @@ from src.db.queries_forecast import (
 from src.services.forecast import (
     ForecastOverrideError,
     bootstrap_forecast_period,
+    generate_forecast_proposals,
     save_forecast_override,
     _trailing_window,
 )
+from src.services.forecast_generator import generate_category_proposals
 from src.ui.help import page_header, section_header, widget_help
 
 
@@ -63,7 +65,7 @@ def render_forecast_view() -> None:
 
     # ------------------------------------------------------------------ period
     default_start, default_end = _default_period()
-    col1, col2, col3 = st.columns([2, 2, 1])
+    col1, col2, col3, col4 = st.columns([2, 2, 1, 1])
     with col1:
         period_start = st.date_input(
             "Forecast period start",
@@ -85,6 +87,22 @@ def render_forecast_view() -> None:
                 conn, mp_id, period_start.isoformat(), period_end.isoformat()
             )
             st.success(f"Refreshed {count} forecast rows.")
+            st.rerun()
+    with col4:
+        st.write("")
+        st.write("")
+        if st.button(
+            "Generate proposals",
+            type="primary",
+            help=widget_help("forecast.generate"),
+        ):
+            summary = generate_forecast_proposals(
+                conn, mp_id, period_start.isoformat(), period_end.isoformat()
+            )
+            st.success(
+                f"Generated {summary['updated']} proposals "
+                f"({summary['flagged']} flagged, {summary['skipped']} manual kept)."
+            )
             st.rerun()
 
     if period_end <= period_start:
@@ -108,6 +126,40 @@ def render_forecast_view() -> None:
             conn, mp_id, period_start.isoformat(), period_end.isoformat()
         )
 
+    # ----------------------------------------------------- coverage + net summary
+    proposals = generate_category_proposals(
+        conn, mp_id, period_start.isoformat(), period_end.isoformat()
+    )
+    proposals_by_cat = {p.category_id: p for p in proposals}
+    months = max((p.months_of_data for p in proposals), default=0.0)
+    flagged = sum(1 for p in proposals if p.flag)
+    factor = f"x{12 / months:.1f}" if months else "n/a"
+    coverage_note = (
+        f"Data coverage: **{months:.1f} months** → annualization **{factor}**."
+    )
+    if flagged:
+        coverage_note += f"  ⚠ {flagged} categor{'y' if flagged == 1 else 'ies'} flagged for review."
+    st.caption(coverage_note)
+
+    forecasts_all = list_forecasts(
+        conn, mp_id, period_start.isoformat(), period_end.isoformat()
+    )
+    cat_section = {c.id: c.section for c in categories}
+    inc_total = sum(
+        (f.forecast_value or 0.0)
+        for f in forecasts_all
+        if cat_section.get(f.category_id) == "D_income"
+    )
+    exp_total = sum(
+        (f.forecast_value or 0.0)
+        for f in forecasts_all
+        if cat_section.get(f.category_id) == "D_expenditure"
+    )
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Income — annual forecast", f"${inc_total:,.2f}")
+    m2.metric("Expenditure — annual forecast", f"${exp_total:,.2f}")
+    m3.metric("Net position", f"${inc_total - exp_total:,.2f}")
+
     # ------------------------------------------------------------------- tabs
     tab_income, tab_expenditure = st.tabs(["Income", "Expenditure"])
 
@@ -121,6 +173,7 @@ def render_forecast_view() -> None:
             section="D_income",
             label="Income",
             key_suffix="inc",
+            proposals_by_cat=proposals_by_cat,
         )
 
     with tab_expenditure:
@@ -133,6 +186,7 @@ def render_forecast_view() -> None:
             section="D_expenditure",
             label="Expenditure",
             key_suffix="exp",
+            proposals_by_cat=proposals_by_cat,
         )
 
     conn.close()
@@ -146,7 +200,9 @@ def _render_section_editor(
     section: str,
     label: str,
     key_suffix: str,
+    proposals_by_cat: dict | None = None,
 ) -> None:
+    proposals_by_cat = proposals_by_cat or {}
     categories = list_forecast_categories(conn, section=section)
     forecasts = list_forecasts(conn, mp_id, period_start, period_end, section=section)
     by_cat_id = {f.category_id: f for f in forecasts}
@@ -154,13 +210,17 @@ def _render_section_editor(
     rows: list[dict] = []
     for cat in categories:
         f = by_cat_id.get(cat.id)
+        prop = proposals_by_cat.get(cat.id)
         rows.append(
             {
                 "_forecast_id": f.id if f else None,
                 "Category": cat.category_name,
                 "Actual": f.actual_value if f else 0.0,
+                "Months": prop.months_of_data if prop else 0.0,
+                "Annualized": prop.annualized_estimate if prop else 0.0,
                 "Forecast": f.forecast_value if f else 0.0,
                 "Override reason": (f.override_reason if f else "") or "",
+                "Flag": (prop.flag if prop and prop.flag else "") or "",
             }
         )
 
@@ -174,6 +234,18 @@ def _render_section_editor(
             "Actual": st.column_config.NumberColumn(
                 "Actual (trailing)", disabled=True, format="$%.2f"
             ),
+            "Months": st.column_config.NumberColumn(
+                "Months of data",
+                disabled=True,
+                format="%.1f",
+                help=widget_help("forecast.months_of_data"),
+            ),
+            "Annualized": st.column_config.NumberColumn(
+                "Annualized estimate",
+                disabled=True,
+                format="$%.2f",
+                help=widget_help("forecast.annualized"),
+            ),
             "Forecast": st.column_config.NumberColumn(
                 "Forecast", format="$%.2f"
             ),
@@ -182,6 +254,7 @@ def _render_section_editor(
                 help="Required when Forecast differs from Actual.",
                 max_chars=300,
             ),
+            "Flag": st.column_config.TextColumn("Flag", disabled=True),
         },
         width="stretch",
         hide_index=True,
