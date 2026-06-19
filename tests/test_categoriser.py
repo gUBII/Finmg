@@ -94,6 +94,70 @@ class TestCategoriser:
         assert txns[1].is_internal_transfer is True
         assert txns[2].category == "Uncategorised"
 
+    # --- new-pattern tests added when uncategorised transactions were triaged ---
+
+    def test_bakers_delight_is_fast_food(self, config):
+        txn = Transaction(date=date(2026, 5, 12), description="EFTPOS BAKERS DELIGHT MARRICKVILLE AU", withdrawal=10.60)
+        assert categorise_transaction(txn, config) == "Fast food & Restaurant"
+
+    def test_muffin_break_is_fast_food(self, config):
+        txn = Transaction(date=date(2026, 3, 19), description="EFTPOS MUFFINBREAKBURWOOD BURWOOD AU", withdrawal=11.60)
+        assert categorise_transaction(txn, config) == "Fast food & Restaurant"
+
+    def test_yeeros_is_fast_food(self, config):
+        txn = Transaction(date=date(2026, 6, 1), description="EFTPOS VICTORIA YEEROS MARRICKVILLE AU", withdrawal=9.14)
+        assert categorise_transaction(txn, config) == "Fast food & Restaurant"
+
+    def test_cwh_is_medicine(self, config):
+        """CWH is the EFTPOS abbreviation for Chemist Warehouse."""
+        txn = Transaction(date=date(2026, 3, 5), description="VISA DEBIT PURCHASE CARD 1216 CWH LAKEMBA LAKEMBA", withdrawal=50.98)
+        assert categorise_transaction(txn, config) == "Medicine (PRN & Oil)"
+
+    def test_specsavers_is_medicine(self, config):
+        txn = Transaction(date=date(2026, 5, 13), description="VISA DEBIT PURCHASE CARD 6621 SPECSAVERS BURWOOD P/L BURWOOD", withdrawal=78.0)
+        assert categorise_transaction(txn, config) == "Medicine (PRN & Oil)"
+
+    def test_lindt_is_gifts(self, config):
+        txn = Transaction(date=date(2026, 3, 2), description="EFTPOS LINDT AUSTRALIA HOMEBUSH AU", withdrawal=6.50)
+        assert categorise_transaction(txn, config) == "Gifts  & Outing"
+
+    def test_superbowl_is_gifts(self, config):
+        txn = Transaction(date=date(2026, 6, 1), description="VISA DEBIT PURCHASE CARD 1216 SQ *STRATHFIELD SUPERBOWL STRATHFIELD S", withdrawal=12.24)
+        assert categorise_transaction(txn, config) == "Gifts  & Outing"
+
+    def test_greater_union_is_gifts(self, config):
+        txn = Transaction(date=date(2026, 5, 26), description="VISA DEBIT PURCHASE CARD 6621 GREATER UNION BURWOO BURWOOD", withdrawal=17.80)
+        assert categorise_transaction(txn, config) == "Gifts  & Outing"
+
+    def test_yd_is_fashion(self, config):
+        txn = Transaction(date=date(2026, 3, 2), description="EFTPOS YD PTY LTD 632 HOMEBUSH AU", withdrawal=119.94)
+        assert categorise_transaction(txn, config) == "Fashion & accessories"
+
+    def test_barber_is_fashion(self, config):
+        txn = Transaction(date=date(2026, 3, 23), description="VISA DEBIT PURCHASE CARD 1216 SQ *BARBER CRAFT BURWOOD", withdrawal=50.70)
+        assert categorise_transaction(txn, config) == "Fashion & accessories"
+
+    def test_newsagency_is_office(self, config):
+        txn = Transaction(date=date(2026, 2, 9), description="EFTPOS NEWSAGENCY BURWOOD WESTFIBURWOOD AU", withdrawal=39.30)
+        assert categorise_transaction(txn, config) == "Office work & Stationary"
+
+    def test_post_shop_is_office(self, config):
+        txn = Transaction(date=date(2026, 5, 11), description="VISA DEBIT PURCHASE CARD 1216 POST ROSELANDS POST SH ROSELANDS", withdrawal=34.0)
+        assert categorise_transaction(txn, config) == "Office work & Stationary"
+
+    def test_reddy_express_is_car(self, config):
+        txn = Transaction(date=date(2026, 2, 9), description="EFTPOS REDDY EXPRESS 1569 GREENACRE AU", withdrawal=22.86)
+        assert categorise_transaction(txn, config) == "Car & Petrol"
+
+    def test_get_fish_glebe_is_groceries(self, config):
+        """GET FISH (Glebe) did not match the old GET FISH PTY LTD pattern."""
+        txn = Transaction(date=date(2026, 4, 7), description="EFTPOS GET FISH \\GLEBE AU", withdrawal=13.50)
+        assert categorise_transaction(txn, config) == "Groceries"
+
+    def test_account_servicing_fee_is_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 2, 27), description="ACCOUNT SERVICING FEE MINIMUM $2000 IN DEPOSITS NOT RECEIVED", withdrawal=5.0)
+        assert categorise_transaction(txn, config) == "Miscellaneous"
+
     def test_category_summary(self, config):
         txns = [
             Transaction(date=date(2026, 1, 15), description="WOOLWORTHS", withdrawal=50.0, category="Groceries"),

@@ -2,11 +2,11 @@
   "expense_categories": [
     {
       "name": "Groceries",
-      "patterns": ["WOOLWORTHS", "COLES", "ALDI", "IGA", "COSTCO", "FRUITY CAPERS", "GREEN VALLEY SPICES", "CASC SEAFOOD", "COSTI BROS", "LAKEMBA SEAFOOD", "FRESH FOOD", "FRUIT MARKET", "METRO CHULLORA", "NATURES BEST", "ROSELANDS FRUIT WORL", "TRANSTASMAN FISHERI", "GET FISH PTY LTD"]
+      "patterns": ["WOOLWORTHS", "COLES", "ALDI", "IGA", "COSTCO", "FRUITY CAPERS", "GREEN VALLEY SPICES", "CASC SEAFOOD", "COSTI BROS", "LAKEMBA SEAFOOD", "FRESH FOOD", "FRUIT MARKET", "METRO CHULLORA", "NATURES BEST", "ROSELANDS FRUIT WORL", "TRANSTASMAN FISHERI", "GET FISH"]
     },
     {
       "name": "Fast food & Restaurant",
-      "patterns": ["MCDONALDS", "HUNGRY JACKS", "KFC", "SUBWAY", "DOMINOS", "UBER EATS", "MENULOG", "DOORDASH", "CHICKEN LICKEN", "COCACOLAEPP", "WINGS & THINGS", "OUTBACK STEAKHOUSE", "THAI PARAGON", "PARAGON", "STEAKHOUSE", "PIZZA", "RESTAURANT", "CAFE", "PALACE CHINESE", "EAST SUSHI", "THAIHUTT", "HJS WILEY PARK", "BRIARS AT GREENLEES", "MOJO PICON", "LA FRUTTERIA", "CRAZY NONNA", "STEYNE HOTEL", "PAESANELLA", "PAULS CAFE", "CARVERY CATERING"]
+      "patterns": ["MCDONALDS", "HUNGRY JACKS", "KFC", "SUBWAY", "DOMINOS", "UBER EATS", "MENULOG", "DOORDASH", "CHICKEN LICKEN", "COCACOLAEPP", "WINGS & THINGS", "OUTBACK STEAKHOUSE", "THAI PARAGON", "PARAGON", "STEAKHOUSE", "PIZZA", "RESTAURANT", "CAFE", "PALACE CHINESE", "EAST SUSHI", "THAIHUTT", "HJS WILEY PARK", "BRIARS AT GREENLEES", "MOJO PICON", "LA FRUTTERIA", "CRAZY NONNA", "STEYNE HOTEL", "PAESANELLA", "PAULS CAFE", "CARVERY CATERING", "BAKERS DELIGHT", "CARUSOS ITALIAN", "MUFFINBREAK", "YEEROS", "SUSHI NAYA", "YOGURBERRY", "SACREBLEU", "PROVENDER HOLDINGS"]
     },
     {
       "name": "Medicine (Webster)",
@@ -14,7 +14,7 @@
     },
     {
       "name": "Medicine (PRN & Oil)",
-      "patterns": ["PHARMACY", "CHEMIST", "CHEMIST WAREHOUSE", "PRICELINE", "AMCAL", "YOUR CHOICE PHARMACY", "PHARMACY 4 LESS", "HEALTHY CARE"]
+      "patterns": ["PHARMACY", "CHEMIST", "CHEMIST WAREHOUSE", "PRICELINE", "AMCAL", "YOUR CHOICE PHARMACY", "PHARMACY 4 LESS", "HEALTHY CARE", "SPECSAVERS", "CWH "]
     },
     {
       "name": "Rent",
@@ -26,11 +26,11 @@
     },
     {
       "name": "Car & Petrol",
-      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "PETROL", "E-TOLL", "LINKT", "OPAL", "SUPER CHEAP AUTO", "SECURE PARKING"]
+      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "PETROL", "E-TOLL", "LINKT", "OPAL", "SUPER CHEAP AUTO", "SECURE PARKING", "REDDY EXPRESS", "SYD APRT"]
     },
     {
       "name": "Gifts  & Outing",
-      "patterns": ["BWS", "DAN MURPHY", "LIQUORLAND", "GIFT", "OUTING", "READING CINEMAS", "TICKETMASTER", "SKY ZONE", "SHOWBAGS", "ACE ATTRACTIONS"]
+      "patterns": ["BWS", "DAN MURPHY", "LIQUORLAND", "GIFT", "OUTING", "READING CINEMAS", "TICKETMASTER", "SKY ZONE", "SHOWBAGS", "ACE ATTRACTIONS", "LINDT AUSTRALIA", "PUNCHBOWL LIQUOR", "RIVERWOOD LEGION", "ANNANDALE HOTEL", "SUPERBOWL", "GREATER UNION", "HOBBYCO"]
     },
     {
       "name": "Debt(s)",
@@ -38,11 +38,11 @@
     },
     {
       "name": "Miscellaneous",
-      "patterns": ["NRMA INSURANCE", "NRMA.COM.AU"]
+      "patterns": ["NRMA INSURANCE", "NRMA.COM.AU", "BLUEFIT"]
     },
     {
       "name": "Office work & Stationary",
-      "patterns": ["OFFICEWORKS", "OFFICE WORKS", "STATIONARY"]
+      "patterns": ["OFFICEWORKS", "OFFICE WORKS", "STATIONARY", "NEWSAGENCY", "POST SH"]
     },
     {
       "name": "Nicotine & cigarettes",
@@ -50,11 +50,11 @@
     },
     {
       "name": "Fashion & accessories",
-      "patterns": ["KMART", "BIG W", "TARGET", "COTTON ON", "UNIQLO", "H&M", "CONNOR CLOTHING", "TAROCASH"]
+      "patterns": ["KMART", "BIG W", "TARGET", "COTTON ON", "UNIQLO", "H&M", "CONNOR CLOTHING", "TAROCASH", "YD PTY LTD", "IDOL NAILS", "BARBER CRAFT"]
     },
     {
       "name": "Home & appliances",
-      "patterns": ["BUNNINGS", "IKEA", "HARVEY NORMAN", "JB HI-FI", "NEXTRA", "DOMAYNE", "JAYCAR ELECTRONICS"]
+      "patterns": ["BUNNINGS", "IKEA", "HARVEY NORMAN", "JB HI-FI", "NEXTRA", "DOMAYNE", "JAYCAR ELECTRONICS", "CENTRAL AIR"]
     }
   ],
   "income_categories": [
@@ -81,5 +81,5 @@
   ],
   "internal_transfer_patterns": ["ANZ M-BANKING FUNDS TFER", "FUNDS TFER TRANSFER"],
   "subscription_patterns": ["NETFLIX", "SPOTIFY", "APPLE.COM", "GOOGLE", "DISNEY", "STAN", "PARAMOUNT", "YOUTUBE"],
-  "fee_patterns": ["ACCOUNT SERVICE FEE", "OVERDRAWN FEE", "DISHONOUR FEE"]
+  "fee_patterns": ["ACCOUNT SERVICE FEE", "ACCOUNT SERVICING FEE", "OVERDRAWN FEE", "DISHONOUR FEE"]
 }
