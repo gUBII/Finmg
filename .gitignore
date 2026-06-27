@@ -34,3 +34,7 @@ handoff/*.log
 linda.png
 
 .devfleet-worktrees/
+.bohor-worktrees/
+
+# Config backups (one-off snapshots before bulk edits)
+*.pre-learn-bak
