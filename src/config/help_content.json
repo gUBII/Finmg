@@ -104,6 +104,11 @@
     "source": "Planned figures from the submitted Plan; actuals from what you record on this page.",
     "do": "Open the flagged-rows panel below the table to read exactly why each 🚩 was raised."
   },
+  "gifts.forecast": {
+    "what": "The full gift-forecast table — every recipient (rows) by occasion (columns) with the planned amount, plus column totals and the grand total. This is the digital twin of the submitted handwritten forecast, rebuilt from the live ledger with the corrected names.",
+    "source": "Built from the gift ledger, so it always matches what is recorded. Flagged (pink) rows are §76 conflicts — e.g. a gift to the private manager.",
+    "do": "Download the Excel copy for the NCAT bundle. To change a figure, edit the ledger below; the matrix and the export update automatically."
+  },
   "gifts.recipients": {
     "what": "The name and relationship-to-Ron for each gift. These belong to the gift itself — a recipient does NOT have to be listed under Significant People.",
     "do": "Edit a Recipient or Relation cell, then press Save recipient changes. Every edit is written to the permanent audit log."
