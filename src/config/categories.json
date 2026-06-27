@@ -2,59 +2,230 @@
   "expense_categories": [
     {
       "name": "Groceries",
-      "patterns": ["WOOLWORTHS", "COLES", "ALDI", "IGA", "COSTCO", "FRUITY CAPERS", "GREEN VALLEY SPICES", "CASC SEAFOOD", "COSTI BROS", "LAKEMBA SEAFOOD", "FRESH FOOD", "FRUIT MARKET", "METRO CHULLORA", "NATURES BEST", "ROSELANDS FRUIT WORL", "TRANSTASMAN FISHERI", "GET FISH"]
+      "patterns": [
+        "WOOLWORTHS",
+        "COLES",
+        "ALDI",
+        "IGA",
+        "COSTCO",
+        "FRUITY CAPERS",
+        "GREEN VALLEY SPICES",
+        "CASC SEAFOOD",
+        "COSTI BROS",
+        "LAKEMBA SEAFOOD",
+        "FRESH FOOD",
+        "FRUIT MARKET",
+        "METRO CHULLORA",
+        "NATURES BEST",
+        "ROSELANDS FRUIT WORL",
+        "TRANSTASMAN FISHERI",
+        "GET FISH",
+        "CHULLORA MRKTPLC NWS",
+        "SYDHMESHWNUTS"
+      ]
     },
     {
       "name": "Fast food & Restaurant",
-      "patterns": ["MCDONALDS", "HUNGRY JACKS", "KFC", "SUBWAY", "DOMINOS", "UBER EATS", "MENULOG", "DOORDASH", "CHICKEN LICKEN", "COCACOLAEPP", "WINGS & THINGS", "OUTBACK STEAKHOUSE", "THAI PARAGON", "PARAGON", "STEAKHOUSE", "PIZZA", "RESTAURANT", "CAFE", "PALACE CHINESE", "EAST SUSHI", "THAIHUTT", "HJS WILEY PARK", "BRIARS AT GREENLEES", "MOJO PICON", "LA FRUTTERIA", "CRAZY NONNA", "STEYNE HOTEL", "PAESANELLA", "PAULS CAFE", "CARVERY CATERING", "BAKERS DELIGHT", "CARUSOS ITALIAN", "MUFFINBREAK", "YEEROS", "SUSHI NAYA", "YOGURBERRY", "SACREBLEU", "PROVENDER HOLDINGS"]
+      "patterns": [
+        "MCDONALDS",
+        "HUNGRY JACKS",
+        "KFC",
+        "SUBWAY",
+        "DOMINOS",
+        "UBER EATS",
+        "MENULOG",
+        "DOORDASH",
+        "CHICKEN LICKEN",
+        "COCACOLAEPP",
+        "WINGS & THINGS",
+        "OUTBACK STEAKHOUSE",
+        "THAI PARAGON",
+        "PARAGON",
+        "STEAKHOUSE",
+        "PIZZA",
+        "RESTAURANT",
+        "CAFE",
+        "PALACE CHINESE",
+        "EAST SUSHI",
+        "THAIHUTT",
+        "HJS WILEY PARK",
+        "BRIARS AT GREENLEES",
+        "MOJO PICON",
+        "LA FRUTTERIA",
+        "CRAZY NONNA",
+        "STEYNE HOTEL",
+        "PAESANELLA",
+        "PAULS CAFE",
+        "CARVERY CATERING",
+        "BAKERS DELIGHT",
+        "CARUSOS ITALIAN",
+        "MUFFINBREAK",
+        "YEEROS",
+        "SUSHI NAYA",
+        "YOGURBERRY",
+        "SACREBLEU",
+        "PROVENDER HOLDINGS",
+        "KHEIZARAN PANAHI PUCHBOWL",
+        "FRANGOS CONCORD"
+      ]
     },
     {
       "name": "Medicine (Webster)",
-      "patterns": ["WEBSTER"]
+      "patterns": [
+        "WEBSTER"
+      ]
     },
     {
       "name": "Medicine (PRN & Oil)",
-      "patterns": ["PHARMACY", "CHEMIST", "CHEMIST WAREHOUSE", "PRICELINE", "AMCAL", "YOUR CHOICE PHARMACY", "PHARMACY 4 LESS", "HEALTHY CARE", "SPECSAVERS", "CWH "]
+      "patterns": [
+        "PHARMACY",
+        "CHEMIST",
+        "CHEMIST WAREHOUSE",
+        "PRICELINE",
+        "AMCAL",
+        "YOUR CHOICE PHARMACY",
+        "PHARMACY 4 LESS",
+        "HEALTHY CARE",
+        "SPECSAVERS",
+        "CWH ",
+        "BARONE PHARM CHULLORA"
+      ]
     },
     {
       "name": "Rent",
-      "patterns": ["RENT", "LANDLORD", "REAL ESTATE"]
+      "patterns": [
+        "RENT",
+        "LANDLORD",
+        "REAL ESTATE",
+        "GOODWILL CARE"
+      ]
     },
     {
       "name": "Personal Cashout",
-      "patterns": ["ANZ ATM", "ATM WITHDRAWAL", "CASH WITHDRAWAL", "ATM ROSELANDS BRANCH"]
+      "patterns": [
+        "ANZ ATM",
+        "ATM WITHDRAWAL",
+        "CASH WITHDRAWAL",
+        "ATM ROSELANDS BRANCH"
+      ]
     },
     {
       "name": "Car & Petrol",
-      "patterns": ["BP ", "SHELL", "CORAL PETROLEUM", "AMPOL", "CALTEX", "PETROL", "E-TOLL", "LINKT", "OPAL", "SUPER CHEAP AUTO", "SECURE PARKING", "REDDY EXPRESS", "SYD APRT"]
+      "patterns": [
+        "BP ",
+        "SHELL",
+        "CORAL PETROLEUM",
+        "AMPOL",
+        "CALTEX",
+        "PETROL",
+        "E-TOLL",
+        "LINKT",
+        "OPAL",
+        "SUPER CHEAP AUTO",
+        "SECURE PARKING",
+        "REDDY EXPRESS",
+        "SYD APRT"
+      ]
     },
     {
-      "name": "Gifts  & Outing",
-      "patterns": ["BWS", "DAN MURPHY", "LIQUORLAND", "GIFT", "OUTING", "READING CINEMAS", "TICKETMASTER", "SKY ZONE", "SHOWBAGS", "ACE ATTRACTIONS", "LINDT AUSTRALIA", "PUNCHBOWL LIQUOR", "RIVERWOOD LEGION", "ANNANDALE HOTEL", "SUPERBOWL", "GREATER UNION", "HOBBYCO"]
+      "name": "Outings",
+      "patterns": [
+        "BWS",
+        "DAN MURPHY",
+        "LIQUORLAND",
+        "GIFT",
+        "OUTING",
+        "READING CINEMAS",
+        "TICKETMASTER",
+        "SKY ZONE",
+        "SHOWBAGS",
+        "ACE ATTRACTIONS",
+        "LINDT AUSTRALIA",
+        "PUNCHBOWL LIQUOR",
+        "RIVERWOOD LEGION",
+        "ANNANDALE HOTEL",
+        "SUPERBOWL",
+        "GREATER UNION",
+        "HOBBYCO"
+      ]
+    },
+    {
+      "name": "Personal Care",
+      "patterns": []
     },
     {
       "name": "Debt(s)",
-      "patterns": ["DIRECT DEBIT", "BPAY", "PAYMENT TO", "AFTERPAY", "ZIP PAY"]
+      "patterns": [
+        "DIRECT DEBIT",
+        "BPAY",
+        "PAYMENT TO",
+        "AFTERPAY",
+        "ZIP PAY"
+      ]
     },
     {
       "name": "Miscellaneous",
-      "patterns": ["NRMA INSURANCE", "NRMA.COM.AU", "BLUEFIT"]
+      "patterns": [
+        "NRMA INSURANCE",
+        "NRMA.COM.AU",
+        "BLUEFIT",
+        "CARMEL DYER CONCESSIO",
+        "DFS ONLINE",
+        "EK HOLA",
+        "GLOBAL FAITH",
+        "SIYA INVESTMENT"
+      ]
     },
     {
       "name": "Office work & Stationary",
-      "patterns": ["OFFICEWORKS", "OFFICE WORKS", "STATIONARY", "NEWSAGENCY", "POST SH"]
+      "patterns": [
+        "OFFICEWORKS",
+        "OFFICE WORKS",
+        "STATIONARY",
+        "NEWSAGENCY",
+        "POST SH",
+        "POST ROSELANDS POST"
+      ]
     },
     {
       "name": "Nicotine & cigarettes",
-      "patterns": ["KING OF THE PACK", "KPY*KING", "CIGARETTE", "TOBACCO", "VAPE", "EAAA CONVENIENCE"]
+      "patterns": [
+        "KING OF THE PACK",
+        "KPY*KING",
+        "CIGARETTE",
+        "TOBACCO",
+        "VAPE",
+        "EAAA CONVENIENCE"
+      ]
     },
     {
       "name": "Fashion & accessories",
-      "patterns": ["KMART", "BIG W", "TARGET", "COTTON ON", "UNIQLO", "H&M", "CONNOR CLOTHING", "TAROCASH", "YD PTY LTD", "IDOL NAILS", "BARBER CRAFT"]
+      "patterns": [
+        "KMART",
+        "BIG W",
+        "TARGET",
+        "COTTON ON",
+        "UNIQLO",
+        "H&M",
+        "CONNOR CLOTHING",
+        "TAROCASH",
+        "YD PTY LTD",
+        "IDOL NAILS",
+        "BARBER CRAFT"
+      ]
     },
     {
       "name": "Home & appliances",
-      "patterns": ["BUNNINGS", "IKEA", "HARVEY NORMAN", "JB HI-FI", "NEXTRA", "DOMAYNE", "JAYCAR ELECTRONICS", "CENTRAL AIR"]
+      "patterns": [
+        "BUNNINGS",
+        "IKEA",
+        "HARVEY NORMAN",
+        "JB HI-FI",
+        "NEXTRA",
+        "DOMAYNE",
+        "JAYCAR ELECTRONICS",
+        "CENTRAL AIR"
+      ]
     }
   ],
   "income_categories": [
@@ -64,22 +235,53 @@
     },
     {
       "name": "Disability Support Pension",
-      "patterns": ["CENTRELINK", "SERVICES AUSTRALIA", "FAMILY TAX", "CTRLINK PENS", "PENSION/SUPERANNUATION"]
+      "patterns": [
+        "CENTRELINK",
+        "SERVICES AUSTRALIA",
+        "FAMILY TAX",
+        "CTRLINK PENS",
+        "PENSION/SUPERANNUATION"
+      ]
     },
     {
       "name": "Bonus",
-      "patterns": ["BONUS"]
+      "patterns": [
+        "BONUS"
+      ]
     },
     {
       "name": "Interest",
-      "patterns": ["INTEREST"]
+      "patterns": [
+        "INTEREST"
+      ]
     },
     {
       "name": "Other",
-      "patterns": ["PAY/SALARY", "WAGES", "SALARY"]
+      "patterns": [
+        "PAY/SALARY",
+        "WAGES",
+        "SALARY"
+      ]
     }
   ],
-  "internal_transfer_patterns": ["ANZ M-BANKING FUNDS TFER", "FUNDS TFER TRANSFER"],
-  "subscription_patterns": ["NETFLIX", "SPOTIFY", "APPLE.COM", "GOOGLE", "DISNEY", "STAN", "PARAMOUNT", "YOUTUBE"],
-  "fee_patterns": ["ACCOUNT SERVICE FEE", "ACCOUNT SERVICING FEE", "OVERDRAWN FEE", "DISHONOUR FEE"]
+  "internal_transfer_patterns": [
+    "ANZ M-BANKING FUNDS TFER",
+    "FUNDS TFER TRANSFER"
+  ],
+  "subscription_patterns": [
+    "NETFLIX",
+    "SPOTIFY",
+    "APPLE.COM",
+    "GOOGLE",
+    "DISNEY",
+    "STAN",
+    "PARAMOUNT",
+    "YOUTUBE"
+  ],
+  "fee_patterns": [
+    "ACCOUNT SERVICE FEE",
+    "ACCOUNT SERVICING FEE",
+    "OVERDRAWN FEE",
+    "DISHONOUR FEE"
+  ]
 }

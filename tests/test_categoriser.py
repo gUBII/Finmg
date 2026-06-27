@@ -119,15 +119,15 @@ class TestCategoriser:
 
     def test_lindt_is_gifts(self, config):
         txn = Transaction(date=date(2026, 3, 2), description="EFTPOS LINDT AUSTRALIA HOMEBUSH AU", withdrawal=6.50)
-        assert categorise_transaction(txn, config) == "Gifts  & Outing"
+        assert categorise_transaction(txn, config) == "Outings"
 
     def test_superbowl_is_gifts(self, config):
         txn = Transaction(date=date(2026, 6, 1), description="VISA DEBIT PURCHASE CARD 1216 SQ *STRATHFIELD SUPERBOWL STRATHFIELD S", withdrawal=12.24)
-        assert categorise_transaction(txn, config) == "Gifts  & Outing"
+        assert categorise_transaction(txn, config) == "Outings"
 
     def test_greater_union_is_gifts(self, config):
         txn = Transaction(date=date(2026, 5, 26), description="VISA DEBIT PURCHASE CARD 6621 GREATER UNION BURWOO BURWOOD", withdrawal=17.80)
-        assert categorise_transaction(txn, config) == "Gifts  & Outing"
+        assert categorise_transaction(txn, config) == "Outings"
 
     def test_yd_is_fashion(self, config):
         txn = Transaction(date=date(2026, 3, 2), description="EFTPOS YD PTY LTD 632 HOMEBUSH AU", withdrawal=119.94)
@@ -167,3 +167,62 @@ class TestCategoriser:
         summary = get_category_summary(txns)
         assert summary["Groceries"]["count"] == 2
         assert summary["Groceries"]["total_withdrawals"] == 80.0
+
+
+class TestLearnedFromOverrides:
+    """Patterns promoted from the category_overrides audit log by
+    scripts/learn_from_overrides.py. Descriptions are the real source rows."""
+
+    @pytest.fixture
+    def config(self):
+        return load_category_rules()
+
+    def test_barone_pharmacy_is_medicine(self, config):
+        txn = Transaction(date=date(2026, 3, 5), description="EFTPOS BARONE PHARM CHULLORA NSWAU", withdrawal=18.0)
+        assert categorise_transaction(txn, config) == "Medicine (PRN & Oil)"
+
+    def test_chullora_marketplace_is_groceries(self, config):
+        txn = Transaction(date=date(2026, 5, 18), description="EFTPOS CHULLORA MRKTPLC NWS CHULLORA NSWAU", withdrawal=39.30)
+        assert categorise_transaction(txn, config) == "Groceries"
+
+    def test_sydhmeshwnuts_is_groceries(self, config):
+        txn = Transaction(date=date(2026, 3, 9), description="EFTPOS ZLR*SYDHMESHWNUTS1 \\ROSEBERY AU", withdrawal=40.0)
+        assert categorise_transaction(txn, config) == "Groceries"
+
+    def test_kheizaran_panahi_is_fast_food(self, config):
+        txn = Transaction(date=date(2026, 3, 2), description="VISA DEBIT PURCHASE CARD 1216 KHEIZARAN PANAHI PUCHBOWL", withdrawal=14.0)
+        assert categorise_transaction(txn, config) == "Fast food & Restaurant"
+
+    def test_post_roselands_is_office(self, config):
+        txn = Transaction(date=date(2026, 4, 1), description="EFTPOS POST ROSELANDS POST ROSELANDS AU", withdrawal=12.0)
+        assert categorise_transaction(txn, config) == "Office work & Stationary"
+
+    def test_carmel_dyer_is_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 4, 13), description="VISA DEBIT PURCHASE CARD 6621 SQ *CARMEL DYER CONCESSIO SYDNEY OLYMPI", withdrawal=9.0)
+        assert categorise_transaction(txn, config) == "Miscellaneous"
+
+    def test_dfs_online_is_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 2, 16), description="EFTPOS SMP*DFS ONLINE MELBOU0D \\PRESTON03 AU", withdrawal=50.75)
+        assert categorise_transaction(txn, config) == "Miscellaneous"
+
+    def test_global_faith_is_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 3, 18), description="EFTPOS GLOBAL FAITH PTY LTD CHISWICK AU", withdrawal=18.59)
+        assert categorise_transaction(txn, config) == "Miscellaneous"
+
+    def test_siya_investment_is_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 4, 8), description="EFTPOS SIYA INVESTMENT PTY LT BELMORE AU", withdrawal=20.50)
+        assert categorise_transaction(txn, config) == "Miscellaneous"
+
+    def test_ek_hola_is_miscellaneous(self, config):
+        txn = Transaction(date=date(2026, 5, 11), description="VISA DEBIT PURCHASE CARD 1216 EK HOLA PTY LTD ROSELANDS", withdrawal=11.0)
+        assert categorise_transaction(txn, config) == "Miscellaneous"
+
+    def test_generic_transfer_stays_uncategorised(self, config):
+        """A too-generic 'U AND A' was deliberately NOT learned (false-positive risk)."""
+        txn = Transaction(date=date(2026, 6, 4), description="EFTPOS U AND A PTY LTD ROSELANDS AU", withdrawal=51.49)
+        assert categorise_transaction(txn, config) == "Uncategorised"
+
+    def test_goodwill_care_is_rent(self, config):
+        """GOODWILL CARE is Ron's landlord — rent payments must categorise as Rent."""
+        txn = Transaction(date=date(2026, 6, 15), description="ANZ MOBILE BANKING PAYMENT 963618 TO GOODWILL CARE", withdrawal=2000.0)
+        assert categorise_transaction(txn, config) == "Rent"

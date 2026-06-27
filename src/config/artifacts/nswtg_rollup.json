@@ -2,7 +2,7 @@
   "_about": "Maps FinMg granular budget categories onto the NSWTG super-lines used by both the Annual Accounts (Section C, actuals) and the Plan (Section D, forecasts). Direction selects deposit vs withdrawal. Categories NOT listed under any line are intentionally unmapped: the NSWTG forms have no clean home for day-to-day personal-living spend (groceries, medicine, personal cashout, fast food, fashion, nicotine, home, office, misc). The audit/gap engine surfaces the unallocated total so Linda allocates it deliberately rather than the system guessing. Tunable: edit categories here, no code change.",
   "_unmapped_personal_living": [
     "Groceries", "Fast food & Restaurant", "Medicine (Webster)",
-    "Medicine (PRN & Oil)", "Personal Cashout", "Miscellaneous",
+    "Medicine (PRN & Oil)", "Personal Cashout", "Personal Care", "Miscellaneous",
     "Office work & Stationary", "Nicotine & cigarettes",
     "Fashion & accessories", "Home & appliances"
   ],
@@ -24,7 +24,7 @@
     "exp_professional": {"direction": "withdrawal", "categories": []},
     "exp_property": {"direction": "withdrawal", "categories": []},
     "exp_utilities": {"direction": "withdrawal", "categories": []},
-    "exp_gifts": {"direction": "withdrawal", "categories": ["Gifts  & Outing"]}
+    "exp_gifts": {"direction": "withdrawal", "categories": ["Outings"]}
   },
   "_plan_note": "The Plan (Section D) taxonomy differs from the Annual Accounts: it HAS a 'Personal living expenses' line, so groceries/medicine/personal roll up cleanly there. Plan rollups read forecast_value (forward), not transaction actuals.",
   "plan_income": {
@@ -39,7 +39,7 @@
     "plan_accommodation": {"direction": "withdrawal", "categories": ["Rent"]},
     "plan_personal_living": {"direction": "withdrawal", "categories": [
       "Groceries", "Fast food & Restaurant", "Medicine (Webster)", "Medicine (PRN & Oil)",
-      "Personal Cashout", "Gifts  & Outing", "Miscellaneous", "Office work & Stationary",
+      "Personal Cashout", "Personal Care", "Outings", "Miscellaneous", "Office work & Stationary",
       "Nicotine & cigarettes", "Fashion & accessories", "Home & appliances", "Car & Petrol"
     ]},
     "plan_property": {"direction": "withdrawal", "categories": []},

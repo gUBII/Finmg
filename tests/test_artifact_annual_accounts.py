@@ -72,7 +72,7 @@ def _seed(conn) -> int:
                     category="Car & Petrol", month="2026-03"),
         Transaction(date=date(2026, 3, 14), description="GIFT SHOP", withdrawal=50.0, deposit=None,
                     account_number="437669532", account_type="ACCESS ACCOUNT",
-                    category="Gifts  & Outing", month="2026-03"),
+                    category="Outings", month="2026-03"),
         Transaction(date=date(2026, 3, 15), description="COLES", withdrawal=300.0, deposit=None,
                     account_number="437669532", account_type="ACCESS ACCOUNT",
                     category="Groceries", month="2026-03"),
