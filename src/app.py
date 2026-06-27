@@ -25,7 +25,7 @@ from src.views.forecast import render_forecast_view
 from src.views.gifts import render_gifts_view
 from src.views.identity import render_identity_view
 from src.views.inventory import render_inventory_view
-from src.views.login import render_login_view, resolve_profile_image
+from src.views.login import render_login_view
 from src.views.one_off import render_one_off_view
 from src.views.submission import render_submission_view
 from src.views.transactions import render_transactions_view
@@ -102,12 +102,12 @@ def _render_sidebar() -> str:
         )
 
     with st.sidebar:
-        profile_image = resolve_profile_image()
-        if profile_image is not None:
-            st.image(str(profile_image), width=150)
-
-        st.markdown("### Hi, Linda-Jane")
-        st.caption("Private household finance dashboard")
+        st.markdown(
+            "<div style=\"font-family:Georgia,'Times New Roman',serif;font-size:1.15rem;"
+            "font-weight:600;color:#2F6B60;line-height:1.25;\">Financial Manager<br>Dashboard</div>",
+            unsafe_allow_html=True,
+        )
+        st.caption("Private Financial Management · NSW")
         st.divider()
 
         for title, views in NAV_GROUPS.items():
