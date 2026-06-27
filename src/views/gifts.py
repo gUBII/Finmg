@@ -63,6 +63,73 @@ def _ledger_frame(gifts: list[Gift]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _money(v: float) -> str:
+    return f"${v:,.0f}" if v else "·"
+
+
+def _render_forecast_matrix(conn, mp_id: int) -> None:
+    """The §76 gift-forecast matrix (recipients × occasions) — the digital twin
+    of the handwritten doc, styled to the FinMg theme. Reproducible: the same
+    build_matrix feeds the Excel export."""
+    rows, col_totals, grand = build_matrix(conn, mp_id)
+    if not rows:
+        return
+
+    head = "".join(f"<th>{OCC_LABEL[o]}</th>" for o in OCC_ORDER)
+    body = []
+    for r in rows:
+        tint = ' style="background:#FCE8E6"' if r.flagged else ""
+        flag = " 🚩" if r.flagged else ""
+        cells = "".join(f"<td>{_money(r.amounts.get(o, 0.0))}</td>" for o in OCC_ORDER)
+        body.append(
+            f'<tr{tint}><td class="nm">{r.name}{flag}</td><td class="rel">{r.relation}</td>'
+            f'{cells}<td class="tot">${r.total:,.0f}</td></tr>'
+        )
+    foot_cells = "".join(f"<td>${col_totals[o]:,.0f}</td>" for o in OCC_ORDER)
+    table = f"""
+    <div class="gf-wrap">
+      <div class="gf-title">{TITLE}</div>
+      <table class="gf">
+        <thead><tr><th class="nm">Person's Name</th><th class="rel">Relation</th>{head}<th>Row Total</th></tr></thead>
+        <tbody>{''.join(body)}</tbody>
+        <tfoot><tr><td class="nm">Column total</td><td></td>{foot_cells}<td class="grand">${grand:,.0f}</td></tr></tfoot>
+      </table>
+    </div>
+    <style>
+      .gf-wrap {{ font-family: Georgia, 'Times New Roman', serif; overflow-x:auto; }}
+      .gf-title {{ color:#1F4E5F; font-weight:700; font-size:1.05rem; margin:.2rem 0 .5rem; }}
+      table.gf {{ border-collapse:collapse; width:100%; font-size:.82rem; }}
+      table.gf th, table.gf td {{ border:1px solid #C9D6D9; padding:5px 8px; text-align:center; white-space:nowrap; }}
+      table.gf thead th {{ background:#1F4E5F; color:#fff; font-weight:700; }}
+      table.gf td.nm {{ text-align:left; font-weight:600; }}
+      table.gf td.rel {{ text-align:left; color:#4a5a5e; }}
+      table.gf td.tot {{ font-weight:700; }}
+      table.gf tfoot td {{ background:#EDF3F4; font-weight:700; border-top:2px solid #1F4E5F; }}
+      table.gf tfoot td.grand {{ color:#1F4E5F; }}
+    </style>
+    """
+    st.markdown(table, unsafe_allow_html=True)
+
+    flagged = [r for r in rows if r.flagged]
+    if flagged:
+        names = ", ".join(r.name for r in flagged)
+        st.warning(f"🚩 §76 review: {names}. A gift from the managed estate to the "
+                   "private manager (or related parties) is a conflict of interest — "
+                   "disclose and confirm NCAT authorisation before lodging.")
+
+    try:
+        path, _ = write_gift_forecast_xlsx(conn, mp_id, FORECAST_XLSX)
+        with open(path, "rb") as fh:
+            st.download_button(
+                "⬇ Download gift-forecast table (Excel)", fh.read(),
+                file_name="Gift_Forecast_RenatoGentili.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key="gift_forecast_xlsx",
+            )
+    except Exception as exc:  # never let the export break the page
+        st.caption(f"Excel export unavailable: {exc}")
+
+
 def render_gifts_view() -> None:
     page_header("Gifts", "gifts")
     st.caption(
@@ -93,6 +160,10 @@ def render_gifts_view() -> None:
     k2.metric("Actual to date", f"${actual_total:,.2f}")
     k3.metric("Remaining budget", f"${planned_total - actual_total:,.2f}")
     k4.metric("§76 flagged", f"{len(flagged)} of {len(gifts)}")
+
+    # ------------------------------------------------ §76 gift-forecast matrix
+    section_header("Gift forecast (§76) — planned matrix", "gifts.forecast")
+    _render_forecast_matrix(conn, mp_id)
 
     # ----------------------------------------------------------------- ledger
     section_header("Ledger", "gifts.ledger")
