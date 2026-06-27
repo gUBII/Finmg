@@ -104,6 +104,10 @@
     "source": "Planned figures from the submitted Plan; actuals from what you record on this page.",
     "do": "Open the flagged-rows panel below the table to read exactly why each 🚩 was raised."
   },
+  "gifts.recipients": {
+    "what": "The name and relationship-to-Ron for each gift. These belong to the gift itself — a recipient does NOT have to be listed under Significant People.",
+    "do": "Edit a Recipient or Relation cell, then press Save recipient changes. Every edit is written to the permanent audit log."
+  },
   "gifts.record_actual": {
     "what": "Where you record what a gift actually cost once it has been given.",
     "source": "The dropdown lists every planned gift; the amount box starts at the planned figure.",
@@ -192,8 +196,8 @@
     "do": "Check the order date and appointment type against the NCAT paperwork — these are copied straight onto every form."
   },
   "identity.significant_people": {
-    "what": "Family and friends who matter to Ron's affairs — the people you consult and the gift recipients. Status tracks whether each person is active, estranged, or deceased.",
-    "do": "Edit details in the table and press Save Changes, or add a new person below. The Consultations and Gifts pages both draw their name lists from here."
+    "what": "Family and friends you must consult about Ron's affairs. Status tracks whether each person is active, estranged, or deceased. (Gift recipients are kept separately on the Gifts page — they don't have to be listed here.)",
+    "do": "Edit details in the table and press Save Changes, or add a new person below. The Consultations page draws its name list from here."
   },
   "inventory": {
     "what": "Everything Ron owns and owes: bank accounts, property, investments, vehicles, the aged-care accommodation bond, and any debts. This fills Sections B and C of the Plan.",

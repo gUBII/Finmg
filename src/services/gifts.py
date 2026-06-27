@@ -56,3 +56,43 @@ def record_gift_actual(
         ),
     )
     return updated
+
+
+def revamp_gift_recipient(
+    conn: sqlite3.Connection,
+    gift_id: int,
+    recipient_name: str | None,
+    recipient_relation: str | None,
+    recorded_by: str | None = None,
+) -> Gift:
+    """Set a gift's recipient name + relation. Gift-owned identity, no FK into
+    significant_people. Every change writes an immutable audit_log entry."""
+    gift = get_gift(conn, gift_id)
+    if gift is None:
+        raise ValueError(f"no gift with id {gift_id}")
+
+    name = (recipient_name or "").strip() or None
+    relation = (recipient_relation or "").strip() or None
+    updated = replace(gift, recipient_name=name, recipient_relation=relation)
+    update_gift(conn, updated)
+    insert_audit(
+        conn,
+        AuditEntry(
+            action="update",
+            table_name="gifts",
+            row_id=gift_id,
+            actor_user=recorded_by,
+            actor_role="private_manager",
+            before_json=json.dumps(
+                {
+                    "recipient_name": gift.recipient_name,
+                    "recipient_relation": gift.recipient_relation,
+                }
+            ),
+            after_json=json.dumps(
+                {"recipient_name": name, "recipient_relation": relation}
+            ),
+            reason=f"revamped gift recipient for gift #{gift_id}",
+        ),
+    )
+    return updated

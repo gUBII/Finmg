@@ -60,10 +60,16 @@ class SubmissionAttachment:
 
 @dataclass(frozen=True)
 class Gift:
-    """A planned or actual gift; checked against Act §76 at the service layer."""
+    """A planned or actual gift; checked against Act §76 at the service layer.
+
+    Recipient identity is gift-owned (recipient_name + recipient_relation) and
+    is deliberately NOT linked to significant_people — Section A.3 consultation
+    contacts and gift recipients are independent lists.
+    """
     managed_person_id: int
     id: int | None = None
-    recipient_id: int | None = None
+    recipient_name: str | None = None
+    recipient_relation: str | None = None
     occasion: str | None = None
     occasion_date: str | None = None
     planned_amount: float | None = None

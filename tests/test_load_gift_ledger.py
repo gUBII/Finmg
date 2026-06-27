@@ -51,15 +51,18 @@ def test_load_inserts_rows_and_reports(tmp_path):
     conn = _conn(tmp_path)
     rid = _seed(conn)
     summary = load_gift_ledger(conn, LEDGER, rid)
-    # Sebastian 3 + Mikayla 1 + Linda 1 = 5; Ghost unmatched and skipped.
-    assert summary["inserted"] == 5
+    # Recipients are gift-owned now — every row loads (no significant_people
+    # match required). Sebastian 3 + Mikayla 1 + Linda 1 + Ghost 1 = 6.
+    assert summary["inserted"] == 6
     assert summary["flagged"] == 2
-    assert summary["unmatched"] == ["Ghost NOBODY"]
-    # Sebastian 3x$100 + Mikayla $300 + Linda $100 = $700.
-    assert summary["total_planned"] == 700.0
+    assert "unmatched" not in summary
+    # Sebastian 3x$100 + Mikayla $300 + Linda $100 + Ghost $50 = $750.
+    assert summary["total_planned"] == 750.0
     gifts = list_gifts(conn, rid)
-    assert len(gifts) == 5
+    assert len(gifts) == 6
     assert all(SOURCE_TAG in (g.notes or "") for g in gifts)
+    # Recipient identity lives on the gift, not via an FK.
+    assert all(g.recipient_name for g in gifts)
 
 
 def test_flag_policy_and_dates(tmp_path):
@@ -77,9 +80,10 @@ def test_flag_policy_and_dates(tmp_path):
     # Dated occasions get the nominal date; birthdays stay undated.
     assert by_occasion["christmas"][0].occasion_date == "2026-12-25"
     assert all(g.occasion_date is None for g in by_occasion["birthday"])
-    # Linda's row has no significant_people FK.
-    linda = [g for g in by_occasion["birthday"] if g.recipient_id is None]
-    assert len(linda) == 1 and "Linda" in linda[0].notes
+    # Recipient name is gift-owned (no FK into significant_people).
+    linda = [g for g in by_occasion["birthday"]
+             if "Linda" in (g.recipient_name or "")]
+    assert len(linda) == 1 and "Linda" in (linda[0].notes or "")
 
 
 def test_reload_is_idempotent(tmp_path):
@@ -87,8 +91,8 @@ def test_reload_is_idempotent(tmp_path):
     rid = _seed(conn)
     load_gift_ledger(conn, LEDGER, rid)
     summary2 = load_gift_ledger(conn, LEDGER, rid)
-    assert summary2["replaced"] == 5
-    assert len(list_gifts(conn, rid)) == 5  # no duplicates
+    assert summary2["replaced"] == 6
+    assert len(list_gifts(conn, rid)) == 6  # no duplicates
 
 
 def test_load_writes_audit(tmp_path):

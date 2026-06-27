@@ -15,11 +15,16 @@ import streamlit as st
 
 from src.db.database import get_connection, init_db
 from src.db.queries_compliance import list_gifts
-from src.db.queries_estate import bootstrap_managed_person_if_empty, list_significant_people
+from src.db.queries_estate import bootstrap_managed_person_if_empty
 from src.models.compliance import Gift
-from src.services.gifts import record_gift_actual
+from src.pipeline.gift_forecast_excel import write_gift_forecast_xlsx
+from src.services.gift_forecast import OCC_LABEL, OCC_ORDER, TITLE, build_matrix
+from src.services.gifts import record_gift_actual, revamp_gift_recipient
 from src.ui.help import page_header, section_header, widget_help
 from src.ui.status import PALETTE, cell_css
+
+# Reproducible export path for the gift-forecast matrix (gitignored data/).
+FORECAST_XLSX = "data/exports/Gift_Forecast_RenatoGentili.xlsx"
 
 OCCASION_LABELS = {
     "birthday": "Birthday",
@@ -32,21 +37,8 @@ OCCASION_LABELS = {
 }
 
 
-def _recipient_names(conn, mp_id: int) -> dict[int, str]:
-    people = list_significant_people(conn, mp_id, include_deceased=True)
-    return {p.id: f"{p.given_name} {p.surname}".strip() for p in people}
-
-
-def _display_name(gift: Gift, names: dict[int, str]) -> str:
-    if gift.recipient_id is not None and gift.recipient_id in names:
-        return names[gift.recipient_id]
-    # Loader rows without an FK carry "planned for <name>" in notes.
-    notes = gift.notes or ""
-    marker = "planned for "
-    if marker in notes:
-        tail = notes.split(marker, 1)[1]
-        return tail.split(" — ", 1)[0].strip()
-    return "(unattributed)"
+def _display_name(gift: Gift) -> str:
+    return (gift.recipient_name or "").strip() or "(unattributed)"
 
 
 def _flag_reason(gift: Gift) -> str | None:
@@ -54,12 +46,13 @@ def _flag_reason(gift: Gift) -> str | None:
     return notes.split(" — ", 1)[1].strip() if " — " in notes else None
 
 
-def _ledger_frame(gifts: list[Gift], names: dict[int, str]) -> pd.DataFrame:
+def _ledger_frame(gifts: list[Gift]) -> pd.DataFrame:
     rows = []
     for g in gifts:
         rows.append(
             {
-                "Recipient": _display_name(g, names),
+                "Recipient": _display_name(g),
+                "Relation": g.recipient_relation or "—",
                 "Occasion": OCCASION_LABELS.get(g.occasion, g.occasion or "—"),
                 "Date": g.occasion_date or "—",
                 "Planned": g.planned_amount or 0.0,
@@ -90,7 +83,6 @@ def render_gifts_view() -> None:
         conn.close()
         return
 
-    names = _recipient_names(conn, mp_id)
     planned_total = sum(g.planned_amount or 0.0 for g in gifts)
     actual_total = sum(g.actual_amount or 0.0 for g in gifts)
     flagged = [g for g in gifts if g.section_76_assessment != "compliant"]
@@ -104,7 +96,7 @@ def render_gifts_view() -> None:
 
     # ----------------------------------------------------------------- ledger
     section_header("Ledger", "gifts.ledger")
-    df = _ledger_frame(gifts, names)
+    df = _ledger_frame(gifts)
 
     def _style_flag(val):
         if isinstance(val, str) and val.startswith("🚩"):
@@ -123,9 +115,56 @@ def render_gifts_view() -> None:
                 reason = _flag_reason(g) or "Flagged by the compliance engine."
                 label = OCCASION_LABELS.get(g.occasion, g.occasion or "—")
                 st.warning(
-                    f"**{_display_name(g, names)} — {label} "
+                    f"**{_display_name(g)} — {label} "
                     f"(${g.planned_amount or 0.0:,.2f})**\n\n{reason}"
                 )
+
+    # ----------------------------------------------- revamp recipients/relation
+    section_header("Recipients & relations", "gifts.recipients")
+    st.caption(
+        "Edit each gift's recipient name and relationship to Ron. These are "
+        "gift-owned — independent of Significant People. Changes are audited."
+    )
+    editor_df = pd.DataFrame(
+        [
+            {
+                "id": g.id,
+                "Recipient": g.recipient_name or "",
+                "Relation": g.recipient_relation or "",
+                "Occasion": OCCASION_LABELS.get(g.occasion, g.occasion or "—"),
+            }
+            for g in gifts
+        ]
+    )
+    edited = st.data_editor(
+        editor_df,
+        width="stretch",
+        hide_index=True,
+        key="gift_recipients_editor",
+        column_config={
+            "id": st.column_config.NumberColumn("id", disabled=True),
+            "Recipient": st.column_config.TextColumn("Recipient"),
+            "Relation": st.column_config.TextColumn("Relation"),
+            "Occasion": st.column_config.TextColumn("Occasion", disabled=True),
+        },
+    )
+    if st.button("Save recipient changes", key="gift_recipients_save"):
+        current = {g.id: g for g in gifts}
+        changes = 0
+        for _, r in edited.iterrows():
+            g = current.get(int(r["id"]))
+            if g is None:
+                continue
+            new_name = (str(r["Recipient"]) or "").strip() or None
+            new_rel = (str(r["Relation"]) or "").strip() or None
+            if new_name != (g.recipient_name or None) or new_rel != (g.recipient_relation or None):
+                revamp_gift_recipient(conn, g.id, new_name, new_rel, recorded_by="Linda")
+                changes += 1
+        if changes:
+            st.success(f"Saved {changes} recipient change(s).")
+            st.rerun()
+        else:
+            st.info("No changes to save.")
 
     # ---------------------------------------------------------- record actual
     section_header("Record an actual", "gifts.record_actual")
@@ -137,7 +176,7 @@ def render_gifts_view() -> None:
     def _gift_label(g: Gift) -> str:
         label = OCCASION_LABELS.get(g.occasion, g.occasion or "—")
         actual = "" if g.actual_amount is None else f" · actual ${g.actual_amount:,.2f}"
-        return f"{_display_name(g, names)} — {label} (planned ${g.planned_amount or 0.0:,.2f}){actual}"
+        return f"{_display_name(g)} — {label} (planned ${g.planned_amount or 0.0:,.2f}){actual}"
 
     chosen = st.selectbox(
         "Planned gift",

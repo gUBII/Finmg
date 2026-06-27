@@ -3,7 +3,8 @@
 Three tabs:
   Managed Person  — Ron's biographical and legal identity (Section A.1)
   Private Manager — Linda's details and appointment (Section A.2)
-  Significant People — consultation contacts and gift recipients (Section A.3)
+  Significant People — consultation contacts (Section A.3); gift recipients
+                       are managed separately in the Gifts view
 
 All writes use the update_* helpers in queries_estate.py (never raw SQL here).
 audit_log integration is intentionally deferred to S2.5.

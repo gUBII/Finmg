@@ -52,7 +52,8 @@ class PrivateManager:
 
 @dataclass(frozen=True)
 class SignificantPerson:
-    """Section A.3 — significant people to consult; also gift recipients."""
+    """Section A.3 — significant people to consult. Independent of the gift
+    ledger: gift recipients are gift-owned (see Gift.recipient_name)."""
     managed_person_id: int
     surname: str
     given_name: str

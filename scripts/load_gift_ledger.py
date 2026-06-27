@@ -29,7 +29,6 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from src.db.database import get_connection, init_db
 from src.db.queries_compliance import insert_audit, insert_gift
-from src.db.queries_estate import find_significant_person_by_name
 from src.models.compliance import AuditEntry, Gift
 
 SOURCE_TAG = "[doc03 p16-17]"
@@ -47,34 +46,28 @@ def load_gift_ledger(conn, ledger: dict, managed_person_id: int) -> dict:
     occasion_dates = ledger.get("occasion_dates", {})
     inserted = 0
     flagged = 0
-    unmatched: list[str] = []
     total_planned = 0.0
 
     for row in ledger["rows"]:
-        recipient_id = None
-        display_name = row.get("given_name") or "(unattributed)"
-        if not row.get("not_significant_person") and not row.get("unattributed"):
-            sp = find_significant_person_by_name(
-                conn, managed_person_id, row["given_name"], row["surname"]
-            )
-            if sp is None:
-                unmatched.append(f"{row['given_name']} {row['surname']}")
-                continue
-            recipient_id = sp.id
-            display_name = f"{row['given_name']} {row['surname']}"
+        # Recipient identity is gift-owned — no lookup into significant_people.
+        given = (row.get("given_name") or "").strip()
+        surname = (row.get("surname") or "").strip()
+        recipient_name = f"{given} {surname}".strip() or "(unattributed)"
+        recipient_relation = row.get("relationship")
 
         flag_reason = row.get("flag_reason")
         assessment = "flagged" if flag_reason else "compliant"
 
         for occasion, amount in row["occasions"].items():
-            notes = f"{SOURCE_TAG} planned for {display_name}"
+            notes = f"{SOURCE_TAG} planned for {recipient_name}"
             if flag_reason:
                 notes += f" — {flag_reason}"
             insert_gift(
                 conn,
                 Gift(
                     managed_person_id=managed_person_id,
-                    recipient_id=recipient_id,
+                    recipient_name=recipient_name,
+                    recipient_relation=recipient_relation,
                     occasion=occasion,
                     occasion_date=occasion_dates.get(occasion),
                     planned_amount=float(amount),
@@ -105,7 +98,6 @@ def load_gift_ledger(conn, ledger: dict, managed_person_id: int) -> dict:
         "inserted": inserted,
         "replaced": deleted,
         "flagged": flagged,
-        "unmatched": unmatched,
         "total_planned": total_planned,
     }
 
@@ -127,10 +119,6 @@ def main() -> int:
     print(f"gifts loaded: {summary['inserted']} rows "
           f"(replaced {summary['replaced']}, flagged {summary['flagged']}) "
           f"— total planned ${summary['total_planned']:,.2f}")
-    if summary["unmatched"]:
-        print("UNMATCHED recipients (not in significant_people):")
-        for name in summary["unmatched"]:
-            print(f"  - {name}")
     for note in ledger.get("_discrepancies", []):
         print(f"NOTE: {note}")
     conn.close()
